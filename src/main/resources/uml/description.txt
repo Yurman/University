@@ -4,7 +4,7 @@ Every group has a list of students.
 The university, also have a list of classrooms.
 For all these entities, the corresponding classes are represented.
 Student and Professor classes have some common features, so they extends general class Human.
-Each faculty has its own schedule.
+The university also has a schedule.
 Schedule class has a list of ScheduleItem objects each of them represent a single lesson.
 ScheduleItem contains attribute which is an object of Lection class.
 This class represents an element of the schedule and determines the exact time of the lesson.

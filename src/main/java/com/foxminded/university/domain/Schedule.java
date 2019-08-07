@@ -1,8 +1,8 @@
 package com.foxminded.university.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Schedule {
     private List<ScheduleItem> schedule;
@@ -16,28 +16,17 @@ public class Schedule {
     }
 
     public List<ScheduleItem> getProfessorSchedule(Professor professor, LocalDate startDate, LocalDate endDate) {
-	List<ScheduleItem> professorSchedule = new ArrayList<ScheduleItem>();
-	for (ScheduleItem item : schedule) {
-	    if ((item.getProfessor().equals(professor))
-		    && ((item.getDate().isAfter(startDate)) || item.getDate().isEqual(startDate))
-		    && ((item.getDate().isBefore(endDate)) || item.getDate().isEqual(endDate))) {
-		professorSchedule.add(item);
-	    }
-	}
 
-	return professorSchedule;
+	return schedule.stream().filter(item -> item.getProfessor().equals(professor))
+		.filter(item -> !(item.getDate().isBefore(startDate)))
+		.filter(item -> !(item.getDate().isAfter(endDate))).collect(Collectors.toList());
     }
 
     public List<ScheduleItem> getGroupSchedule(Group group, LocalDate startDate, LocalDate endDate) {
-	List<ScheduleItem> groupSchedule = new ArrayList<ScheduleItem>();
-	for (ScheduleItem item : schedule) {
-	    if ((item.getGroups().contains(group))
-		    && ((item.getDate().isAfter(startDate)) || item.getDate().isEqual(startDate))
-		    && ((item.getDate().isBefore(endDate)) || item.getDate().isEqual(endDate))) {
-		groupSchedule.add(item);
-	    }
-	}
-	return groupSchedule;
+
+	return schedule.stream().filter(item -> item.getGroups().contains(group))
+		.filter(item -> !(item.getDate().isBefore(startDate)))
+		.filter(item -> !(item.getDate().isAfter(endDate))).collect(Collectors.toList());
     }
 
     public List<ScheduleItem> getStudentSchedule(Student student, LocalDate startDate, LocalDate endDate) {

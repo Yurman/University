@@ -1,7 +1,6 @@
 package com.foxminded.university.domain;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -9,53 +8,18 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
 public class ScheduleTest {
-
-    private static Schedule testSchedule = new Schedule();
-    private static Professor professor = new Professor();
-    private static Group firstGroup = new Group();
-    private static Group secondGroup = new Group();
-    private static Student student = new Student();
-
-    private static ScheduleItem firstItem = new ScheduleItem();
-    private static ScheduleItem secondItem = new ScheduleItem();
-    private static ScheduleItem thirdItem = new ScheduleItem();
-    private static ScheduleItem fourthItem = new ScheduleItem();
+    private static Schedule testSchedule = ScheduleRepository.getTestSchedule();
+    private static Professor professor = ProfessorRepository.getProfessor();
+    private static Student student = ScheduleRepository.getStudent();
+    private static Group firstGroup = ScheduleRepository.getFirstGroup();
+    private static ScheduleItem firstItem = ScheduleRepository.getFirstItem();
+    private static ScheduleItem secondItem = ScheduleRepository.getSecondItem();
+    private static ScheduleItem thirdItem = ScheduleRepository.getThirdItem();
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
-	List<Student> students = new ArrayList<Student>();
-	students.add(student);
-	firstGroup.setStudents(students);
-	secondGroup.setStudents(students);
-	student.setGroup(firstGroup);
-	List<Group> firstGroups = new ArrayList<Group>();
-	firstGroups.add(firstGroup);
-	List<Group> secondGroups = new ArrayList<Group>();
-	secondGroups.add(secondGroup);
-
-	firstItem.setDate(LocalDate.of(2019, 2, 28));
-	firstItem.setProfessor(professor);
-	firstItem.setGroups(firstGroups);
-
-	secondItem.setDate(LocalDate.of(2019, 2, 24));
-	secondItem.setProfessor(professor);
-	secondItem.setGroups(secondGroups);
-
-	thirdItem.setDate(LocalDate.of(2019, 2, 7));
-	thirdItem.setProfessor(professor);
-	thirdItem.setGroups(secondGroups);
-
-	fourthItem.setDate(LocalDate.of(2019, 1, 31));
-	fourthItem.setProfessor(professor);
-	fourthItem.setGroups(secondGroups);
-
-	List<ScheduleItem> schedule = new ArrayList<ScheduleItem>();
-	schedule.add(firstItem);
-	schedule.add(secondItem);
-	schedule.add(thirdItem);
-	schedule.add(fourthItem);
-	testSchedule.setSchedule(schedule);
+	ScheduleRepository.initializeSchedule();
 
     }
 

@@ -1,7 +1,6 @@
 package com.foxminded.university.service;
 
 import java.util.List;
-
 import com.foxminded.university.domain.*;
 
 public class University {

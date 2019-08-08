@@ -8,10 +8,6 @@ public class ScheduleRepository {
 
     private static Schedule testSchedule = new Schedule();
 
-    private static Group firstGroup = new Group();
-    private static Group secondGroup = new Group();
-    private static Student student = new Student();
-
     private static ScheduleItem firstItem = new ScheduleItem();
     private static ScheduleItem secondItem = new ScheduleItem();
     private static ScheduleItem thirdItem = new ScheduleItem();
@@ -23,30 +19,6 @@ public class ScheduleRepository {
 
     public static void setTestSchedule(Schedule testSchedule) {
 	ScheduleRepository.testSchedule = testSchedule;
-    }
-
-    public static Group getFirstGroup() {
-	return firstGroup;
-    }
-
-    public static void setFirstGroup(Group firstGroup) {
-	ScheduleRepository.firstGroup = firstGroup;
-    }
-
-    public static Group getSecondGroup() {
-	return secondGroup;
-    }
-
-    public static void setSecondGroup(Group secondGroup) {
-	ScheduleRepository.secondGroup = secondGroup;
-    }
-
-    public static Student getStudent() {
-	return student;
-    }
-
-    public static void setStudent(Student student) {
-	ScheduleRepository.student = student;
     }
 
     public static ScheduleItem getFirstItem() {
@@ -83,31 +55,23 @@ public class ScheduleRepository {
 
     public static void initializeSchedule() {
 
-	List<Student> students = new ArrayList<Student>();
-	students.add(student);
-	firstGroup.setStudents(students);
-	secondGroup.setStudents(students);
-	student.setGroup(firstGroup);
-	List<Group> firstGroups = new ArrayList<Group>();
-	firstGroups.add(firstGroup);
-	List<Group> secondGroups = new ArrayList<Group>();
-	secondGroups.add(secondGroup);
+	GroupRepository.initializeGroupData();
 
 	firstItem.setDate(LocalDate.of(2019, 2, 28));
 	firstItem.setProfessor(ProfessorRepository.getProfessor());
-	firstItem.setGroups(firstGroups);
+	firstItem.setGroups(GroupRepository.getFirstGroups());
 
 	secondItem.setDate(LocalDate.of(2019, 2, 24));
 	secondItem.setProfessor(ProfessorRepository.getProfessor());
-	secondItem.setGroups(secondGroups);
+	secondItem.setGroups(GroupRepository.getSecondGroups());
 
 	thirdItem.setDate(LocalDate.of(2019, 2, 7));
 	thirdItem.setProfessor(ProfessorRepository.getProfessor());
-	thirdItem.setGroups(secondGroups);
+	thirdItem.setGroups(GroupRepository.getSecondGroups());
 
 	fourthItem.setDate(LocalDate.of(2019, 1, 31));
 	fourthItem.setProfessor(ProfessorRepository.getProfessor());
-	fourthItem.setGroups(secondGroups);
+	fourthItem.setGroups(GroupRepository.getSecondGroups());
 
 	List<ScheduleItem> schedule = new ArrayList<ScheduleItem>();
 	schedule.add(firstItem);

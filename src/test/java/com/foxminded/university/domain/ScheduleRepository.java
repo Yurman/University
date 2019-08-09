@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.foxminded.university.service.Schedule;
+
 public class ScheduleRepository {
 
     private static Schedule testSchedule = new Schedule();

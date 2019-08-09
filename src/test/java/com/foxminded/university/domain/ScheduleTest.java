@@ -3,28 +3,20 @@ package com.foxminded.university.domain;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
+import com.foxminded.university.service.Schedule;
+
 public class ScheduleTest {
-    private static Schedule testSchedule = ScheduleRepository.getTestSchedule();
-    private static Professor professor = ProfessorRepository.getProfessor();
-    private static Student student = StudentRepository.getStudent();
-    private static Group firstGroup = GroupRepository.getFirst();
-    private static ScheduleItem firstItem = ScheduleRepository.getFirstItem();
-    private static ScheduleItem secondItem = ScheduleRepository.getSecondItem();
-    private static ScheduleItem thirdItem = ScheduleRepository.getThirdItem();
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-
-	ScheduleRepository.initializeSchedule();
-
-    }
 
     @Test
     public final void shouldReturnScheduleForProfessorWhenCorrectDate() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Professor professor = ProfessorRepository.getProfessor();
+	ScheduleItem secondItem = ScheduleRepository.getSecondItem();
+	ScheduleItem thirdItem = ScheduleRepository.getThirdItem();
+
 	List<ScheduleItem> result = testSchedule.getProfessorSchedule(professor, LocalDate.of(2019, 2, 1),
 		LocalDate.of(2019, 2, 27));
 	assertThat(result).hasSize(2).contains(secondItem, thirdItem);
@@ -32,6 +24,11 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnScheduleForProfessorWhenOnEdgeDate() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Professor professor = ProfessorRepository.getProfessor();
+	ScheduleItem firstItem = ScheduleRepository.getFirstItem();
+	ScheduleItem secondItem = ScheduleRepository.getSecondItem();
+
 	List<ScheduleItem> result = testSchedule.getProfessorSchedule(professor, LocalDate.of(2019, 2, 24),
 		LocalDate.of(2019, 2, 28));
 	assertThat(result).hasSize(2).contains(firstItem, secondItem);
@@ -39,6 +36,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForProfessorWhenDateOutOfPeriod() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Professor professor = ProfessorRepository.getProfessor();
+
 	List<ScheduleItem> result = testSchedule.getProfessorSchedule(professor, LocalDate.of(2019, 3, 1),
 		LocalDate.of(2019, 6, 27));
 	assertThat(result).hasSize(0);
@@ -46,7 +46,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForProfessorWithoutClasses() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
 	Professor otherProfessor = new Professor();
+
 	List<ScheduleItem> result = testSchedule.getProfessorSchedule(otherProfessor, LocalDate.of(2019, 1, 1),
 		LocalDate.of(2019, 1, 27));
 	assertThat(result).hasSize(0);
@@ -54,6 +56,10 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnScheduleForGroupWhenCorrectDate() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Group firstGroup = GroupRepository.getFirst();
+	ScheduleItem firstItem = ScheduleRepository.getFirstItem();
+
 	List<ScheduleItem> result = testSchedule.getGroupSchedule(firstGroup, LocalDate.of(2019, 1, 1),
 		LocalDate.of(2019, 3, 27));
 	assertThat(result).hasSize(1).contains(firstItem);
@@ -61,6 +67,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForGroupWhenDateOutOfPeriod() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Group firstGroup = GroupRepository.getFirst();
+
 	List<ScheduleItem> result = testSchedule.getGroupSchedule(firstGroup, LocalDate.of(2019, 4, 30),
 		LocalDate.of(2019, 9, 27));
 	assertThat(result).hasSize(0);
@@ -68,6 +77,10 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnScheduleForGroupWhenOnEdgeDate() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Group firstGroup = GroupRepository.getFirst();
+	ScheduleItem firstItem = ScheduleRepository.getFirstItem();
+
 	List<ScheduleItem> result = testSchedule.getGroupSchedule(firstGroup, LocalDate.of(2019, 2, 28),
 		LocalDate.of(2019, 2, 28));
 	assertThat(result).hasSize(1).contains(firstItem);
@@ -75,7 +88,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForGroupWithoutClasses() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
 	Group otherGroup = new Group();
+
 	List<ScheduleItem> result = testSchedule.getGroupSchedule(otherGroup, LocalDate.of(2019, 1, 1),
 		LocalDate.of(2019, 9, 27));
 	assertThat(result).hasSize(0);
@@ -83,6 +98,10 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnScheduleForStudentWhenCorrectDate() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Student student = StudentRepository.getStudent();
+	ScheduleItem firstItem = ScheduleRepository.getFirstItem();
+
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(student, LocalDate.of(2019, 1, 1),
 		LocalDate.of(2019, 3, 27));
 	assertThat(result).hasSize(1).contains(firstItem);
@@ -90,6 +109,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForStudentOutOfPeriodTest() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
+	Student student = StudentRepository.getStudent();
+
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(student, LocalDate.of(2019, 6, 1),
 		LocalDate.of(2019, 9, 27));
 	assertThat(result).hasSize(0);
@@ -97,7 +119,9 @@ public class ScheduleTest {
 
     @Test
     public final void shouldReturnEmptyScheduleForStudentWithoutClasses() {
+	Schedule testSchedule = ScheduleRepository.getTestSchedule();
 	Student otherStudent = new Student();
+
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(otherStudent, LocalDate.of(2019, 6, 1),
 		LocalDate.of(2019, 9, 27));
 	assertThat(result).hasSize(0);

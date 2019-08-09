@@ -1,7 +1,9 @@
-package com.foxminded.university.service;
+package com.foxminded.university.domain;
 
 import java.util.List;
-import com.foxminded.university.domain.*;
+import com.foxminded.university.domain.Room;
+import com.foxminded.university.service.Schedule;
+import com.foxminded.university.domain.Faculty;
 
 public class University {
     private String title;

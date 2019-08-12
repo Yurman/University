@@ -8,79 +8,47 @@ import com.foxminded.university.service.Schedule;
 
 public class ScheduleRepository {
 
-    private static Schedule testSchedule = new Schedule();
-
-    private static ScheduleItem firstItem = new ScheduleItem();
-    private static ScheduleItem secondItem = new ScheduleItem();
-    private static ScheduleItem thirdItem = new ScheduleItem();
-    private static ScheduleItem fourthItem = new ScheduleItem();
-
     public static Schedule getTestSchedule() {
+	List<ScheduleItem> schedule = new ArrayList<>();
+	Schedule testSchedule = new Schedule();
+	schedule.add(getFirstItem());
+	schedule.add(getSecondItem());
+	schedule.add(getThirdItem());
+	schedule.add(getFourthItem());
+	testSchedule.setSchedule(schedule);
 	return testSchedule;
-    }
 
-    public static void setTestSchedule(Schedule testSchedule) {
-	ScheduleRepository.testSchedule = testSchedule;
     }
 
     public static ScheduleItem getFirstItem() {
-	return firstItem;
-    }
-
-    public static void setFirstItem(ScheduleItem firstItem) {
-	ScheduleRepository.firstItem = firstItem;
+	ScheduleItem first = new ScheduleItem();
+	first.setDate(LocalDate.of(2019, 2, 28));
+	first.setProfessor(ProfessorRepository.getTestProfessor());
+	first.setGroups(GroupRepository.getTestGroups());
+	return first;
     }
 
     public static ScheduleItem getSecondItem() {
-	return secondItem;
-    }
-
-    public static void setSecondItem(ScheduleItem secondItem) {
-	ScheduleRepository.secondItem = secondItem;
+	ScheduleItem second = new ScheduleItem();
+	second.setDate(LocalDate.of(2019, 2, 24));
+	second.setGroups(GroupRepository.getTestGroups());
+	second.setProfessor(ProfessorRepository.getTestProfessor());
+	return second;
     }
 
     public static ScheduleItem getThirdItem() {
-	return thirdItem;
-    }
-
-    public static void setThirdItem(ScheduleItem thirdItem) {
-	ScheduleRepository.thirdItem = thirdItem;
+	ScheduleItem third = new ScheduleItem();
+	third.setDate(LocalDate.of(2019, 2, 7));
+	third.setGroups(GroupRepository.getTestGroups());
+	third.setProfessor(ProfessorRepository.getTestProfessor());
+	return third;
     }
 
     public static ScheduleItem getFourthItem() {
-	return fourthItem;
-    }
-
-    public static void setFourthItem(ScheduleItem fourthItem) {
-	ScheduleRepository.fourthItem = fourthItem;
-    }
-
-    public static void initializeSchedule() {
-
-	GroupRepository.initializeGroupData();
-
-	firstItem.setDate(LocalDate.of(2019, 2, 28));
-	firstItem.setProfessor(ProfessorRepository.getProfessor());
-	firstItem.setGroups(GroupRepository.getFirstGroups());
-
-	secondItem.setDate(LocalDate.of(2019, 2, 24));
-	secondItem.setProfessor(ProfessorRepository.getProfessor());
-	secondItem.setGroups(GroupRepository.getSecondGroups());
-
-	thirdItem.setDate(LocalDate.of(2019, 2, 7));
-	thirdItem.setProfessor(ProfessorRepository.getProfessor());
-	thirdItem.setGroups(GroupRepository.getSecondGroups());
-
-	fourthItem.setDate(LocalDate.of(2019, 1, 31));
-	fourthItem.setProfessor(ProfessorRepository.getProfessor());
-	fourthItem.setGroups(GroupRepository.getSecondGroups());
-
-	List<ScheduleItem> schedule = new ArrayList<ScheduleItem>();
-	schedule.add(firstItem);
-	schedule.add(secondItem);
-	schedule.add(thirdItem);
-	schedule.add(fourthItem);
-	testSchedule.setSchedule(schedule);
-
+	ScheduleItem fourth = new ScheduleItem();
+	fourth.setDate(LocalDate.of(2019, 1, 31));
+	fourth.setGroups(GroupRepository.getTestGroups());
+	fourth.setProfessor(ProfessorRepository.getTestProfessor());
+	return fourth;
     }
 }

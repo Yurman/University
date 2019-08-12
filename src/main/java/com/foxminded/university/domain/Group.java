@@ -39,4 +39,47 @@ public class Group {
     public void setStudents(List<Student> students) {
 	this.students = students;
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 51;
+	int result = 15;
+	result = prime * result + ((department == null) ? 0 : department.hashCode());
+	result = prime * result + ((students == null) ? 0 : students.hashCode());
+	result = prime * result + ((title == null) ? 0 : title.hashCode());
+	result = prime * result + ((year == null) ? 0 : year.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Group other = (Group) obj;
+	if (department == null) {
+	    if (other.department != null)
+		return false;
+	} else if (!department.equals(other.department))
+	    return false;
+	if (students == null) {
+	    if (other.students != null)
+		return false;
+	} else if (!students.equals(other.students))
+	    return false;
+	if (title == null) {
+	    if (other.title != null)
+		return false;
+	} else if (!title.equals(other.title))
+	    return false;
+	if (year == null) {
+	    if (other.year != null)
+		return false;
+	} else if (!year.equals(other.year))
+	    return false;
+	return true;
+    }
 }

@@ -46,4 +46,48 @@ public class University {
     public static void main(String[] args) {
 
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 123;
+	int result = 37;
+	result = prime * result + ((classRooms == null) ? 0 : classRooms.hashCode());
+	result = prime * result + ((faculties == null) ? 0 : faculties.hashCode());
+	result = prime * result + ((schedule == null) ? 0 : schedule.hashCode());
+	result = prime * result + ((title == null) ? 0 : title.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	University other = (University) obj;
+	if (classRooms == null) {
+	    if (other.classRooms != null)
+		return false;
+	} else if (!classRooms.equals(other.classRooms))
+	    return false;
+	if (faculties == null) {
+	    if (other.faculties != null)
+		return false;
+	} else if (!faculties.equals(other.faculties))
+	    return false;
+	if (schedule == null) {
+	    if (other.schedule != null)
+		return false;
+	} else if (!schedule.equals(other.schedule))
+	    return false;
+	if (title == null) {
+	    if (other.title != null)
+		return false;
+	} else if (!title.equals(other.title))
+	    return false;
+	return true;
+    }
+
 }

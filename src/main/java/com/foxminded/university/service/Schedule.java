@@ -43,4 +43,29 @@ public class Schedule {
     public List<ScheduleItem> getStudentSchedule(Student student, LocalDate startDate, LocalDate endDate) {
 	return getGroupSchedule(student.getGroup(), startDate, endDate);
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 73;
+	int result = 93;
+	result = prime * result + ((schedule == null) ? 0 : schedule.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Schedule other = (Schedule) obj;
+	if (schedule == null) {
+	    if (other.schedule != null)
+		return false;
+	} else if (!schedule.equals(other.schedule))
+	    return false;
+	return true;
+    }
 }

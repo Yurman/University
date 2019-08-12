@@ -30,4 +30,41 @@ public class Department {
     public void setGroups(List<Group> groups) {
 	this.groups = groups;
     }
+
+    @Override
+    public int hashCode() {
+	final int prime = 41;
+	int result = 10;
+	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+	result = prime * result + ((professors == null) ? 0 : professors.hashCode());
+	result = prime * result + ((title == null) ? 0 : title.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	Department other = (Department) obj;
+	if (groups == null) {
+	    if (other.groups != null)
+		return false;
+	} else if (!groups.equals(other.groups))
+	    return false;
+	if (professors == null) {
+	    if (other.professors != null)
+		return false;
+	} else if (!professors.equals(other.professors))
+	    return false;
+	if (title == null) {
+	    if (other.title != null)
+		return false;
+	} else if (!title.equals(other.title))
+	    return false;
+	return true;
+    }
 }

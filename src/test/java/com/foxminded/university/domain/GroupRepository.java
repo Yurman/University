@@ -5,52 +5,27 @@ import java.util.List;
 
 public class GroupRepository {
 
-    private static Group first = new Group();
-    private static Group second = new Group();
-    private static List<Group> firstGroups = new ArrayList<Group>();
-    private static List<Group> secondGroups = new ArrayList<Group>();
-
-    public static List<Group> getFirstGroups() {
-	return firstGroups;
-    }
-
-    public static void setFirstGroups(List<Group> firstGroups) {
-	GroupRepository.firstGroups = firstGroups;
-    }
-
-    public static Group getFirst() {
+    public static Group createFirstTestGroup() {
+	Group first = new Group();
 	return first;
     }
 
-    public static void setFirst(Group first) {
-	GroupRepository.first = first;
+    public static Group getFirstTestGroup() {
+	Group first = createFirstTestGroup();
+	first.setStudents(StudentRepository.getStudentsGroup());
+	return first;
     }
 
-    public static Group getSecond() {
+    public static Group getSecondTestGroup() {
+	Group second = new Group();
+	second.setStudents(StudentRepository.getStudentsGroup());
 	return second;
     }
 
-    public static void setSecond(Group second) {
-	GroupRepository.second = second;
+    public static List<Group> getTestGroups() {
+	List<Group> testGroups = new ArrayList<>();
+	testGroups.add(getFirstTestGroup());
+	return testGroups;
     }
 
-    public static List<Group> getSecondGroups() {
-	return secondGroups;
-    }
-
-    public static void setSecondGroups(List<Group> secondGroups) {
-	GroupRepository.secondGroups = secondGroups;
-    }
-
-    static void initializeGroupData() {
-
-	StudentRepository.initializeStudentData();
-
-	first.setStudents(StudentRepository.getStudents());
-	second.setStudents(StudentRepository.getStudents());
-
-	firstGroups.add(first);
-
-	secondGroups.add(second);
-    }
 }

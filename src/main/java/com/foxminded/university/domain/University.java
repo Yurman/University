@@ -51,8 +51,6 @@ public class University {
     public int hashCode() {
 	final int prime = 123;
 	int result = 37;
-	result = prime * result + ((classRooms == null) ? 0 : classRooms.hashCode());
-	result = prime * result + ((faculties == null) ? 0 : faculties.hashCode());
 	result = prime * result + ((schedule == null) ? 0 : schedule.hashCode());
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
 	return result;
@@ -67,16 +65,6 @@ public class University {
 	if (getClass() != obj.getClass())
 	    return false;
 	University other = (University) obj;
-	if (classRooms == null) {
-	    if (other.classRooms != null)
-		return false;
-	} else if (!classRooms.equals(other.classRooms))
-	    return false;
-	if (faculties == null) {
-	    if (other.faculties != null)
-		return false;
-	} else if (!faculties.equals(other.faculties))
-	    return false;
 	if (schedule == null) {
 	    if (other.schedule != null)
 		return false;
@@ -89,5 +77,4 @@ public class University {
 	    return false;
 	return true;
     }
-
 }

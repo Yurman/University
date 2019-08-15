@@ -45,7 +45,6 @@ public class Group {
 	final int prime = 51;
 	int result = 15;
 	result = prime * result + ((department == null) ? 0 : department.hashCode());
-	result = prime * result + ((students == null) ? 0 : students.hashCode());
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
 	result = prime * result + ((year == null) ? 0 : year.hashCode());
 	return result;
@@ -64,11 +63,6 @@ public class Group {
 	    if (other.department != null)
 		return false;
 	} else if (!department.equals(other.department))
-	    return false;
-	if (students == null) {
-	    if (other.students != null)
-		return false;
-	} else if (!students.equals(other.students))
 	    return false;
 	if (title == null) {
 	    if (other.title != null)

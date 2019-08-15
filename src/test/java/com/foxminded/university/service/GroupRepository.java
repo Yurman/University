@@ -1,23 +1,21 @@
-package com.foxminded.university.domain;
+package com.foxminded.university.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.foxminded.university.domain.Group;
 
 public class GroupRepository {
 
-    public static Group createFirstTestGroup() {
-	Group first = new Group();
-	return first;
-    }
-
     public static Group getFirstTestGroup() {
-	Group first = createFirstTestGroup();
+	Group first = new Group();
+	first.setTitle("MF-11");
 	first.setStudents(StudentRepository.getStudentsGroup());
 	return first;
     }
 
     public static Group getSecondTestGroup() {
 	Group second = new Group();
+	second.setTitle("MF-21");
 	second.setStudents(StudentRepository.getStudentsGroup());
 	return second;
     }
@@ -27,5 +25,4 @@ public class GroupRepository {
 	testGroups.add(getFirstTestGroup());
 	return testGroups;
     }
-
 }

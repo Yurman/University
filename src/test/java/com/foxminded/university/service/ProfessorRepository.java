@@ -1,4 +1,6 @@
-package com.foxminded.university.domain;
+package com.foxminded.university.service;
+
+import com.foxminded.university.domain.Professor;
 
 public class ProfessorRepository {
 

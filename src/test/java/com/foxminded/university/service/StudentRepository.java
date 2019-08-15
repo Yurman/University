@@ -1,7 +1,8 @@
-package com.foxminded.university.domain;
+package com.foxminded.university.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.foxminded.university.domain.Student;
 
 public class StudentRepository {
 
@@ -18,5 +19,4 @@ public class StudentRepository {
 	studentsGroup.add(getTestStudent());
 	return studentsGroup;
     }
-
 }

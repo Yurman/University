@@ -56,7 +56,6 @@ public class ScheduleItem {
 	int result = 23;
 	result = prime * result + ((classRoom == null) ? 0 : classRoom.hashCode());
 	result = prime * result + ((date == null) ? 0 : date.hashCode());
-	result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 	result = prime * result + ((lection == null) ? 0 : lection.hashCode());
 	result = prime * result + ((professor == null) ? 0 : professor.hashCode());
 	return result;
@@ -80,11 +79,6 @@ public class ScheduleItem {
 	    if (other.date != null)
 		return false;
 	} else if (!date.equals(other.date))
-	    return false;
-	if (groups == null) {
-	    if (other.groups != null)
-		return false;
-	} else if (!groups.equals(other.groups))
 	    return false;
 	if (lection == null) {
 	    if (other.lection != null)

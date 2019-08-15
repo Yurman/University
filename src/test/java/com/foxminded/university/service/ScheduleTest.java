@@ -1,12 +1,13 @@
-package com.foxminded.university.domain;
+package com.foxminded.university.service;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import com.foxminded.university.service.Schedule;
+import com.foxminded.university.domain.Group;
+import com.foxminded.university.domain.Professor;
+import com.foxminded.university.domain.ScheduleItem;
+import com.foxminded.university.domain.Student;
 
 public class ScheduleTest {
 
@@ -114,7 +115,6 @@ public class ScheduleTest {
     public final void shouldReturnEmptyScheduleForStudentOutOfPeriodTest() {
 	Schedule testSchedule = ScheduleRepository.getTestSchedule();
 	Student student = StudentRepository.getTestStudent();
-	student.setGroup(GroupRepository.getFirstTestGroup());
 
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(student, LocalDate.of(2019, 6, 1),
 		LocalDate.of(2019, 9, 27));
@@ -125,8 +125,6 @@ public class ScheduleTest {
     public final void shouldReturnEmptyScheduleForStudentWithoutClasses() {
 	Schedule testSchedule = ScheduleRepository.getTestSchedule();
 	Student otherStudent = new Student();
-	Group otherGroup = new Group();
-	otherStudent.setGroup(otherGroup);
 
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(otherStudent, LocalDate.of(2019, 1, 1),
 		LocalDate.of(2019, 3, 27));

@@ -1,9 +1,9 @@
-package com.foxminded.university.domain;
+package com.foxminded.university.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.foxminded.university.domain.ScheduleItem;
 import com.foxminded.university.service.Schedule;
 
 public class ScheduleRepository {

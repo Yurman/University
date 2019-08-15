@@ -11,6 +11,7 @@ public class StudentRepository {
 	testStudent.setAge(20);
 	testStudent.setFirstName("Petr");
 	testStudent.setLastName("Ivanov");
+	testStudent.setGroup(GroupRepository.createFirstTestGroup());
 	return testStudent;
     }
 

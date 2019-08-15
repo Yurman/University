@@ -6,9 +6,14 @@ import com.foxminded.university.domain.Group;
 
 public class GroupRepository {
 
-    public static Group getFirstTestGroup() {
+    public static Group createFirstTestGroup() {
 	Group first = new Group();
 	first.setTitle("MF-11");
+	return first;
+    }
+
+    public static Group getFirstTestGroup() {
+	Group first = createFirstTestGroup();
 	first.setStudents(StudentRepository.getStudentsGroup());
 	return first;
     }

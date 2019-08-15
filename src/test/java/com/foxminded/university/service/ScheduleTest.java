@@ -104,7 +104,6 @@ public class ScheduleTest {
 	Student student = StudentRepository.getTestStudent();
 	ScheduleItem secondItem = ScheduleRepository.getSecondItem();
 	ScheduleItem thirdItem = ScheduleRepository.getThirdItem();
-	student.setGroup(GroupRepository.getFirstTestGroup());
 
 	List<ScheduleItem> result = testSchedule.getStudentSchedule(student, LocalDate.of(2019, 2, 1),
 		LocalDate.of(2019, 2, 27));

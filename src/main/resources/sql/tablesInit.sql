@@ -1,0 +1,89 @@
+CREATE
+	TABLE IF NOT EXISTS 
+		FACULTIES(id INT NOT NULL UNIQUE PRIMARY KEY,
+		title VARCHAR (20) NOT NULL);		
+CREATE
+	TABLE IF NOT EXISTS
+		DEPARTMENTS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		title VARCHAR (20) NOT NULL,
+		faculty_id INT NOT NULL REFERENCES faculties(id) ON
+		UPDATE
+			CASCADE ON
+			DELETE
+				CASCADE);
+CREATE
+	TABLE IF NOT EXISTS
+		GROUPS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		year VARCHAR (20) NOT NULL,
+		title VARCHAR (50) NOT NULL,
+		department_id INT NOT NULL REFERENCES departments(id) ON
+		UPDATE
+			CASCADE ON
+			DELETE
+				CASCADE);
+CREATE
+	TABLE IF NOT EXISTS
+		STUDENTS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		first_name VARCHAR (20) NOT NULL,
+		last_name VARCHAR (50) NOT NULL,
+		group_id INT NOT NULL REFERENCES groups(id) ON
+		UPDATE
+			CASCADE ON
+			DELETE
+				CASCADE);
+CREATE
+	TABLE IF NOT EXISTS
+		PROFESSORS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		first_name VARCHAR (20) NOT NULL,
+		last_name VARCHAR (50) NOT NULL,		
+		position VARCHAR(45) NOT NULL,
+		degree VARCHAR (45) NOT NULL,
+		age INT NOT NULL,
+		department_id INT NOT NULL REFERENCES faculties(id) ON
+		UPDATE
+			CASCADE ON
+			DELETE
+				CASCADE);
+CREATE
+	TABLE IF NOT EXISTS
+		ROOMS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		number INT NOT NULL);
+CREATE
+	TABLE IF NOT EXISTS
+		LECTIONS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		title VARCHAR (20) NOT NULL,
+		start_time TIME NOT NULL,
+		end_time TIME NOT NULL);
+CREATE
+	TABLE IF NOT EXISTS
+		SCHEDULE_ITEMS(id INT NOT NULL UNIQUE PRIMARY KEY,
+		lection_id INT NOT NULL REFERENCES lections(id) ON
+		UPDATE
+			CASCADE ON
+			DELETE
+				CASCADE,
+				room_id INT NOT NULL REFERENCES rooms(id) ON
+		        UPDATE
+			        CASCADE ON
+			        DELETE
+				        CASCADE,
+				       	professor_id INT NOT NULL REFERENCES professors(id) ON
+		                UPDATE
+			                CASCADE ON
+			                DELETE
+				                CASCADE,
+				                item_date DATE NOT NULL);
+CREATE
+	TABLE IF NOT EXISTS
+		SCHEDULE_ITEMS_GROUPS(schedule_items_id INT NOT NULL UNIQUE PRIMARY KEY 
+				REFERENCES schedule_items(id) ON
+		        UPDATE
+			        CASCADE ON
+			        DELETE
+				        CASCADE,
+				        group_id INT NOT NULL UNIQUE  
+		                    REFERENCES groups(id) ON
+		                    UPDATE
+			                    CASCADE ON
+			                    DELETE
+				                    CASCADE);

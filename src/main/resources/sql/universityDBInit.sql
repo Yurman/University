@@ -1,2 +1,2 @@
-CREATE
-	DATABASE university; 
+CREATE DATABASE university; 
+	

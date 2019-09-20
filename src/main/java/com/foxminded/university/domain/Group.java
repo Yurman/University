@@ -5,7 +5,7 @@ import java.util.List;
 public class Group {
     private String title;
     private Department department;
-    private String year;
+    private int year;
     private List<Student> students;
 
     public String getTitle() {
@@ -24,11 +24,11 @@ public class Group {
 	this.department = department;
     }
 
-    public String getYear() {
+    public int getYear() {
 	return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
 	this.year = year;
     }
 
@@ -43,10 +43,10 @@ public class Group {
     @Override
     public int hashCode() {
 	final int prime = 51;
-	int result = 15;
+	int result = 1;
 	result = prime * result + ((department == null) ? 0 : department.hashCode());
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
-	result = prime * result + ((year == null) ? 0 : year.hashCode());
+	result = prime * result + year;
 	return result;
     }
 
@@ -69,11 +69,9 @@ public class Group {
 		return false;
 	} else if (!title.equals(other.title))
 	    return false;
-	if (year == null) {
-	    if (other.year != null)
-		return false;
-	} else if (!year.equals(other.year))
+	if (year != other.year)
 	    return false;
 	return true;
     }
+
 }

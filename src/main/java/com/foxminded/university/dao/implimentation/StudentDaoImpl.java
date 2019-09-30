@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.postgres;
+package com.foxminded.university.dao.implimentation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,12 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.foxminded.university.dao.CrudDao;
 import com.foxminded.university.dao.DaoFactory;
-import com.foxminded.university.dao.GroupDao;
-import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
 
-public class PostgresStudentDao implements StudentDao {
+public class StudentDaoImpl implements CrudDao<Student> {
 
     @Override
     public Student getById(int id) {
@@ -21,7 +20,7 @@ public class PostgresStudentDao implements StudentDao {
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
-	GroupDao group = new PostgresGroupDao();
+	GroupDaoImpl group = new GroupDaoImpl();
 
 	try {
 	    DaoFactory factory = new DaoFactory();
@@ -29,9 +28,11 @@ public class PostgresStudentDao implements StudentDao {
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, id);
 	    result = statement.executeQuery();
-	    student.setFirstName(result.getString(2));
-	    student.setLastName(result.getString(3));
-	    student.setGroup(group.getGroupById(result.getInt(4)));
+	    while (result.next()) {
+		student.setFirstName(result.getString(2));
+		student.setLastName(result.getString(3));
+		student.setGroup(group.getById(result.getInt(4)));
+	    }
 
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -50,23 +51,26 @@ public class PostgresStudentDao implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudentsByGroupId(int id) {
+    public List<Student> getAll() {
 	List<Student> students = new ArrayList<>();
-	String sql = "SELECT * FROM students WHERE group_id = '?'";
+	String sql = "SELECT * FROM groups";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
+	GroupDaoImpl group = new GroupDaoImpl();
 
 	try {
 	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
-	    statement.setInt(1, id);
 	    result = statement.executeQuery();
 	    while (result.next()) {
-		students.add((Student) result.getObject(1));
+		Student student = new Student();
+		student.setFirstName(result.getString(2));
+		student.setLastName(result.getString(3));
+		student.setGroup(group.getById(result.getInt(4)));
+		students.add(student);
 	    }
-
 	} catch (SQLException e) {
 	    e.printStackTrace();
 
@@ -84,8 +88,8 @@ public class PostgresStudentDao implements StudentDao {
     }
 
     @Override
-    public int addStudent(int id, String firstName, String lastName, int group_id) {
-	String sql = "INSERT INTO students (id, first_name, last_name, group_id) VALUES ('?', '?', '?', '?');";
+    public boolean add(Student student) {
+	String sql = "INSERT INTO students (first_name, last_name, group_id) VALUES ('?', '?', '?', '?');";
 	Connection connection = null;
 	PreparedStatement statement = null;
 
@@ -93,14 +97,13 @@ public class PostgresStudentDao implements StudentDao {
 	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
-	    statement.setInt(1, id);
-	    statement.setString(2, firstName);
-	    statement.setString(3, lastName);
-	    statement.setInt(4, group_id);
+	    statement.setString(1, student.getFirstName());
+	    statement.setString(2, student.getLastName());
+	    statement.setInt(3, student.getGroup().hashCode()); // ?
 	    statement.executeQuery();
 	} catch (SQLException e) {
 	    e.printStackTrace();
-	    return -1;
+	    return false;
 	} finally {
 	    try {
 		statement.close();
@@ -110,11 +113,11 @@ public class PostgresStudentDao implements StudentDao {
 	    }
 	}
 
-	return 1;
+	return true;
     }
 
     @Override
-    public boolean deleteStudent(int id) {
+    public boolean delete(int id) {
 	String sql = "DELETE FROM students WHERE id = '?'";
 	Connection connection = null;
 	PreparedStatement statement = null;
@@ -140,9 +143,25 @@ public class PostgresStudentDao implements StudentDao {
     }
 
     @Override
-    public boolean updateStudent(int id, String firstName, String lastName, int group_id) {
-	// TODO Auto-generated method stub
-	return false;
-    }
+    public boolean update(Student student) {
+	String sql = "UPDATE students SET  first_name = '?', last_name = '?', group_id = '?' WHERE id = '?'";
+	Connection connection = null;
+	PreparedStatement statement = null;
 
+	try {
+	    DaoFactory factory = new DaoFactory();
+	    connection = factory.getConnection();
+	    statement = connection.prepareStatement(sql);
+	    statement.setString(1, student.getFirstName());
+	    statement.setString(2, student.getLastName());
+	    statement.setInt(3, student.getGroup().hashCode());// ?
+	    statement.setInt(4, student.hashCode());// ?
+	    statement.executeQuery();
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+
+	return true;
+    }
 }

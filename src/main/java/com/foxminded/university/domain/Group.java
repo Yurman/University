@@ -1,12 +1,9 @@
 package com.foxminded.university.domain;
 
-import java.util.List;
-
 public class Group {
     private String title;
     private Department department;
     private int year;
-    private List<Student> students;
 
     public String getTitle() {
 	return title;
@@ -30,14 +27,6 @@ public class Group {
 
     public void setYear(int year) {
 	this.year = year;
-    }
-
-    public List<Student> getStudents() {
-	return students;
-    }
-
-    public void setStudents(List<Student> students) {
-	this.students = students;
     }
 
     @Override

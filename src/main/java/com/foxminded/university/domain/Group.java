@@ -1,9 +1,19 @@
 package com.foxminded.university.domain;
 
 public class Group {
+
+    private int id;
     private String title;
     private Department department;
     private int year;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public String getTitle() {
 	return title;
@@ -34,6 +44,7 @@ public class Group {
 	final int prime = 51;
 	int result = 1;
 	result = prime * result + ((department == null) ? 0 : department.hashCode());
+	result = prime * result + id;
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
 	result = prime * result + year;
 	return result;
@@ -53,6 +64,8 @@ public class Group {
 		return false;
 	} else if (!department.equals(other.department))
 	    return false;
+	if (id != other.id)
+	    return false;
 	if (title == null) {
 	    if (other.title != null)
 		return false;
@@ -62,5 +75,4 @@ public class Group {
 	    return false;
 	return true;
     }
-
 }

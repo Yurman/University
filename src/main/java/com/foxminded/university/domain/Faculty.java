@@ -1,7 +1,17 @@
 package com.foxminded.university.domain;
 
 public class Faculty {
+
+    private int id;
     private String title;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public String getTitle() {
 	return title;
@@ -14,7 +24,8 @@ public class Faculty {
     @Override
     public int hashCode() {
 	final int prime = 71;
-	int result = 7;
+	int result = 1;
+	result = prime * result + id;
 	result = prime * result + ((title == null) ? 0 : title.hashCode());
 	return result;
     }
@@ -28,6 +39,8 @@ public class Faculty {
 	if (getClass() != obj.getClass())
 	    return false;
 	Faculty other = (Faculty) obj;
+	if (id != other.id)
+	    return false;
 	if (title == null) {
 	    if (other.title != null)
 		return false;

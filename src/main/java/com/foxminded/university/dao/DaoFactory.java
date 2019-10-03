@@ -1,20 +1,21 @@
 package com.foxminded.university.dao;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class DaoFactory {
-    public Connection getConnection() {
-	FileInputStream fileInput = null;
-	Properties dbProperty = new Properties();
+   
+    private Properties readProperties(String propertiesFileName) {
+	InputStream fileInput = null;
+	Properties dbProperties = new Properties();
 
 	try {
-	    fileInput = new FileInputStream("src/main/resources/db.properties");
-	    dbProperty.load(fileInput);
+	    fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName);
+	    dbProperties.load(fileInput);
 
 	} catch (IOException e) {
 	    e.printStackTrace();
@@ -25,20 +26,26 @@ public class DaoFactory {
 		e.printStackTrace();
 	    }
 	}
+	return dbProperties;
 
+    }
+
+    public Connection getConnection() {
+
+	Properties dbProperties = readProperties("db.properties");
 	try {
-	    Class.forName(dbProperty.getProperty("db.driver"));
+	    Class.forName(dbProperties.getProperty("db.driver"));
 	} catch (ClassNotFoundException e) {
 	    e.printStackTrace();
 	}
 
 	Properties connectionProperty = new Properties();
-	connectionProperty.setProperty("user", dbProperty.getProperty("db.user"));
-	connectionProperty.setProperty("password", dbProperty.getProperty("db.password"));
+	connectionProperty.setProperty("user", dbProperties.getProperty("db.user"));
+	connectionProperty.setProperty("password", "password");
 	Connection connection = null;
 
 	try {
-	    connection = DriverManager.getConnection(dbProperty.getProperty("db.url"), connectionProperty);
+	    connection = DriverManager.getConnection(dbProperties.getProperty("db.url"), connectionProperty);
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}

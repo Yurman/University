@@ -1,7 +1,17 @@
 package com.foxminded.university.domain;
 
 public class Student extends Person {
+
+    private int id;
     private Group group;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public Group getGroup() {
 	return group;
@@ -13,9 +23,10 @@ public class Student extends Person {
 
     @Override
     public int hashCode() {
-	final int prime = 52;
+	final int prime = 31;
 	int result = super.hashCode();
 	result = prime * result + ((group == null) ? 0 : group.hashCode());
+	result = prime * result + id;
 	return result;
     }
 
@@ -33,7 +44,8 @@ public class Student extends Person {
 		return false;
 	} else if (!group.equals(other.group))
 	    return false;
+	if (id != other.id)
+	    return false;
 	return true;
     }
-
 }

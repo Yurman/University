@@ -2,9 +2,18 @@ package com.foxminded.university.domain;
 
 public class Professor extends Person {
 
+    private int id;
     private String degree;
     private String position;
     private Department department;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public String getDegree() {
 	return degree;
@@ -36,6 +45,7 @@ public class Professor extends Person {
 	int result = super.hashCode();
 	result = prime * result + ((degree == null) ? 0 : degree.hashCode());
 	result = prime * result + ((department == null) ? 0 : department.hashCode());
+	result = prime * result + id;
 	result = prime * result + ((position == null) ? 0 : position.hashCode());
 	return result;
     }
@@ -58,6 +68,8 @@ public class Professor extends Person {
 	    if (other.department != null)
 		return false;
 	} else if (!department.equals(other.department))
+	    return false;
+	if (id != other.id)
 	    return false;
 	if (position == null) {
 	    if (other.position != null)

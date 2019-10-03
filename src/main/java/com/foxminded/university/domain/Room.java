@@ -1,7 +1,17 @@
 package com.foxminded.university.domain;
 
 public class Room {
+    
+    private int id;
     private int number;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public int getNumber() {
 	return number;
@@ -13,8 +23,9 @@ public class Room {
 
     @Override
     public int hashCode() {
-	final int prime = 66;
-	int result = 97;
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + id;
 	result = prime * result + number;
 	return result;
     }
@@ -28,6 +39,8 @@ public class Room {
 	if (getClass() != obj.getClass())
 	    return false;
 	Room other = (Room) obj;
+	if (id != other.id)
+	    return false;
 	if (number != other.number)
 	    return false;
 	return true;

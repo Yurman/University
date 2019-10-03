@@ -4,11 +4,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ScheduleItem {
+
+    private int id;
     private Lection lection;
     private Professor professor;
     private List<Group> groups;
     private LocalDate date;
     private Room classRoom;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public Lection getLection() {
 	return lection;
@@ -52,10 +62,11 @@ public class ScheduleItem {
 
     @Override
     public int hashCode() {
-	final int prime = 43;
-	int result = 23;
+	final int prime = 31;
+	int result = 1;
 	result = prime * result + ((classRoom == null) ? 0 : classRoom.hashCode());
 	result = prime * result + ((date == null) ? 0 : date.hashCode());
+	result = prime * result + id;
 	result = prime * result + ((lection == null) ? 0 : lection.hashCode());
 	result = prime * result + ((professor == null) ? 0 : professor.hashCode());
 	return result;
@@ -79,6 +90,8 @@ public class ScheduleItem {
 	    if (other.date != null)
 		return false;
 	} else if (!date.equals(other.date))
+	    return false;
+	if (id != other.id)
 	    return false;
 	if (lection == null) {
 	    if (other.lection != null)

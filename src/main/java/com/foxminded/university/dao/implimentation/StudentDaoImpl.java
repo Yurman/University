@@ -7,20 +7,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.foxminded.university.dao.CrudDao;
 import com.foxminded.university.dao.DaoFactory;
+import com.foxminded.university.dao.StudentDao;
+import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Faculty;
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.domain.Student;
 
-public class StudentDaoImpl implements CrudDao<Student> {
+public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
 	Student student = new Student();
-	String sql = "SELECT * FROM students WHERE id = '?'";
+	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id WHERE students.id = '?';";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
-	GroupDaoImpl group = new GroupDaoImpl();
 
 	try {
 	    DaoFactory factory = new DaoFactory();
@@ -28,10 +30,24 @@ public class StudentDaoImpl implements CrudDao<Student> {
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, id);
 	    result = statement.executeQuery();
+
 	    while (result.next()) {
+		student.setId(id);
 		student.setFirstName(result.getString(2));
 		student.setLastName(result.getString(3));
-		student.setGroup(group.getById(result.getInt(4)));
+		Group group = new Group();
+		group.setId(result.getInt(5));
+		group.setYear(result.getInt(6));
+		group.setTitle(result.getString(7));
+		Department department = new Department();
+		department.setId(result.getInt(9));
+		department.setTitle(result.getString(10));
+		Faculty faculty = new Faculty();
+		faculty.setId(result.getInt(12));
+		faculty.setTitle(result.getString(13));
+		department.setFaculty(faculty);
+		group.setDepartment(department);
+		student.setGroup(group);
 	    }
 
 	} catch (SQLException e) {
@@ -53,23 +69,35 @@ public class StudentDaoImpl implements CrudDao<Student> {
     @Override
     public List<Student> getAll() {
 	List<Student> students = new ArrayList<>();
-	String sql = "SELECT * FROM groups";
+	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
-	GroupDaoImpl group = new GroupDaoImpl();
 
 	try {
 	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    result = statement.executeQuery();
+
 	    while (result.next()) {
 		Student student = new Student();
+		student.setId(result.getInt(1));
 		student.setFirstName(result.getString(2));
 		student.setLastName(result.getString(3));
-		student.setGroup(group.getById(result.getInt(4)));
-		students.add(student);
+		Group group = new Group();
+		group.setId(result.getInt(5));
+		group.setYear(result.getInt(6));
+		group.setTitle(result.getString(7));
+		Department department = new Department();
+		department.setId(result.getInt(9));
+		department.setTitle(result.getString(10));
+		Faculty faculty = new Faculty();
+		faculty.setId(result.getInt(12));
+		faculty.setTitle(result.getString(13));
+		department.setFaculty(faculty);
+		group.setDepartment(department);
+		student.setGroup(group);
 	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -99,7 +127,7 @@ public class StudentDaoImpl implements CrudDao<Student> {
 	    statement = connection.prepareStatement(sql);
 	    statement.setString(1, student.getFirstName());
 	    statement.setString(2, student.getLastName());
-	    statement.setInt(3, student.getGroup().hashCode()); // ?
+	    statement.setInt(3, student.getGroup().getId());
 	    statement.executeQuery();
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -154,8 +182,8 @@ public class StudentDaoImpl implements CrudDao<Student> {
 	    statement = connection.prepareStatement(sql);
 	    statement.setString(1, student.getFirstName());
 	    statement.setString(2, student.getLastName());
-	    statement.setInt(3, student.getGroup().hashCode());// ?
-	    statement.setInt(4, student.hashCode());// ?
+	    statement.setInt(3, student.getGroup().getId());
+	    statement.setInt(4, student.getId());
 	    statement.executeQuery();
 	} catch (SQLException e) {
 	    e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.foxminded.university.domain;
 
+import com.foxminded.university.dao.impl.StudentDaoImpl;
 import com.foxminded.university.service.Schedule;
 
 public class University {
@@ -24,7 +25,10 @@ public class University {
     }
 
     public static void main(String[] args) {
-
+	Student student = new Student();
+	StudentDaoImpl studentDao = new StudentDaoImpl();
+	student = studentDao.getById(14);
+	System.out.println(student.getFirstName());
     }
 
     @Override

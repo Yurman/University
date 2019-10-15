@@ -13,15 +13,13 @@ public class GroupRepository {
     }
 
     public static Group getFirstTestGroup() {
-	Group first = createFirstTestGroup();
-	first.setStudents(StudentRepository.getStudentsGroup());
+	Group first = createFirstTestGroup();	
 	return first;
     }
 
     public static Group getSecondTestGroup() {
 	Group second = new Group();
-	second.setTitle("MF-21");
-	second.setStudents(StudentRepository.getStudentsGroup());
+	second.setTitle("MF-21");	
 	return second;
     }
 

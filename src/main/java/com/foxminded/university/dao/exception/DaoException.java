@@ -1,10 +1,10 @@
-package com.foxminded.university.dao;
+package com.foxminded.university.dao.exception;
 
 public class DaoException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    DaoException(String message) {
+    public DaoException(String message) {
 	super(message);
     }
 

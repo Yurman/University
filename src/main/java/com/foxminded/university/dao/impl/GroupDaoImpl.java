@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.implimentation;
+package com.foxminded.university.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,36 +9,40 @@ import java.util.List;
 
 import com.foxminded.university.dao.DaoFactory;
 import com.foxminded.university.dao.GroupDao;
+import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.domain.Group;
 
 public class GroupDaoImpl implements GroupDao {
+    private DaoFactory factory = new DaoFactory();
 
     public Group getById(int id) {
 	Group group = new Group();
-	String sql = "SELECT * FROM groups JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id WHERE groups.id = '?';";
+	String sql = "SELECT * FROM groups JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id WHERE groups.id = ?;";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
 
 	try {
-	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, id);
 	    result = statement.executeQuery();
 
 	    while (result.next()) {
-		group.setId(id);
-		group.setYear(result.getInt(2));
-		group.setTitle(result.getString(3));
+		group.setId(result.getInt("id"));
+		group.setYear(result.getInt("year"));
+		group.setTitle(result.getString("title"));
+
 		Department department = new Department();
-		department.setId(result.getInt(5));
-		department.setTitle(result.getString(6));
+		department.setId(result.getInt("id"));
+		department.setTitle(result.getString("title"));
+
 		Faculty faculty = new Faculty();
-		faculty.setId(result.getInt(8));
-		faculty.setTitle(result.getString(9));
+		faculty.setId(result.getInt("id"));
+		faculty.setTitle(result.getString("title"));
+
 		department.setFaculty(faculty);
 		group.setDepartment(department);
 	    }
@@ -54,7 +58,6 @@ public class GroupDaoImpl implements GroupDao {
 		e.printStackTrace();
 	    }
 	}
-
 	return group;
     }
 
@@ -67,29 +70,30 @@ public class GroupDaoImpl implements GroupDao {
 	ResultSet result = null;
 
 	try {
-	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    result = statement.executeQuery();
 
 	    while (result.next()) {
 		Group group = new Group();
-		group.setId(result.getInt(1));
-		group.setYear(result.getInt(2));
-		group.setTitle(result.getString(3));
+		group.setId(result.getInt("id"));
+		group.setYear(result.getInt("year"));
+		group.setTitle(result.getString("title"));
+
 		Department department = new Department();
-		department.setId(result.getInt(5));
-		department.setTitle(result.getString(6));
+		department.setId(result.getInt("id"));
+		department.setTitle(result.getString("title"));
+
 		Faculty faculty = new Faculty();
-		faculty.setId(result.getInt(8));
-		faculty.setTitle(result.getString(9));
+		faculty.setId(result.getInt("id"));
+		faculty.setTitle(result.getString("title"));
+
 		department.setFaculty(faculty);
 		group.setDepartment(department);
 		groups.add(group);
 	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
-
 	} finally {
 	    try {
 		result.close();
@@ -99,72 +103,87 @@ public class GroupDaoImpl implements GroupDao {
 		e.printStackTrace();
 	    }
 	}
-
 	return groups;
     }
 
     @Override
-    public boolean add(Group group) {
-	String sql = "INSERT INTO groups (id, year, title, department_id) VALUES ('?', '?', '?', '?');";
+    public Group add(Group group) {
+	String sql = "INSERT INTO groups (id, year, title, department_id) VALUES (?, ?, ?, ?);";
 	Connection connection = null;
 	PreparedStatement statement = null;
 
 	try {
-	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, group.hashCode());
 	    statement.setInt(2, group.getYear());
 	    statement.setString(3, group.getTitle());
 	    statement.setInt(4, group.getDepartment().getId());
-	    statement.executeQuery();
+	    statement.execute();
 	} catch (SQLException e) {
 	    e.printStackTrace();
-	    return false;
+	    throw new DaoException("Error while adding");
+	} finally {
+	    try {
+		statement.close();
+		connection.close();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
-
-	return true;
+	return getById(group.getId());
     }
 
     @Override
     public boolean delete(int id) {
-	String sql = "DELETE FROM groups WHERE id = '?'";
+	String sql = "DELETE FROM groups WHERE id = ?";
 	Connection connection = null;
 	PreparedStatement statement = null;
 
 	try {
-	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, id);
-	    statement.executeQuery();
+	    statement.execute();
 	} catch (SQLException e) {
 	    e.printStackTrace();
-	    return false;
+	    throw new DaoException("Error while deleting");
+	} finally {
+	    try {
+		statement.close();
+		connection.close();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
 	return true;
     }
 
     @Override
-    public boolean update(Group group) {
+    public Group update(Group group) {
 	String sql = "UPDATE groups SET  year = '?', title = '?', department_id = '?' WHERE id = '?'";
 	Connection connection = null;
 	PreparedStatement statement = null;
 
 	try {
-	    DaoFactory factory = new DaoFactory();
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, group.getYear());
 	    statement.setString(2, group.getTitle());
 	    statement.setInt(3, group.getDepartment().getId());
-	    statement.setInt(4, group.hashCode());
-	    statement.executeQuery();
+	    statement.setInt(4, group.getId());
+	    statement.execute();
 	} catch (SQLException e) {
 	    e.printStackTrace();
-	    return false;
+	    throw new DaoException("Error while updating");
+	} finally {
+	    try {
+		statement.close();
+		connection.close();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
 	}
-
-	return true;
+	return getById(group.getId());
     }
 }

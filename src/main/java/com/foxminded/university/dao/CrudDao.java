@@ -7,10 +7,10 @@ public interface CrudDao<T> {
 
     public List<T> getAll();
 
-    public boolean add(T t);
+    public T add(T t);
 
     public boolean delete(int id);
 
-    public boolean update(T t);
+    public T update(T t);
 
 }

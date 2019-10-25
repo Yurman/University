@@ -30,22 +30,13 @@ public class DaoFactory {
 	return connection;
     }
 
-    private Properties readProperties(String propertiesFileName) {
-	InputStream fileInput = null;
+    public Properties readProperties(String propertiesFileName) {
 	Properties dbProperties = new Properties();
 
-	try {
-	    fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName);
+	try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
 	    dbProperties.load(fileInput);
-
 	} catch (IOException e) {
 	    e.printStackTrace();
-	} finally {
-	    try {
-		fileInput.close();
-	    } catch (IOException e) {
-		e.printStackTrace();
-	    }
 	}
 	return dbProperties;
     }

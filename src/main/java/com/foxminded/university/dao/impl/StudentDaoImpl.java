@@ -20,40 +20,21 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-	Student student = new Student();
-	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id WHERE students.id = ?;";
+	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id "
+		+ "JOIN departments ON groups.department_id = departments.id "
+		+ "JOIN faculties ON departments.faculty_id = faculties.id "
+		+ "WHERE students.id = ?;";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
+	Student student = new Student();
 
 	try {
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    statement.setInt(1, id);
 	    result = statement.executeQuery();
-
-	    while (result.next()) {
-		student.setId(result.getInt("id"));
-		student.setFirstName(result.getString("first_name"));
-		student.setLastName(result.getString("last_name"));
-
-		Group group = new Group();
-		group.setId(result.getInt("id"));
-		group.setYear(result.getInt("year"));
-		group.setTitle(result.getString("title"));
-
-		Department department = new Department();
-		department.setId(result.getInt("id"));
-		department.setTitle(result.getString("title"));
-
-		Faculty faculty = new Faculty();
-		faculty.setId(result.getInt("id"));
-		faculty.setTitle(result.getString("title"));
-
-		department.setFaculty(faculty);
-		group.setDepartment(department);
-		student.setGroup(group);
-	    }
+	    student = assembleStudents(result).get(0);
 
 	} catch (SQLException e) {
 	    e.printStackTrace();
@@ -73,7 +54,8 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
 	List<Student> students = new ArrayList<>();
-	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id JOIN departments ON groups.department_id = departments.id JOIN faculties ON departments.faculty_id = faculties.id";
+	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id "
+		+ "JOIN departments ON groups.department_id = departments.id;";
 	Connection connection = null;
 	PreparedStatement statement = null;
 	ResultSet result = null;
@@ -82,32 +64,11 @@ public class StudentDaoImpl implements StudentDao {
 	    connection = factory.getConnection();
 	    statement = connection.prepareStatement(sql);
 	    result = statement.executeQuery();
+	    students = assembleStudents(result);
 
-	    while (result.next()) {
-		Student student = new Student();
-		student.setId(result.getInt("id"));
-		student.setFirstName(result.getString("first_name"));
-		student.setLastName(result.getString("last_name"));
+	} catch (
 
-		Group group = new Group();
-		group.setId(result.getInt("id"));
-		group.setYear(result.getInt("year"));
-		group.setTitle(result.getString("title"));
-
-		Department department = new Department();
-		department.setId(result.getInt("id"));
-		department.setTitle(result.getString("title"));
-
-		Faculty faculty = new Faculty();
-		faculty.setId(result.getInt("id"));
-		faculty.setTitle(result.getString("title"));
-
-		department.setFaculty(faculty);
-		group.setDepartment(department);
-		student.setGroup(group);
-		students.add(student);
-	    }
-	} catch (SQLException e) {
+	SQLException e) {
 	    e.printStackTrace();
 
 	} finally {
@@ -176,7 +137,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student update(Student student) {
-	String sql = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?";
+	String sql = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
 	Connection connection = null;
 	PreparedStatement statement = null;
 
@@ -199,6 +160,41 @@ public class StudentDaoImpl implements StudentDao {
 		e.printStackTrace();
 	    }
 	}
-	return getById(student.getId());
+	return student;
+    }
+
+    private List<Student> assembleStudents(ResultSet result) {
+
+	List<Student> students = new ArrayList<>();
+	try {
+	    while (result.next()) {
+		Student student = new Student();
+		student.setId(result.getInt("id"));
+
+		student.setFirstName(result.getString("first_name"));
+		student.setLastName(result.getString("last_name"));
+
+		Group group = new Group();
+		group.setId(result.getInt("id"));
+		group.setYear(result.getInt("year"));
+		group.setTitle(result.getString("title"));
+
+		Department department = new Department();
+		department.setId(result.getInt("id"));
+		department.setTitle(result.getString("title"));
+
+		Faculty faculty = new Faculty();
+		faculty.setId(result.getInt("id"));
+		faculty.setTitle(result.getString("title"));
+
+		department.setFaculty(faculty);
+		group.setDepartment(department);
+		student.setGroup(group);
+		students.add(student);
+	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+	return students;
     }
 }

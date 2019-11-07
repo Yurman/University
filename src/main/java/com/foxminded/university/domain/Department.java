@@ -50,15 +50,19 @@ public class Department {
 	    return false;
 	Department other = (Department) obj;
 	if (faculty == null) {
-	    if (other.faculty != null)
+	    if (other.faculty != null) {
 		return false;
-	} else if (!faculty.equals(other.faculty))
+	    }
+	} else if (!faculty.equals(other.faculty)) {
 	    return false;
-	if (id != other.id)
+	}
+	if (id != other.id) {
 	    return false;
+	}
 	if (title == null) {
-	    if (other.title != null)
+	    if (other.title != null) {
 		return false;
+	    }
 	} else if (!title.equals(other.title))
 	    return false;
 	return true;

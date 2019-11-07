@@ -60,15 +60,17 @@ public class Group {
 	    return false;
 	Group other = (Group) obj;
 	if (department == null) {
-	    if (other.department != null)
+	    if (other.department != null) {
 		return false;
+	    }
 	} else if (!department.equals(other.department))
 	    return false;
 	if (id != other.id)
 	    return false;
 	if (title == null) {
-	    if (other.title != null)
+	    if (other.title != null) {
 		return false;
+	    }
 	} else if (!title.equals(other.title))
 	    return false;
 	if (year != other.year)

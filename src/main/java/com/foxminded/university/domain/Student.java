@@ -40,8 +40,9 @@ public class Student extends Person {
 	    return false;
 	Student other = (Student) obj;
 	if (group == null) {
-	    if (other.group != null)
+	    if (other.group != null) {
 		return false;
+	    }
 	} else if (!group.equals(other.group))
 	    return false;
 	if (id != other.id)

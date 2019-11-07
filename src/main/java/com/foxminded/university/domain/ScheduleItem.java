@@ -82,25 +82,31 @@ public class ScheduleItem {
 	    return false;
 	ScheduleItem other = (ScheduleItem) obj;
 	if (classRoom == null) {
-	    if (other.classRoom != null)
+	    if (other.classRoom != null) {
 		return false;
-	} else if (!classRoom.equals(other.classRoom))
+	    }
+	} else if (!classRoom.equals(other.classRoom)) {
 	    return false;
+	}
 	if (date == null) {
-	    if (other.date != null)
+	    if (other.date != null) {
 		return false;
+	    }
 	} else if (!date.equals(other.date))
 	    return false;
 	if (id != other.id)
 	    return false;
 	if (lection == null) {
-	    if (other.lection != null)
+	    if (other.lection != null) {
 		return false;
-	} else if (!lection.equals(other.lection))
+	    }
+	} else if (!lection.equals(other.lection)) {
 	    return false;
+	}
 	if (professor == null) {
-	    if (other.professor != null)
+	    if (other.professor != null) {
 		return false;
+	    }
 	} else if (!professor.equals(other.professor))
 	    return false;
 	return true;

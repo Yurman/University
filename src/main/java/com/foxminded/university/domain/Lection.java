@@ -62,20 +62,23 @@ public class Lection {
 	    return false;
 	Lection other = (Lection) obj;
 	if (endTime == null) {
-	    if (other.endTime != null)
+	    if (other.endTime != null) {
 		return false;
+	    }
 	} else if (!endTime.equals(other.endTime))
 	    return false;
 	if (id != other.id)
 	    return false;
 	if (startTime == null) {
-	    if (other.startTime != null)
+	    if (other.startTime != null) {
 		return false;
+	    }
 	} else if (!startTime.equals(other.startTime))
 	    return false;
 	if (title == null) {
-	    if (other.title != null)
+	    if (other.title != null) {
 		return false;
+	    }
 	} else if (!title.equals(other.title))
 	    return false;
 	return true;

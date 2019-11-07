@@ -1,41 +1,51 @@
 package com.foxminded.university.dao.impl;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.flywaydb.core.Flyway;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.foxminded.university.dao.DaoFactory;
+import com.foxminded.university.domain.Student;
 
 public class StudentDaoImplTest {
 
     private StudentDaoImpl studentDao = new StudentDaoImpl();
-    private DaoFactory factory = new DaoFactory();
-    Flyway flyway = new Flyway();
+    private TestDataInitializer testData = new TestDataInitializer();
+    private Flyway flyway = TestDataInitializer.initializeFlyway();
 
     @Before
     public void setUp() throws Exception {
-
-	BasicDataSource dataSource = new BasicDataSource();
-	dataSource.setDriverClassName("org.postgresql.Driver");
-	dataSource.setUrl("jdbc:postgresql://localhost:5433/test_university");
-	dataSource.setUsername("admin");
-	dataSource.setPassword("password");
-	flyway.setDataSource(dataSource);
-	flyway.setSchemas("test_university");
 	flyway.clean();
 	flyway.migrate();
-
+	testData.initializeTestData();
     }
 
     @Test
     public void testAdd() throws Exception {
+	
+    }
+    
+    @Test
+    public void testGetAll() throws Exception {
+	List<Student> students = studentDao.getAll();
+	assertTrue(students.size() > 0);
+	assertTrue(students.size() == 22);
     }
 
     @Test
     public void testDelete() throws Exception {
-	studentDao.delete(19);
+	studentDao.delete(289);
+	List<Student> students = studentDao.getAll();	
+	assertTrue(students.size() == 22);
+    }
 
+    @After
+    public void tearDown() throws Exception {
+	flyway.clean();
     }
 }

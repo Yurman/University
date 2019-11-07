@@ -17,33 +17,31 @@ import com.foxminded.university.domain.Student;
 
 public class StudentDaoImpl implements StudentDao {
     private DaoFactory factory = new DaoFactory();
+    private static final int DEFAULT_GROUP_ID = 0;
 
     @Override
     public Student getById(int id) {
-	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id "
+	String sql = "SELECT * FROM students LEFT JOIN groups ON students.group_id = groups.id "
 		+ "JOIN departments ON groups.department_id = departments.id "
-		+ "JOIN faculties ON departments.faculty_id = faculties.id "
-		+ "WHERE students.id = ?;";
-	Connection connection = null;
-	PreparedStatement statement = null;
+		+ "JOIN faculties ON departments.faculty_id = faculties.id " + "WHERE students.id = ?;";
 	ResultSet result = null;
 	Student student = new Student();
 
-	try {
-	    connection = factory.getConnection();
-	    statement = connection.prepareStatement(sql);
+	try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);) {
+
 	    statement.setInt(1, id);
 	    result = statement.executeQuery();
-	    student = assembleStudents(result).get(0);
-
+	    while (result.next()) {
+		student = extractStudent(result);
+	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
-
 	} finally {
 	    try {
-		result.close();
-		statement.close();
-		connection.close();
+		if (result != null) {
+		    result.close();
+		}
 	    } catch (SQLException e) {
 		e.printStackTrace();
 	    }
@@ -54,147 +52,123 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
 	List<Student> students = new ArrayList<>();
-	String sql = "SELECT * FROM students JOIN groups ON students.group_id = groups.id "
+	String sql = "SELECT * FROM students LEFT JOIN groups ON students.group_id = groups.id "
 		+ "JOIN departments ON groups.department_id = departments.id;";
-	Connection connection = null;
-	PreparedStatement statement = null;
-	ResultSet result = null;
 
-	try {
-	    connection = factory.getConnection();
-	    statement = connection.prepareStatement(sql);
-	    result = statement.executeQuery();
-	    students = assembleStudents(result);
+	try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet result = statement.executeQuery();) {
 
-	} catch (
-
-	SQLException e) {
-	    e.printStackTrace();
-
-	} finally {
-	    try {
-		result.close();
-		statement.close();
-		connection.close();
-	    } catch (SQLException e) {
-		e.printStackTrace();
+	    while (result.next()) {
+		students.add(extractStudent(result));
 	    }
+	} catch (SQLException e) {
+	    e.printStackTrace();
 	}
 	return students;
     }
 
     @Override
     public Student add(Student student) {
-	String sql = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?);";
-	Connection connection = null;
-	PreparedStatement statement = null;
+	String sql = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?) RETURNING id;";
+	ResultSet result = null;
 
-	try {
-	    connection = factory.getConnection();
-	    statement = connection.prepareStatement(sql);
+	try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);) {
+
 	    statement.setString(1, student.getFirstName());
 	    statement.setString(2, student.getLastName());
-	    statement.setInt(3, student.getGroup().getId());
-	    statement.execute();
+	    if (student.getGroup() != null) {
+		statement.setInt(3, student.getGroup().getId());
+	    } else {
+		statement.setInt(3, DEFAULT_GROUP_ID);
+	    }
+	    result = statement.executeQuery();
+	    if (result.next()) {
+		student.setId(result.getInt("id"));
+	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    throw new DaoException("Error while adding");
 	} finally {
 	    try {
-		statement.close();
-		connection.close();
+		if (result != null) {
+		    result.close();
+		}
 	    } catch (SQLException e) {
 		e.printStackTrace();
-	    }
+	    } 
 	}
-	return getById(student.getId());
+	return student;
     }
 
     @Override
     public boolean delete(int id) {
-	String sql = "DELETE FROM students WHERE id = ?";
-	Connection connection = null;
-	PreparedStatement statement = null;
+	String sql = "DELETE FROM students WHERE id = ?;";
 
-	try {
-	    connection = factory.getConnection();
-	    statement = connection.prepareStatement(sql);
+	try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);) {
+
 	    statement.setInt(1, id);
 	    statement.execute();
+	    return true;
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    throw new DaoException("Error while deleting");
-	} finally {
-	    try {
-		statement.close();
-		connection.close();
-	    } catch (SQLException e) {
-		e.printStackTrace();
-	    }
-	}
-	return true;
+	}	
     }
 
     @Override
     public Student update(Student student) {
 	String sql = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
-	Connection connection = null;
-	PreparedStatement statement = null;
 
-	try {
-	    connection = factory.getConnection();
-	    statement = connection.prepareStatement(sql);
+	try (Connection connection = factory.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);) {
+
 	    statement.setString(1, student.getFirstName());
 	    statement.setString(2, student.getLastName());
-	    statement.setInt(3, student.getGroup().getId());
+	    if (student.getGroup() != null) {
+		statement.setInt(3, student.getGroup().getId());
+	    } else {
+		statement.setInt(3, DEFAULT_GROUP_ID);
+	    }
 	    statement.setInt(4, student.getId());
 	    statement.executeUpdate();
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    throw new DaoException("Error while updating");
-	} finally {
-	    try {
-		statement.close();
-		connection.close();
-	    } catch (SQLException e) {
-		e.printStackTrace();
-	    }
 	}
 	return student;
     }
 
-    private List<Student> assembleStudents(ResultSet result) {
+    private Student extractStudent(ResultSet result) {
+	Student student = new Student();
 
-	List<Student> students = new ArrayList<>();
 	try {
-	    while (result.next()) {
-		Student student = new Student();
-		student.setId(result.getInt("id"));
+	    student.setId(result.getInt("id"));
+	    student.setFirstName(result.getString("first_name"));
+	    student.setLastName(result.getString("last_name"));
 
-		student.setFirstName(result.getString("first_name"));
-		student.setLastName(result.getString("last_name"));
+	    Group group = new Group();
+	    group.setId(result.getInt("groups.id"));
+	    group.setYear(result.getInt("groups.year"));
+	    group.setTitle(result.getString("groups.title"));
 
-		Group group = new Group();
-		group.setId(result.getInt("id"));
-		group.setYear(result.getInt("year"));
-		group.setTitle(result.getString("title"));
+	    Department department = new Department();
+	    department.setId(result.getInt("departments.id"));
+	    department.setTitle(result.getString("departments.title"));
 
-		Department department = new Department();
-		department.setId(result.getInt("id"));
-		department.setTitle(result.getString("title"));
+	    Faculty faculty = new Faculty();
+	    faculty.setId(result.getInt("faculties.id"));
+	    faculty.setTitle(result.getString("faculties.title"));
 
-		Faculty faculty = new Faculty();
-		faculty.setId(result.getInt("id"));
-		faculty.setTitle(result.getString("title"));
+	    department.setFaculty(faculty);
+	    group.setDepartment(department);
+	    student.setGroup(group);
 
-		department.setFaculty(faculty);
-		group.setDepartment(department);
-		student.setGroup(group);
-		students.add(student);
-	    }
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	}
-	return students;
+	return student;
     }
 }

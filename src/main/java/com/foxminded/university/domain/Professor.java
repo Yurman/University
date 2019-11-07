@@ -60,20 +60,23 @@ public class Professor extends Person {
 	    return false;
 	Professor other = (Professor) obj;
 	if (degree == null) {
-	    if (other.degree != null)
+	    if (other.degree != null) {
 		return false;
+	    }
 	} else if (!degree.equals(other.degree))
 	    return false;
 	if (department == null) {
-	    if (other.department != null)
+	    if (other.department != null) {
 		return false;
+	    }
 	} else if (!department.equals(other.department))
 	    return false;
 	if (id != other.id)
 	    return false;
 	if (position == null) {
-	    if (other.position != null)
+	    if (other.position != null) {
 		return false;
+	    }
 	} else if (!position.equals(other.position))
 	    return false;
 	return true;

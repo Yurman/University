@@ -1,40 +1,40 @@
 INSERT
 	INTO
-		test_university.faculties (title)
+		faculties (title)
 	VALUES ('Pysics');
 INSERT
 	INTO
-		test_university.faculties (title)
+		faculties (title)
 	VALUES ('Math');
 INSERT
 	INTO
-		test_university.departments (title, faculty_id)
+		departments (title, faculty_id)
 	VALUES ('Math and Physics', '1');
 INSERT
 	INTO
-		test_university.departments (title, faculty_id)
+		departments (title, faculty_id)
 	VALUES ('Optic', '1');
 	INSERT
 	INTO
-		test_university.departments (title, faculty_id)
+		departments (title, faculty_id)
 	VALUES ('Statistic', '2');
 INSERT
 	INTO
-		test_university.departments (title, faculty_id)
+		departments (title, faculty_id)
 	VALUES ('Geometry', '2');
 	
 INSERT
 	INTO
-		test_university.groups (title, year, department_id)
+		groups (title, year, department_id)
 	VALUES ('MP-11', '1', '1');
 INSERT
 	INTO
-		test_university.groups (title, year, department_id)
+		groups (title, year, department_id)
 	VALUES ('MS-21','2', '3');
 	
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Anatoliy',
 	'Shyrokov',
@@ -42,7 +42,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Ivan',
 	'Antonov',
@@ -50,7 +50,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Dmitry',
 	'Petrov',
@@ -58,7 +58,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Petr',
 	'Sidorov',
@@ -66,7 +66,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Nikolai',
 	'Ivanov',
@@ -74,7 +74,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Sergei',
 	'Ivanov',
@@ -82,7 +82,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Alexander',
 	'Kovalev',
@@ -90,7 +90,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Alexander',
 	'Lebedev',
@@ -98,7 +98,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Semen',
 	'Pupkin',
@@ -106,7 +106,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Sergei',
 	'Pugovkin',
@@ -114,7 +114,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Nikolai',
 	'Prokhorov',
@@ -122,7 +122,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Sergei',
 	'Denisov',
@@ -130,7 +130,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Dmitri',
 	'Petrov',
@@ -138,7 +138,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Alexei',
 	'Sidorov',
@@ -146,7 +146,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Ivan',
 	'Medvedev',
@@ -154,7 +154,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Sergei',
 	'Kuznetsov',
@@ -162,7 +162,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Maxim',
 	'Sergeev',
@@ -170,7 +170,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Alexander',
 	'Ivanov',
@@ -178,7 +178,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Dmitri',
 	'Pupkin',
@@ -186,7 +186,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Sergei',
 	'Pyatkin',
@@ -194,7 +194,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Vasiliy',
 	'Petrov',
@@ -202,7 +202,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Alexei',
 	'Morozov',
@@ -210,7 +210,7 @@ INSERT
 
 INSERT
 	INTO
-		test_university.STUDENTS (first_name,
+		STUDENTS (first_name,
 		last_name, group_id)
 	VALUES ('Atem',
 	'Komov',

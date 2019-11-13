@@ -1,6 +1,5 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -26,22 +25,42 @@ public class StudentDaoImplTest {
     }
 
     @Test
-    public void testAdd() throws Exception {
-	
+    public void shouldGetStudentById() throws Exception {
+	Student student = studentDao.getById(1);
+	assertTrue(student.getFirstName().equals("Anatoliy"));
+	assertTrue(student.getLastName().equals("Shyrokov"));
     }
-    
+
     @Test
-    public void testGetAll() throws Exception {
+    public void shouldUpdateStudent() throws Exception {
+	Student student = testData.makeTestStudent();
+	student.setId(1);
+	student.setFirstName("Tolya");
+	Student updatedStudent = studentDao.update(student);
+	assertTrue(updatedStudent.getFirstName().equals("Tolya"));
+	assertTrue(updatedStudent.getLastName().equals("Shyrokov"));
+    }
+
+    @Test
+    public void shouldGetAllStudents() throws Exception {
 	List<Student> students = studentDao.getAll();
-	assertTrue(students.size() > 0);
+	assertTrue(students.size() == 23);
+    }
+
+    @Test
+    public void shouldDeleteStudent() throws Exception {
+	studentDao.delete(22);
+	List<Student> students = studentDao.getAll();
 	assertTrue(students.size() == 22);
     }
 
     @Test
-    public void testDelete() throws Exception {
-	studentDao.delete(289);
-	List<Student> students = studentDao.getAll();	
-	assertTrue(students.size() == 22);
+    public void shouldAddStudent() throws Exception {
+	Student student = testData.makeTestStudent();
+	student.setFirstName("test");
+	Student addedStudent = studentDao.add(student);
+	assertTrue(addedStudent.getId() == 24);	
+	assertTrue(studentDao.getById(24).getFirstName().equals("test"));
     }
 
     @After

@@ -17,13 +17,14 @@ import com.foxminded.university.domain.Student;
 
 public class StudentDaoImpl implements StudentDao {
     private DaoFactory factory = new DaoFactory();
-    private static final int DEFAULT_GROUP_ID = 0;
+    
 
     @Override
     public Student getById(int id) {
 	String sql = "SELECT * FROM students LEFT JOIN groups ON students.group_id = groups.id "
 		+ "JOIN departments ON groups.department_id = departments.id "
 		+ "JOIN faculties ON departments.faculty_id = faculties.id " + "WHERE students.id = ?;";
+	
 	ResultSet result = null;
 	Student student = new Student();
 
@@ -53,7 +54,8 @@ public class StudentDaoImpl implements StudentDao {
     public List<Student> getAll() {
 	List<Student> students = new ArrayList<>();
 	String sql = "SELECT * FROM students LEFT JOIN groups ON students.group_id = groups.id "
-		+ "JOIN departments ON groups.department_id = departments.id;";
+		+ "JOIN departments ON groups.department_id = departments.id "
+		+ "JOIN faculties ON departments.faculty_id = faculties.id ";
 
 	try (Connection connection = factory.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -80,11 +82,9 @@ public class StudentDaoImpl implements StudentDao {
 	    statement.setString(2, student.getLastName());
 	    if (student.getGroup() != null) {
 		statement.setInt(3, student.getGroup().getId());
-	    } else {
-		statement.setInt(3, DEFAULT_GROUP_ID);
-	    }
+	    } 
 	    result = statement.executeQuery();
-	    if (result.next()) {
+	    while (result.next()) {
 		student.setId(result.getInt("id"));
 	    }
 	} catch (SQLException e) {
@@ -97,7 +97,7 @@ public class StudentDaoImpl implements StudentDao {
 		}
 	    } catch (SQLException e) {
 		e.printStackTrace();
-	    } 
+	    }
 	}
 	return student;
     }
@@ -111,11 +111,11 @@ public class StudentDaoImpl implements StudentDao {
 
 	    statement.setInt(1, id);
 	    statement.execute();
-	    return true;
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    throw new DaoException("Error while deleting");
-	}	
+	}
+	return true;
     }
 
     @Override
@@ -129,11 +129,9 @@ public class StudentDaoImpl implements StudentDao {
 	    statement.setString(2, student.getLastName());
 	    if (student.getGroup() != null) {
 		statement.setInt(3, student.getGroup().getId());
-	    } else {
-		statement.setInt(3, DEFAULT_GROUP_ID);
-	    }
+	    } 
 	    statement.setInt(4, student.getId());
-	    statement.executeUpdate();
+	    statement.execute();
 	} catch (SQLException e) {
 	    e.printStackTrace();
 	    throw new DaoException("Error while updating");
@@ -145,22 +143,22 @@ public class StudentDaoImpl implements StudentDao {
 	Student student = new Student();
 
 	try {
-	    student.setId(result.getInt("id"));
-	    student.setFirstName(result.getString("first_name"));
-	    student.setLastName(result.getString("last_name"));
+	    student.setId(result.getInt(1));
+	    student.setFirstName(result.getString(2));
+	    student.setLastName(result.getString(3));
 
 	    Group group = new Group();
-	    group.setId(result.getInt("groups.id"));
-	    group.setYear(result.getInt("groups.year"));
-	    group.setTitle(result.getString("groups.title"));
+	    group.setId(result.getInt(5));
+	    group.setYear(result.getInt(6));
+	    group.setTitle(result.getString(7));
 
 	    Department department = new Department();
-	    department.setId(result.getInt("departments.id"));
-	    department.setTitle(result.getString("departments.title"));
+	    department.setId(result.getInt(9));
+	    department.setTitle(result.getString(10));
 
 	    Faculty faculty = new Faculty();
-	    faculty.setId(result.getInt("faculties.id"));
-	    faculty.setTitle(result.getString("faculties.title"));
+	    faculty.setId(result.getInt(12));
+	    faculty.setTitle(result.getString(13));
 
 	    department.setFaculty(faculty);
 	    group.setDepartment(department);

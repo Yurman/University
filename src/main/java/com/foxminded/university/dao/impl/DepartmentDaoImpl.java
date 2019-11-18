@@ -8,23 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.foxminded.university.dao.DaoFactory;
-import com.foxminded.university.dao.GroupDao;
+import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
-import com.foxminded.university.domain.Group;
 
-public class GroupDaoImpl implements GroupDao {
+public class DepartmentDaoImpl implements DepartmentDao {
     private DaoFactory factory = new DaoFactory();
 
-    public Group getById(int id) {
-        String sql = "SELECT * FROM  groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id " 
-                + "WHERE groups.id = ?;";
+    public Department getById(int id) {
+        String sql = "SELECT * FROM  departments JOIN faculties ON departments.faculty_id = faculties.id "
+                + "WHERE departments.id = ?;";
 
         ResultSet result = null;
-        Group group = new Group();
+        Department department = new Department();
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -32,7 +29,7 @@ public class GroupDaoImpl implements GroupDao {
             statement.setInt(1, id);
             result = statement.executeQuery();
             while (result.next()) {
-                group = extractGroup(result);
+                department = extractDepartment(result);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,44 +42,41 @@ public class GroupDaoImpl implements GroupDao {
                 e.printStackTrace();
             }
         }
-        return group;
+        return department;
     }
 
     @Override
-    public List<Group> getAll() {
-        List<Group> groups = new ArrayList<>();
-        String sql = "SELECT * FROM groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id;";
+    public List<Department> getAll() {
+        List<Department> departments = new ArrayList<>();
+        String sql = "SELECT * FROM departments JOIN faculties ON departments.faculty_id = faculties.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet result = statement.executeQuery();) {
 
             while (result.next()) {
-                groups.add(extractGroup(result));
+                departments.add(extractDepartment(result));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return groups;
+        return departments;
     }
 
     @Override
-    public Group add(Group group) {
-        String sql = "INSERT INTO groups (year, title, department_id) VALUES (?, ?, ?) RETURNING id;";
+    public Department add(Department department) {
+        String sql = "INSERT INTO departments (title, faculty_id) VALUES (?, ?) RETURNING id;";
 
         ResultSet result = null;
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
 
-            statement.setInt(1, group.getYear());
-            statement.setString(2, group.getTitle());
-            statement.setInt(3, group.getDepartment().getId());
+            statement.setString(1, department.getTitle());
+            statement.setInt(2, department.getFaculty().getId());
             result = statement.executeQuery();
             if (result.next()) {
-                group.setId(result.getInt("id"));
+                department.setId(result.getInt("id"));
             }
 
         } catch (SQLException e) {
@@ -97,12 +91,12 @@ public class GroupDaoImpl implements GroupDao {
                 e.printStackTrace();
             }
         }
-        return group;
+        return department;
     }
 
     @Override
     public boolean delete(int id) {
-        String sql = "DELETE FROM groups WHERE id = ?;";
+        String sql = "DELETE FROM departments WHERE id = ?;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -117,45 +111,38 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public Group update(Group group) {
-        String sql = "UPDATE groups SET  year = ?, title = ?, department_id = ? WHERE id = ?;";
+    public Department update(Department department) {
+        String sql = "UPDATE departments SET  title = ?, faculty_id = ? WHERE id = ?;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
 
-            statement.setInt(1, group.getYear());
-            statement.setString(2, group.getTitle());
-            statement.setInt(3, group.getDepartment().getId());
-            statement.setInt(4, group.getId());
+            statement.setString(1, department.getTitle());
+            statement.setInt(2, department.getFaculty().getId());
+            statement.setInt(3, department.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DaoException("Error while updating");
         }
-        return group;
+        return department;
     }
 
-    private Group extractGroup(ResultSet result) {
-        Group group = new Group();
+    private Department extractDepartment(ResultSet result) {
+        Department department = new Department();
         try {
-            group.setId(result.getInt(1));
-            group.setYear(result.getInt(2));
-            group.setTitle(result.getString(3));
-
-            Department department = new Department();
-            department.setId(result.getInt(5));
-            department.setTitle(result.getString(6));
+            department.setId(result.getInt(1));
+            department.setTitle(result.getString(2));
 
             Faculty faculty = new Faculty();
-            faculty.setId(result.getInt(8));
-            faculty.setTitle(result.getString(9));
+            faculty.setId(result.getInt(4));
+            faculty.setTitle(result.getString(5));
 
             department.setFaculty(faculty);
-            group.setDepartment(department);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return group;
+        return department;
     }
 }

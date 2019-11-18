@@ -1,7 +1,8 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
@@ -10,61 +11,65 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplTest {
 
     private StudentDaoImpl studentDao = new StudentDaoImpl();
-    private TestDataInitializer testData = new TestDataInitializer();
-    private Flyway flyway = TestDataInitializer.initializeFlyway();
+    private Flyway flyway = FlywayWrapper.initializeFlyway();
+    private Student testStudent = StudentRepository.getDaoTestStudent();
+    private Student otherStudent = StudentRepository.getDaoTestStudent();
 
     @Before
     public void setUp() throws Exception {
-	flyway.clean();
-	flyway.migrate();
-	testData.initializeTestData();
+        flyway.clean();
+        flyway.migrate();
+
+        FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+        facultyDao.add(testStudent.getGroup().getDepartment().getFaculty());
+
+        DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
+        departmentDao.add(testStudent.getGroup().getDepartment());
+
+        GroupDaoImpl groupDao = new GroupDaoImpl();
+        groupDao.add(testStudent.getGroup());
+
+        studentDao.add(testStudent);
+        otherStudent.setFirstName("Nick");
+        otherStudent.setLastName("Tester");
+        studentDao.add(otherStudent);
     }
 
     @Test
     public void shouldGetStudentById() throws Exception {
-	Student student = studentDao.getById(1);
-	assertTrue(student.getFirstName().equals("Anatoliy"));
-	assertTrue(student.getLastName().equals("Shyrokov"));
+        assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
     public void shouldUpdateStudent() throws Exception {
-	Student student = testData.makeTestStudent();
-	student.setId(1);
-	student.setFirstName("Tolya");
-	Student updatedStudent = studentDao.update(student);
-	assertTrue(updatedStudent.getFirstName().equals("Tolya"));
-	assertTrue(updatedStudent.getLastName().equals("Shyrokov"));
+        testStudent.setFirstName("Nicolas");
+        studentDao.update(testStudent);
+        assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
     public void shouldGetAllStudents() throws Exception {
-	List<Student> students = studentDao.getAll();
-	assertTrue(students.size() == 23);
+        List<Student> expected = new ArrayList<>();
+        expected.add(testStudent);
+        expected.add(otherStudent);
+        assertEquals(expected, studentDao.getAll());
     }
 
     @Test
     public void shouldDeleteStudent() throws Exception {
-	studentDao.delete(22);
-	List<Student> students = studentDao.getAll();
-	assertTrue(students.size() == 22);
-    }
-
-    @Test
-    public void shouldAddStudent() throws Exception {
-	Student student = testData.makeTestStudent();
-	student.setFirstName("test");
-	Student addedStudent = studentDao.add(student);
-	assertTrue(addedStudent.getId() == 24);	
-	assertTrue(studentDao.getById(24).getFirstName().equals("test"));
+        List<Student> expected = new ArrayList<>();
+        expected.add(testStudent);
+        studentDao.delete(2);
+        assertEquals(expected, studentDao.getAll());
     }
 
     @After
     public void tearDown() throws Exception {
-	flyway.clean();
+        flyway.clean();
     }
 }

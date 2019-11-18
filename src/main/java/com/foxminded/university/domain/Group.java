@@ -8,73 +8,73 @@ public class Group {
     private int year;
 
     public int getId() {
-	return id;
+        return id;
     }
 
     public void setId(int id) {
-	this.id = id;
+        this.id = id;
     }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public void setTitle(String title) {
-	this.title = title;
+        this.title = title;
     }
 
     public Department getDepartment() {
-	return department;
+        return department;
     }
 
     public void setDepartment(Department department) {
-	this.department = department;
+        this.department = department;
     }
 
     public int getYear() {
-	return year;
+        return year;
     }
 
     public void setYear(int year) {
-	this.year = year;
+        this.year = year;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 51;
-	int result = 1;
-	result = prime * result + ((department == null) ? 0 : department.hashCode());
-	result = prime * result + id;
-	result = prime * result + ((title == null) ? 0 : title.hashCode());
-	result = prime * result + year;
-	return result;
+        final int prime = 51;
+        int result = 1;
+        result = prime * result + ((department == null) ? 0 : department.hashCode());
+        result = prime * result + id;
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        result = prime * result + year;
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Group other = (Group) obj;
-	if (department == null) {
-	    if (other.department != null) {
-		return false;
-	    }
-	} else if (!department.equals(other.department))
-	    return false;
-	if (id != other.id)
-	    return false;
-	if (title == null) {
-	    if (other.title != null) {
-		return false;
-	    }
-	} else if (!title.equals(other.title))
-	    return false;
-	if (year != other.year)
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Group other = (Group) obj;
+        if (department == null) {
+            if (other.department != null) {
+                return false;
+            }
+        } else if (!department.equals(other.department))
+            return false;
+        if (id != other.id)
+            return false;
+        if (title == null) {
+            if (other.title != null) {
+                return false;
+            }
+        } else if (!title.equals(other.title))
+            return false;
+        if (year != other.year)
+            return false;
+        return true;
     }
 }

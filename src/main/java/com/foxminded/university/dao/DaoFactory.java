@@ -10,34 +10,34 @@ import java.util.Properties;
 public class DaoFactory {
 
     public Connection getConnection() {
-	Properties dbProperties = readProperties("db.properties");
-	try {
-	    Class.forName(dbProperties.getProperty("db.driver"));
-	} catch (ClassNotFoundException e) {
-	    e.printStackTrace();
-	}
+        Properties dbProperties = readProperties("db.properties");
+        try {
+            Class.forName(dbProperties.getProperty("db.driver"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-	Properties connectionProperty = new Properties();
-	connectionProperty.setProperty("user", dbProperties.getProperty("db.user"));
-	connectionProperty.setProperty("password", dbProperties.getProperty("db.password"));
-	Connection connection = null;
+        Properties connectionProperty = new Properties();
+        connectionProperty.setProperty("user", dbProperties.getProperty("db.user"));
+        connectionProperty.setProperty("password", dbProperties.getProperty("db.password"));
+        Connection connection = null;
 
-	try {
-	    connection = DriverManager.getConnection(dbProperties.getProperty("db.url"), connectionProperty);
-	} catch (SQLException e) {
-	    e.printStackTrace();
-	}
-	return connection;
+        try {
+            connection = DriverManager.getConnection(dbProperties.getProperty("db.url"), connectionProperty);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connection;
     }
 
     public Properties readProperties(String propertiesFileName) {
-	Properties dbProperties = new Properties();
+        Properties dbProperties = new Properties();
 
-	try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
-	    dbProperties.load(fileInput);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	return dbProperties;
+        try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
+            dbProperties.load(fileInput);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dbProperties;
     }
 }

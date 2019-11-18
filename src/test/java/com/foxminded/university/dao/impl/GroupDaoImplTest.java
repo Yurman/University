@@ -1,7 +1,8 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
@@ -10,63 +11,67 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.GroupRepository;
 
 public class GroupDaoImplTest {
 
     private GroupDaoImpl groupDao = new GroupDaoImpl();
-    private TestDataInitializer testData = new TestDataInitializer();
-    private Flyway flyway = TestDataInitializer.initializeFlyway();
+    private Flyway flyway = FlywayWrapper.initializeFlyway();
+    private Group testGroup = GroupRepository.getDaoTestGroup();
+    private Group otherGroup = GroupRepository.getDaoTestGroup();
 
     @Before
     public void setUp() throws Exception {
-	flyway.clean();
-	flyway.migrate();
-	testData.initializeTestData();
+        flyway.clean();
+        flyway.migrate();
+
+        FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+        facultyDao.add(testGroup.getDepartment().getFaculty());
+
+        DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
+        departmentDao.add(testGroup.getDepartment());
+
+        groupDao.add(testGroup);
+        otherGroup.setTitle("Optics");
+        groupDao.add(otherGroup);
+        otherGroup.setId(2);
+
     }
 
     @Test
     public void shouldGetGroupById() throws Exception {
-	Group group = groupDao.getById(1);
-	assertTrue(group != null);
-	assertTrue(group.getTitle().equals("MP-11"));
-    }
-
-    @Test
-    public void shouldUpdateGroup() throws Exception {
-	Group group = testData.makeTestGroup();
-	group.setId(1);
-	group.setTitle("test");
-	Group updatedGroup = groupDao.update(group);
-	assertTrue(updatedGroup.getTitle().equals("test"));
-
+        assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test
     public void shouldGetAllGroups() throws Exception {
-	List<Group> groups = groupDao.getAll();
-	assertTrue(groups.size() == 2);
+        List<Group> expected = new ArrayList<>();
+        expected.add(testGroup);
+        expected.add(otherGroup);
+        List<Group> result = groupDao.getAll();
+
+        assertEquals(expected, result);
     }
 
     @Test
-    public void shouldDeleteGroup() throws Exception {
-	groupDao.delete(1);
-	List<Group> groups = groupDao.getAll();
-	assertTrue(groups.size() == 1);
+    public void shouldUpdteGroup() throws Exception {
+        testGroup.setTitle("Math");
+        groupDao.update(testGroup);
+
+        assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test
-    public void shouldAddGroup() throws Exception {
-	Group group = testData.makeTestGroup();
-	group.setTitle("test");
-	Group addedGroup = groupDao.add(group);
-	assertTrue(addedGroup.getId() == 3);
-	assertTrue(groupDao.getById(3).getTitle().equals("test"));
-	assertTrue(addedGroup.equals(groupDao.getById(3)));
+    public void shouldDeleteGroupById() throws Exception {
+        groupDao.delete(1);
+        List<Group> expected = new ArrayList<>();
+        expected.add(otherGroup);
+       
+        assertEquals(expected, groupDao.getAll());
     }
 
     @After
     public void tearDown() throws Exception {
-	// flyway.clean();
+        flyway.clean();
     }
-
 }

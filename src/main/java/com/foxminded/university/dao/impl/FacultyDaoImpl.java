@@ -8,23 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.foxminded.university.dao.DaoFactory;
-import com.foxminded.university.dao.GroupDao;
+import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.dao.exception.DaoException;
-import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
-import com.foxminded.university.domain.Group;
 
-public class GroupDaoImpl implements GroupDao {
+public class FacultyDaoImpl implements FacultyDao {
     private DaoFactory factory = new DaoFactory();
 
-    public Group getById(int id) {
-        String sql = "SELECT * FROM  groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id " 
-                + "WHERE groups.id = ?;";
+    public Faculty getById(int id) {
+        String sql = "SELECT * FROM faculties WHERE id = ?;";
 
         ResultSet result = null;
-        Group group = new Group();
+        Faculty faculty = new Faculty();
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -32,7 +27,7 @@ public class GroupDaoImpl implements GroupDao {
             statement.setInt(1, id);
             result = statement.executeQuery();
             while (result.next()) {
-                group = extractGroup(result);
+                faculty = extractFaculty(result);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,44 +40,40 @@ public class GroupDaoImpl implements GroupDao {
                 e.printStackTrace();
             }
         }
-        return group;
+        return faculty;
     }
 
     @Override
-    public List<Group> getAll() {
-        List<Group> groups = new ArrayList<>();
-        String sql = "SELECT * FROM groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id;";
+    public List<Faculty> getAll() {
+        List<Faculty> faculties = new ArrayList<>();
+        String sql = "SELECT * FROM faculties;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
                 ResultSet result = statement.executeQuery();) {
 
             while (result.next()) {
-                groups.add(extractGroup(result));
+                faculties.add(extractFaculty(result));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return groups;
+        return faculties;
     }
 
     @Override
-    public Group add(Group group) {
-        String sql = "INSERT INTO groups (year, title, department_id) VALUES (?, ?, ?) RETURNING id;";
+    public Faculty add(Faculty faculty) {
+        String sql = "INSERT INTO faculties (title) VALUES (?) RETURNING id;";
 
         ResultSet result = null;
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
 
-            statement.setInt(1, group.getYear());
-            statement.setString(2, group.getTitle());
-            statement.setInt(3, group.getDepartment().getId());
+            statement.setString(1, faculty.getTitle());
             result = statement.executeQuery();
             if (result.next()) {
-                group.setId(result.getInt("id"));
+                faculty.setId(result.getInt("id"));
             }
 
         } catch (SQLException e) {
@@ -97,12 +88,12 @@ public class GroupDaoImpl implements GroupDao {
                 e.printStackTrace();
             }
         }
-        return group;
+        return faculty;
     }
 
     @Override
     public boolean delete(int id) {
-        String sql = "DELETE FROM groups WHERE id = ?;";
+        String sql = "DELETE FROM faculties WHERE id = ?;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
@@ -117,45 +108,30 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public Group update(Group group) {
-        String sql = "UPDATE groups SET  year = ?, title = ?, department_id = ? WHERE id = ?;";
+    public Faculty update(Faculty faculty) {
+        String sql = "UPDATE faculties SET  title = ? WHERE id = ?;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {
 
-            statement.setInt(1, group.getYear());
-            statement.setString(2, group.getTitle());
-            statement.setInt(3, group.getDepartment().getId());
-            statement.setInt(4, group.getId());
+            statement.setString(1, faculty.getTitle());
+            statement.setInt(2, faculty.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new DaoException("Error while updating");
         }
-        return group;
+        return faculty;
     }
 
-    private Group extractGroup(ResultSet result) {
-        Group group = new Group();
+    private Faculty extractFaculty(ResultSet result) {
+        Faculty faculty = new Faculty();
         try {
-            group.setId(result.getInt(1));
-            group.setYear(result.getInt(2));
-            group.setTitle(result.getString(3));
-
-            Department department = new Department();
-            department.setId(result.getInt(5));
-            department.setTitle(result.getString(6));
-
-            Faculty faculty = new Faculty();
-            faculty.setId(result.getInt(8));
-            faculty.setTitle(result.getString(9));
-
-            department.setFaculty(faculty);
-            group.setDepartment(department);
-
+            faculty.setId(result.getInt(1));
+            faculty.setTitle(result.getString(2));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return group;
+        return faculty;
     }
 }

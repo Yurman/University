@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
 
@@ -52,13 +53,10 @@ public class FacultyDaoImplTest {
         assertEquals(testFaculty, facultyDao.getById(1));
     }
 
-    @Test
-    public void shouldDeleteFacultyById() throws Exception {
+    @Test(expected = DaoException.class)
+    public void shouldDeleteFacultyById() throws DaoException {
         facultyDao.delete(1);
-        List<Faculty> expected = new ArrayList<>();
-        expected.add(otherFaculty);
-
-        assertEquals(expected, facultyDao.getAll());
+        facultyDao.getById(1);
     }
 
     @After

@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.service.GroupRepository;
 
@@ -61,13 +62,10 @@ public class GroupDaoImplTest {
         assertEquals(testGroup, groupDao.getById(1));
     }
 
-    @Test
+    @Test(expected = DaoException.class)
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        List<Group> expected = new ArrayList<>();
-        expected.add(otherGroup);
-       
-        assertEquals(expected, groupDao.getAll());
+        groupDao.getById(1);
     }
 
     @After

@@ -18,10 +18,10 @@ public class GroupDaoImpl implements GroupDao {
     private DaoFactory factory = new DaoFactory();
 
     public Group getById(int id) {
-        String sql = "SELECT * FROM  groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id " 
-                + "WHERE groups.id = ?;";
+        String sql = "select groups.id as groupId, year, groups.title as group, "
+                + "departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty " + "from groups, departments, faculties "
+                + "where groups.department_id = departments.id and departments.faculty_id = faculties.id and groups.id = ?;";
 
         ResultSet result = null;
         Group group = new Group();
@@ -31,6 +31,9 @@ public class GroupDaoImpl implements GroupDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
+            if (!result.isBeforeFirst()) {
+                throw new DaoException("no such group found");
+            }
             while (result.next()) {
                 group = extractGroup(result);
             }
@@ -51,9 +54,10 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public List<Group> getAll() {
         List<Group> groups = new ArrayList<>();
-        String sql = "SELECT * FROM groups "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id;";
+        String sql = "select groups.id as groupId, year, groups.title as group, "
+                + "departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty " + "from groups, departments, faculties "
+                + "where groups.department_id = departments.id and departments.faculty_id = faculties.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -138,17 +142,17 @@ public class GroupDaoImpl implements GroupDao {
     private Group extractGroup(ResultSet result) {
         Group group = new Group();
         try {
-            group.setId(result.getInt(1));
-            group.setYear(result.getInt(2));
-            group.setTitle(result.getString(3));
+            group.setId(result.getInt("groupId"));
+            group.setYear(result.getInt("year"));
+            group.setTitle(result.getString("group"));
 
             Department department = new Department();
-            department.setId(result.getInt(5));
-            department.setTitle(result.getString(6));
+            department.setId(result.getInt("deapartmentId"));
+            department.setTitle(result.getString("department"));
 
             Faculty faculty = new Faculty();
-            faculty.setId(result.getInt(8));
-            faculty.setTitle(result.getString(9));
+            faculty.setId(result.getInt("facultyId"));
+            faculty.setTitle(result.getString("faculty"));
 
             department.setFaculty(faculty);
             group.setDepartment(department);

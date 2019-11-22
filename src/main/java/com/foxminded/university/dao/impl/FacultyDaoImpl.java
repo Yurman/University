@@ -16,7 +16,7 @@ public class FacultyDaoImpl implements FacultyDao {
     private DaoFactory factory = new DaoFactory();
 
     public Faculty getById(int id) {
-        String sql = "SELECT * FROM faculties WHERE id = ?;";
+        String sql = "select faculties.id AS facultyId, faculties.title AS faculty from faculties where id = ?;";
 
         ResultSet result = null;
         Faculty faculty = new Faculty();
@@ -26,6 +26,9 @@ public class FacultyDaoImpl implements FacultyDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
+            if (!result.isBeforeFirst() ) {    
+                throw new DaoException("no such faculty found"); 
+            } 
             while (result.next()) {
                 faculty = extractFaculty(result);
             }
@@ -46,7 +49,7 @@ public class FacultyDaoImpl implements FacultyDao {
     @Override
     public List<Faculty> getAll() {
         List<Faculty> faculties = new ArrayList<>();
-        String sql = "SELECT * FROM faculties;";
+        String sql = "select faculties.id AS facultyId, faculties.title AS faculty from faculties;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -127,8 +130,8 @@ public class FacultyDaoImpl implements FacultyDao {
     private Faculty extractFaculty(ResultSet result) {
         Faculty faculty = new Faculty();
         try {
-            faculty.setId(result.getInt(1));
-            faculty.setTitle(result.getString(2));
+            faculty.setId(result.getInt("facultyId"));
+            faculty.setTitle(result.getString("faculty"));
         } catch (SQLException e) {
             e.printStackTrace();
         }

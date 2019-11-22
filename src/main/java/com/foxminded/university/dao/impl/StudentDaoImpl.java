@@ -20,11 +20,13 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-        String sql = "SELECT * FROM students " 
-                + "LEFT JOIN groups ON students.group_id = groups.id "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id " 
-                + "WHERE students.id = ?;";
+        String sql = "select students.id AS studentId, first_name AS name, last_name AS Surname, "
+                + "groups.id as groupId, year, groups.title as group, "
+                + "departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty "
+                + "from students, groups, departments, faculties "
+                + "where students.group_id = groups.id and groups.department_id = departments.id "
+                + "and departments.faculty_id = faculties.id and students.id = ?;";
 
         ResultSet result = null;
         Student student = new Student();
@@ -34,6 +36,9 @@ public class StudentDaoImpl implements StudentDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
+            if (!result.isBeforeFirst()) {
+                throw new DaoException("no such student found");
+            }
             while (result.next()) {
                 student = extractStudent(result);
             }
@@ -54,10 +59,12 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
         List<Student> students = new ArrayList<>();
-        String sql = "SELECT * FROM students "
-                + "LEFT JOIN groups ON students.group_id = groups.id "
-                + "JOIN departments ON groups.department_id = departments.id "
-                + "JOIN faculties ON departments.faculty_id = faculties.id ";
+        String sql = "select students.id AS studentId, first_name AS name, last_name AS Surname, "
+                + "groups.id as groupId, year, groups.title as group, "
+                + "departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty "
+                + "from students, groups, departments, faculties "
+                + "where students.group_id = groups.id and groups.department_id = departments.id and departments.faculty_id = faculties.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -145,22 +152,22 @@ public class StudentDaoImpl implements StudentDao {
         Student student = new Student();
 
         try {
-            student.setId(result.getInt(1));
-            student.setFirstName(result.getString(2));
-            student.setLastName(result.getString(3));
+            student.setId(result.getInt("studentId"));
+            student.setFirstName(result.getString("name"));
+            student.setLastName(result.getString("Surname"));
 
             Group group = new Group();
-            group.setId(result.getInt(5));
-            group.setYear(result.getInt(6));
-            group.setTitle(result.getString(7));
+            group.setId(result.getInt("groupId"));
+            group.setYear(result.getInt("year"));
+            group.setTitle(result.getString("group"));
 
             Department department = new Department();
-            department.setId(result.getInt(9));
-            department.setTitle(result.getString(10));
+            department.setId(result.getInt("deapartmentId"));
+            department.setTitle(result.getString("department"));
 
             Faculty faculty = new Faculty();
-            faculty.setId(result.getInt(12));
-            faculty.setTitle(result.getString(13));
+            faculty.setId(result.getInt("facultyId"));
+            faculty.setTitle(result.getString("faculty"));
 
             department.setFaculty(faculty);
             group.setDepartment(department);

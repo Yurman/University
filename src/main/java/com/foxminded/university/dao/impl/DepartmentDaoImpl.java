@@ -17,8 +17,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     private DaoFactory factory = new DaoFactory();
 
     public Department getById(int id) {
-        String sql = "SELECT * FROM  departments JOIN faculties ON departments.faculty_id = faculties.id "
-                + "WHERE departments.id = ?;";
+        String sql = "select departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty "
+                + "from departments, faculties "
+                + "where departments.faculty_id = faculties.id and departments.id = ?;";
 
         ResultSet result = null;
         Department department = new Department();
@@ -28,6 +30,9 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
+            if (!result.isBeforeFirst() ) {    
+                throw new DaoException("no such department found"); 
+            } 
             while (result.next()) {
                 department = extractDepartment(result);
             }
@@ -48,7 +53,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public List<Department> getAll() {
         List<Department> departments = new ArrayList<>();
-        String sql = "SELECT * FROM departments JOIN faculties ON departments.faculty_id = faculties.id;";
+        String sql = "select departments.id AS deapartmentId, departments.title as department, "
+                + "faculties.id AS facultyId, faculties.title AS faculty "
+                + "from departments, faculties "
+                + "where departments.faculty_id = faculties.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -131,12 +139,12 @@ public class DepartmentDaoImpl implements DepartmentDao {
     private Department extractDepartment(ResultSet result) {
         Department department = new Department();
         try {
-            department.setId(result.getInt(1));
-            department.setTitle(result.getString(2));
+            department.setId(result.getInt("deapartmentId"));
+            department.setTitle(result.getString("department"));
 
             Faculty faculty = new Faculty();
-            faculty.setId(result.getInt(4));
-            faculty.setTitle(result.getString(5));
+            faculty.setId(result.getInt("facultyId"));
+            faculty.setTitle(result.getString("faculty"));
 
             department.setFaculty(faculty);
 

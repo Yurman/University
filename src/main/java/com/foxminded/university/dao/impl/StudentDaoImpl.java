@@ -20,13 +20,22 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-        String sql = "select students.id AS studentId, first_name AS name, last_name AS Surname, "
-                + "groups.id as groupId, year, groups.title as group, "
-                + "departments.id AS deapartmentId, departments.title as department, "
-                + "faculties.id AS facultyId, faculties.title AS faculty "
-                + "from students, groups, departments, faculties "
-                + "where students.group_id = groups.id and groups.department_id = departments.id "
-                + "and departments.faculty_id = faculties.id and students.id = ?;";
+        String sql = "select " + 
+                "s.id as student_id, " + 
+                "first_name, " + 
+                "last_name, " + 
+                "g.id as group_id, " + 
+                "year, " + 
+                "g.title as group_title, " + 
+                "d.id as department_id, " + 
+                "d.title as department_title, " + 
+                "f.id as faculty_id, " + 
+                "f.title as faculty_title " + 
+                "from students as s, groups as g, departments as d, faculties as f " + 
+                "where s.group_id = g.id " + 
+                "and g.department_id = d.id " + 
+                "and d.faculty_id = f.id " + 
+                "and s.id = ?;";
 
         ResultSet result = null;
         Student student = new Student();
@@ -59,12 +68,21 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
         List<Student> students = new ArrayList<>();
-        String sql = "select students.id AS studentId, first_name AS name, last_name AS Surname, "
-                + "groups.id as groupId, year, groups.title as group, "
-                + "departments.id AS deapartmentId, departments.title as department, "
-                + "faculties.id AS facultyId, faculties.title AS faculty "
-                + "from students, groups, departments, faculties "
-                + "where students.group_id = groups.id and groups.department_id = departments.id and departments.faculty_id = faculties.id;";
+        String sql = "select " + 
+                "s.id as student_id, " + 
+                "first_name, " + 
+                "last_name, " + 
+                "g.id as group_id, " + 
+                "year, " + 
+                "g.title as group_title, " + 
+                "d.id as department_id, " + 
+                "d.title as department_title, " + 
+                "f.id as faculty_id, " + 
+                "f.title as faculty_title " + 
+                "from students as s, groups as g, departments as d, faculties as f " + 
+                "where s.group_id = g.id " + 
+                "and g.department_id = d.id " + 
+                "and d.faculty_id = f.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);
@@ -150,24 +168,24 @@ public class StudentDaoImpl implements StudentDao {
 
     private Student extractStudent(ResultSet result) {
         Student student = new Student();
-
+        
         try {
-            student.setId(result.getInt("studentId"));
-            student.setFirstName(result.getString("name"));
-            student.setLastName(result.getString("Surname"));
+            student.setId(result.getInt("student_id"));
+            student.setFirstName(result.getString("first_name"));
+            student.setLastName(result.getString("last_name"));
 
             Group group = new Group();
-            group.setId(result.getInt("groupId"));
+            group.setId(result.getInt("group_id"));
             group.setYear(result.getInt("year"));
-            group.setTitle(result.getString("group"));
+            group.setTitle(result.getString("group_title"));
 
             Department department = new Department();
-            department.setId(result.getInt("deapartmentId"));
-            department.setTitle(result.getString("department"));
+            department.setId(result.getInt("department_id"));
+            department.setTitle(result.getString("department_title"));
 
             Faculty faculty = new Faculty();
-            faculty.setId(result.getInt("facultyId"));
-            faculty.setTitle(result.getString("faculty"));
+            faculty.setId(result.getInt("faculty_id"));
+            faculty.setTitle(result.getString("faculty_title"));
 
             department.setFaculty(faculty);
             group.setDepartment(department);

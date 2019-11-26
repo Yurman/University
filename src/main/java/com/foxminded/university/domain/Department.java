@@ -1,58 +1,70 @@
 package com.foxminded.university.domain;
 
-import java.util.List;
-
 public class Department {
+
+    private int id;
     private String title;
-    private List<Professor> professors;
-    private List<Group> groups;
+    private Faculty faculty;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
-	return title;
+        return title;
     }
 
     public void setTitle(String title) {
-	this.title = title;
+        this.title = title;
     }
 
-    public List<Professor> getProfessors() {
-	return professors;
+    public Faculty getFaculty() {
+        return faculty;
     }
 
-    public void setProfessors(List<Professor> professors) {
-	this.professors = professors;
-    }
-
-    public List<Group> getGroups() {
-	return groups;
-    }
-
-    public void setGroups(List<Group> groups) {
-	this.groups = groups;
+    public void setFaculty(Faculty faculty) {
+        this.faculty = faculty;
     }
 
     @Override
     public int hashCode() {
-	final int prime = 41;
-	int result = 10;
-	result = prime * result + ((title == null) ? 0 : title.hashCode());
-	return result;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((faculty == null) ? 0 : faculty.hashCode());
+        result = prime * result + id;
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
+        return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (getClass() != obj.getClass())
-	    return false;
-	Department other = (Department) obj;
-	if (title == null) {
-	    if (other.title != null)
-		return false;
-	} else if (!title.equals(other.title))
-	    return false;
-	return true;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Department other = (Department) obj;
+        if (faculty == null) {
+            if (other.faculty != null) {
+                return false;
+            }
+        } else if (!faculty.equals(other.faculty)) {
+            return false;
+        }
+        if (id != other.id) {
+            return false;
+        }
+        if (title == null) {
+            if (other.title != null) {
+                return false;
+            }
+        } else if (!title.equals(other.title))
+            return false;
+        return true;
     }
 }

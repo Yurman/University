@@ -44,4 +44,3 @@ INSERT  INTO STUDENTS
     ('Vasiliy', 'Petrov', '2'),
     ('Alexei', 'Morozov', '2'),
     ('Artem', 'Komov', '2');
-    

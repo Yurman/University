@@ -14,7 +14,7 @@ import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
 
-public class FacultyDaoImplTest {
+public class FacultyDaoImplIT {
     private FacultyDaoImpl facultyDao = new FacultyDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Faculty testFaculty = FacultyRepository.getTestFaculty();

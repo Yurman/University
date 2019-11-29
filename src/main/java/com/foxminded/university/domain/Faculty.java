@@ -48,6 +48,4 @@ public class Faculty {
             return false;
         return true;
     }
-
-   
 }

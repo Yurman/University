@@ -18,17 +18,17 @@ public class GroupDaoImpl implements GroupDao {
     private DaoFactory factory = new DaoFactory();
 
     public Group getById(int id) {
-        String sql = "select " +                 
-                "g.id as group_id, " + 
-                "year, " + 
-                "g.title as group_title, " + 
-                "d.id as department_id, " + 
-                "d.title as department_title, " + 
-                "f.id as faculty_id, " + 
-                "f.title as faculty_title " + 
-                "from groups as g, departments as d, faculties as f " + 
-                "where g.department_id = d.id " + 
-                "and d.faculty_id = f.id " + 
+        String sql = "select " +
+                "g.id as group_id, " +
+                "year, " +
+                "g.title as group_title, " +
+                "d.id as department_id, " +
+                "d.title as department_title, " +
+                "f.id as faculty_id, " +
+                "f.title as faculty_title " +
+                "from groups as g, departments as d, faculties as f " +
+                "where g.department_id = d.id " +
+                "and d.faculty_id = f.id " +
                 "and g.id = ?;";
 
         ResultSet result = null;
@@ -62,17 +62,17 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public List<Group> getAll() {
         List<Group> groups = new ArrayList<>();
-        String sql = "select " +                 
-                "g.id as group_id, " + 
-                "year, " + 
-                "g.title as group_title, " + 
-                "d.id as department_id, " + 
-                "d.title as department_title, " + 
-                "f.id as faculty_id, " + 
-                "f.title as faculty_title " + 
-                "from groups as g, departments as d, faculties as f " + 
-                "where g.department_id = d.id " + 
-                "and d.faculty_id = f.id;"; 
+        String sql = "select " +
+                "g.id as group_id, " +
+                "year, " +
+                "g.title as group_title, " +
+                "d.id as department_id, " +
+                "d.title as department_title, " +
+                "f.id as faculty_id, " +
+                "f.title as faculty_title " +
+                "from groups as g, departments as d, faculties as f " +
+                "where g.department_id = d.id " +
+                "and d.faculty_id = f.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);

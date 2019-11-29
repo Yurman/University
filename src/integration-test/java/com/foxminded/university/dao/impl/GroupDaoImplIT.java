@@ -14,7 +14,7 @@ import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.service.GroupRepository;
 
-public class GroupDaoImplTest {
+public class GroupDaoImplIT {
 
     private GroupDaoImpl groupDao = new GroupDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();

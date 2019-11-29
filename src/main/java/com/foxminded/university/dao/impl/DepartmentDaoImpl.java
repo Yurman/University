@@ -17,10 +17,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     private DaoFactory factory = new DaoFactory();
 
     public Department getById(int id) {
-        String sql = "select departments.id AS deapartmentId, departments.title as department, "
-                + "faculties.id AS facultyId, faculties.title AS faculty "
-                + "from departments, faculties "
-                + "where departments.faculty_id = faculties.id and departments.id = ?;";
+        String sql = "select departments.id AS deapartmentId, departments.title as department, " +
+                "faculties.id AS facultyId, faculties.title AS faculty " +
+                "from departments, faculties " +
+                "where departments.faculty_id = faculties.id and departments.id = ?;";
 
         ResultSet result = null;
         Department department = new Department();
@@ -30,9 +30,9 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
-            if (!result.isBeforeFirst() ) {    
-                throw new DaoException("no such department found"); 
-            } 
+            if (!result.isBeforeFirst()) {
+                throw new DaoException("no such department found");
+            }
             while (result.next()) {
                 department = extractDepartment(result);
             }
@@ -53,10 +53,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public List<Department> getAll() {
         List<Department> departments = new ArrayList<>();
-        String sql = "select departments.id AS deapartmentId, departments.title as department, "
-                + "faculties.id AS facultyId, faculties.title AS faculty "
-                + "from departments, faculties "
-                + "where departments.faculty_id = faculties.id;";
+        String sql = "select departments.id AS deapartmentId, departments.title as department, " +
+                "faculties.id AS facultyId, faculties.title AS faculty " +
+                "from departments, faculties " +
+                "where departments.faculty_id = faculties.id;";
 
         try (Connection connection = factory.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);

@@ -14,7 +14,7 @@ import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
-public class StudentDaoImplTest {
+public class StudentDaoImplIT {
 
     private StudentDaoImpl studentDao = new StudentDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();

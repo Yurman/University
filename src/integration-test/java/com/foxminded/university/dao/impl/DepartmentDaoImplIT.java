@@ -14,7 +14,7 @@ import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 
-public class DepartmentDaoImplTest {
+public class DepartmentDaoImplIT {
     private DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Department testDepartment = DepartmentRepository.getTestDepartment();

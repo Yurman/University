@@ -20,21 +20,21 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-        String sql = "select " + 
-                "s.id as student_id, " + 
-                "first_name, " + 
-                "last_name, " + 
-                "g.id as group_id, " + 
-                "year, " + 
-                "g.title as group_title, " + 
-                "d.id as department_id, " + 
-                "d.title as department_title, " + 
-                "f.id as faculty_id, " + 
-                "f.title as faculty_title " + 
-                "from students as s, groups as g, departments as d, faculties as f " + 
-                "where s.group_id = g.id " + 
-                "and g.department_id = d.id " + 
-                "and d.faculty_id = f.id " + 
+        String sql = "select " +
+                "s.id as student_id, " +
+                "first_name, " +
+                "last_name, " +
+                "g.id as group_id, " +
+                "year, " +
+                "g.title as group_title, " +
+                "d.id as department_id, " +
+                "d.title as department_title, " +
+                "f.id as faculty_id, " +
+                "f.title as faculty_title " +
+                "from students as s, groups as g, departments as d, faculties as f " +
+                "where s.group_id = g.id " +
+                "and g.department_id = d.id " +
+                "and d.faculty_id = f.id " +
                 "and s.id = ?;";
 
         ResultSet result = null;
@@ -68,20 +68,20 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getAll() {
         List<Student> students = new ArrayList<>();
-        String sql = "select " + 
-                "s.id as student_id, " + 
-                "first_name, " + 
-                "last_name, " + 
-                "g.id as group_id, " + 
-                "year, " + 
-                "g.title as group_title, " + 
-                "d.id as department_id, " + 
-                "d.title as department_title, " + 
-                "f.id as faculty_id, " + 
-                "f.title as faculty_title " + 
-                "from students as s, groups as g, departments as d, faculties as f " + 
-                "where s.group_id = g.id " + 
-                "and g.department_id = d.id " + 
+        String sql = "select " +
+                "s.id as student_id, " +
+                "first_name, " +
+                "last_name, " +
+                "g.id as group_id, " +
+                "year, " +
+                "g.title as group_title, " +
+                "d.id as department_id, " +
+                "d.title as department_title, " +
+                "f.id as faculty_id, " +
+                "f.title as faculty_title " +
+                "from students as s, groups as g, departments as d, faculties as f " +
+                "where s.group_id = g.id " +
+                "and g.department_id = d.id " +
                 "and d.faculty_id = f.id;";
 
         try (Connection connection = factory.getConnection();
@@ -168,7 +168,7 @@ public class StudentDaoImpl implements StudentDao {
 
     private Student extractStudent(ResultSet result) {
         Student student = new Student();
-        
+
         try {
             student.setId(result.getInt("student_id"));
             student.setFirstName(result.getString("first_name"));

@@ -1,14 +1,13 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Faculty;
@@ -20,7 +19,7 @@ public class FacultyDaoImplIT {
     private Faculty testFaculty = FacultyRepository.getTestFaculty();
     private Faculty otherFaculty = FacultyRepository.getTestFaculty();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         flyway.clean();
         flyway.migrate();
@@ -33,7 +32,7 @@ public class FacultyDaoImplIT {
 
     @Test
     public void shouldGetFacultyById() throws Exception {
-        assertEquals(testFaculty, facultyDao.getById(1));
+        Assertions.assertEquals(testFaculty, facultyDao.getById(1));
     }
 
     @Test
@@ -42,7 +41,7 @@ public class FacultyDaoImplIT {
         expected.add(testFaculty);
         expected.add(otherFaculty);
 
-        assertEquals(expected, facultyDao.getAll());
+        Assertions.assertEquals(expected, facultyDao.getAll());
     }
 
     @Test
@@ -50,16 +49,18 @@ public class FacultyDaoImplIT {
         testFaculty.setTitle("Math");
         facultyDao.update(testFaculty);
 
-        assertEquals(testFaculty, facultyDao.getById(1));
+        Assertions.assertEquals(testFaculty, facultyDao.getById(1));
     }
 
-    @Test(expected = DaoException.class)
+    @Test
     public void shouldDeleteFacultyById() throws DaoException {
         facultyDao.delete(1);
-        facultyDao.getById(1);
+        Assertions.assertThrows(DaoException.class, () -> {
+            facultyDao.getById(1);
+        });
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         flyway.clean();
     }

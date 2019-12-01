@@ -1,14 +1,13 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Group;
@@ -21,7 +20,7 @@ public class GroupDaoImplIT {
     private Group testGroup = GroupRepository.getDaoTestGroup();
     private Group otherGroup = GroupRepository.getDaoTestGroup();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         flyway.clean();
         flyway.migrate();
@@ -41,7 +40,7 @@ public class GroupDaoImplIT {
 
     @Test
     public void shouldGetGroupById() throws Exception {
-        assertEquals(testGroup, groupDao.getById(1));
+        Assertions.assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test
@@ -51,7 +50,7 @@ public class GroupDaoImplIT {
         expected.add(otherGroup);
         List<Group> result = groupDao.getAll();
 
-        assertEquals(expected, result);
+        Assertions.assertEquals(expected, result);
     }
 
     @Test
@@ -59,16 +58,18 @@ public class GroupDaoImplIT {
         testGroup.setTitle("Math");
         groupDao.update(testGroup);
 
-        assertEquals(testGroup, groupDao.getById(1));
+        Assertions.assertEquals(testGroup, groupDao.getById(1));
     }
 
-    @Test(expected = DaoException.class)
+    @Test
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        groupDao.getById(1);
+        Assertions.assertThrows(DaoException.class, () -> {
+            groupDao.getById(1);
+        });
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         flyway.clean();
     }

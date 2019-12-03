@@ -1,27 +1,26 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
-public class StudentDaoImplTest {
+public class StudentDaoImplIT {
 
     private StudentDaoImpl studentDao = new StudentDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Student testStudent = StudentRepository.getDaoTestStudent();
     private Student otherStudent = StudentRepository.getDaoTestStudent();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         flyway.clean();
         flyway.migrate();
@@ -43,14 +42,14 @@ public class StudentDaoImplTest {
 
     @Test
     public void shouldGetStudentById() throws Exception {
-        assertEquals(testStudent, studentDao.getById(1));
+        Assertions.assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
         studentDao.update(testStudent);
-        assertEquals(testStudent, studentDao.getById(1));
+        Assertions.assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
@@ -58,16 +57,18 @@ public class StudentDaoImplTest {
         List<Student> expected = new ArrayList<>();
         expected.add(testStudent);
         expected.add(otherStudent);
-        assertEquals(expected, studentDao.getAll());
+        Assertions.assertEquals(expected, studentDao.getAll());
     }
 
-    @Test(expected = DaoException.class)
+    @Test
     public void shouldDeleteStudent() throws Exception {
         studentDao.delete(2);
-        studentDao.getById(2);
+        Assertions.assertThrows(DaoException.class, () -> {
+            studentDao.getById(2);
+        });
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         flyway.clean();
     }

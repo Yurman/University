@@ -26,9 +26,9 @@ public class FacultyDaoImpl implements FacultyDao {
 
             statement.setInt(1, id);
             result = statement.executeQuery();
-            if (!result.isBeforeFirst() ) {    
-                throw new DaoException("no such faculty found"); 
-            } 
+            if (!result.isBeforeFirst()) {
+                throw new DaoException("no such faculty found");
+            }
             while (result.next()) {
                 faculty = extractFaculty(result);
             }

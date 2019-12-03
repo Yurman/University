@@ -1,26 +1,25 @@
 package com.foxminded.university.dao.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 
 import com.foxminded.university.dao.exception.DaoException;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 
-public class DepartmentDaoImplTest {
+public class DepartmentDaoImplIT {
     private DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Department testDepartment = DepartmentRepository.getTestDepartment();
     private Department otherDepartment = DepartmentRepository.getTestDepartment();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         flyway.clean();
         flyway.migrate();
@@ -36,7 +35,7 @@ public class DepartmentDaoImplTest {
 
     @Test
     public void shouldGetDepartmentById() throws Exception {
-        assertEquals(testDepartment, departmentDao.getById(1));
+        Assertions.assertEquals(testDepartment, departmentDao.getById(1));
     }
 
     @Test
@@ -45,7 +44,7 @@ public class DepartmentDaoImplTest {
         expected.add(testDepartment);
         expected.add(otherDepartment);
 
-        assertEquals(expected, departmentDao.getAll());
+        Assertions.assertEquals(expected, departmentDao.getAll());
     }
 
     @Test
@@ -53,16 +52,18 @@ public class DepartmentDaoImplTest {
         testDepartment.setTitle("Math");
         departmentDao.update(testDepartment);
 
-        assertEquals(testDepartment, departmentDao.getById(1));
+        Assertions.assertEquals(testDepartment, departmentDao.getById(1));
     }
 
-    @Test(expected = DaoException.class)
+    @Test
     public void shouldDeleteFacultyById() throws Exception {
         departmentDao.delete(1);
-        departmentDao.getById(1);
+        Assertions.assertThrows(DaoException.class, () -> {
+            departmentDao.getById(1);
+        });
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         flyway.clean();
     }

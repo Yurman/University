@@ -1,7 +1,5 @@
 package com.foxminded.university.dao;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,7 +8,7 @@ import java.util.Properties;
 public class DaoFactory {
 
     public Connection getConnection() {
-        Properties dbProperties = readProperties("db.properties");
+        Properties dbProperties = PropertyReader.readProperties("db.properties");
         try {
             Class.forName(dbProperties.getProperty("db.driver"));
         } catch (ClassNotFoundException e) {
@@ -28,16 +26,5 @@ public class DaoFactory {
             e.printStackTrace();
         }
         return connection;
-    }
-
-    public Properties readProperties(String propertiesFileName) {
-        Properties dbProperties = new Properties();
-
-        try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
-            dbProperties.load(fileInput);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return dbProperties;
     }
 }

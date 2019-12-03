@@ -1,9 +1,11 @@
 package com.foxminded.university.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.util.List;
-import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.domain.Professor;
 import com.foxminded.university.domain.ScheduleItem;

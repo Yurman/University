@@ -9,13 +9,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 
-import com.foxminded.university.dao.exception.DaoException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
+
+import com.foxminded.university.dao.SpringConfigurator;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.service.GroupRepository;
 
 public class GroupDaoImplIT {
-
-    private GroupDaoImpl groupDao = new GroupDaoImpl();
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfigurator.class);
+    private GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Group testGroup = GroupRepository.getDaoTestGroup();
     private Group otherGroup = GroupRepository.getDaoTestGroup();
@@ -64,7 +67,7 @@ public class GroupDaoImplIT {
     @Test
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        Assertions.assertThrows(DaoException.class, () -> {
+        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
             groupDao.getById(1);
         });
     }

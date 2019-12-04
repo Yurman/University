@@ -8,14 +8,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.exception.DaoException;
+import com.foxminded.university.dao.SpringConfigurator;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
-
-    private StudentDaoImpl studentDao = new StudentDaoImpl();
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfigurator.class);
+    private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Student testStudent = StudentRepository.getDaoTestStudent();
     private Student otherStudent = StudentRepository.getDaoTestStudent();
@@ -31,9 +33,8 @@ public class StudentDaoImplIT {
         DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
         departmentDao.add(testStudent.getGroup().getDepartment());
 
-        GroupDaoImpl groupDao = new GroupDaoImpl();
+        GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
         groupDao.add(testStudent.getGroup());
-
         studentDao.add(testStudent);
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
@@ -63,7 +64,7 @@ public class StudentDaoImplIT {
     @Test
     public void shouldDeleteStudent() throws Exception {
         studentDao.delete(2);
-        Assertions.assertThrows(DaoException.class, () -> {
+        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
             studentDao.getById(2);
         });
     }

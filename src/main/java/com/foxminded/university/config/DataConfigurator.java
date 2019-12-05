@@ -1,4 +1,4 @@
-package com.foxminded.university.dao;
+package com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
@@ -13,10 +13,10 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @ComponentScan("com.foxminded.university")
 @PropertySource("classpath:db.properties")
-public class SpringConfigurator {
+public class DataConfigurator {
 
     @Autowired
-    Environment environment;
+    private Environment environment;
 
     private final String URL = "db.url";
     private final String USER = "db.user";
@@ -24,7 +24,7 @@ public class SpringConfigurator {
     private final String PASSWORD = "db.password";
 
     @Bean
-    DataSource dataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setUrl(environment.getProperty(URL));
         dataSource.setUsername(environment.getProperty(USER));

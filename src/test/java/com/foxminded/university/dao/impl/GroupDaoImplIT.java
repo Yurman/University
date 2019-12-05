@@ -6,18 +6,19 @@ import java.util.List;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.SpringConfigurator;
+import com.foxminded.university.config.DataConfigurator;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.service.GroupRepository;
 
 public class GroupDaoImplIT {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfigurator.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfigurator.class);
     private GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Group testGroup = GroupRepository.getDaoTestGroup();
@@ -43,7 +44,7 @@ public class GroupDaoImplIT {
 
     @Test
     public void shouldGetGroupById() throws Exception {
-        Assertions.assertEquals(testGroup, groupDao.getById(1));
+        assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test
@@ -53,7 +54,7 @@ public class GroupDaoImplIT {
         expected.add(otherGroup);
         List<Group> result = groupDao.getAll();
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -61,13 +62,13 @@ public class GroupDaoImplIT {
         testGroup.setTitle("Math");
         groupDao.update(testGroup);
 
-        Assertions.assertEquals(testGroup, groupDao.getById(1));
+        assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
             groupDao.getById(1);
         });
     }

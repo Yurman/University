@@ -8,18 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.foxminded.university.dao.StudentDao;
-import com.foxminded.university.dao.StudentMapper;
+import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
 
 @Component
-public class StudentDaoImpl implements StudentDao {
-    
+public class StudentDaoImpl implements StudentDao {    
     private JdbcTemplate jdbcTemplate;    
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
         
@@ -84,9 +82,12 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Student add(Student student) {
         KeyHolder holder = new GeneratedKeyHolder();
-        SqlParameterSource parameters = new MapSqlParameterSource()
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("first_name", student.getFirstName())
-                .addValue("last_name", student.getLastName()).addValue("group_id", student.getGroup().getId());
+                .addValue("last_name", student.getLastName());
+        if (student.getGroup() != null) {
+            parameters.addValue("group_id", student.getGroup().getId());            
+        }
         namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
         student.setId(holder.getKey().intValue());
         return student;

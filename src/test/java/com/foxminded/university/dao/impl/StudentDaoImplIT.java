@@ -5,18 +5,19 @@ import java.util.List;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.SpringConfigurator;
+import com.foxminded.university.config.DataConfigurator;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfigurator.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfigurator.class);
     private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Student testStudent = StudentRepository.getDaoTestStudent();
@@ -43,14 +44,14 @@ public class StudentDaoImplIT {
 
     @Test
     public void shouldGetStudentById() throws Exception {
-        Assertions.assertEquals(testStudent, studentDao.getById(1));
+        assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
         studentDao.update(testStudent);
-        Assertions.assertEquals(testStudent, studentDao.getById(1));
+        assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test
@@ -58,13 +59,13 @@ public class StudentDaoImplIT {
         List<Student> expected = new ArrayList<>();
         expected.add(testStudent);
         expected.add(otherStudent);
-        Assertions.assertEquals(expected, studentDao.getAll());
+        assertEquals(expected, studentDao.getAll());
     }
 
     @Test
     public void shouldDeleteStudent() throws Exception {
         studentDao.delete(2);
-        Assertions.assertThrows(EmptyResultDataAccessException.class, () -> {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
             studentDao.getById(2);
         });
     }

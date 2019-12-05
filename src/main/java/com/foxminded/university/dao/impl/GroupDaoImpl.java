@@ -8,13 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.foxminded.university.dao.GroupDao;
-import com.foxminded.university.dao.GroupMapper;
+import com.foxminded.university.dao.mapper.GroupMapper;
 import com.foxminded.university.domain.Group;
 
 @Component
@@ -74,12 +73,13 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public Group add(Group group) {
         KeyHolder holder = new GeneratedKeyHolder();
-        SqlParameterSource parameters = new MapSqlParameterSource()
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("title", group.getTitle())
-                .addValue("year", group.getYear())
-                .addValue("department_id", group.getDepartment().getId());
+                .addValue("year", group.getYear());
+        if (group.getDepartment() != null) {
+            parameters.addValue("department_id", group.getDepartment().getId());
+        }
         namedParameterJdbcTemplate.update(SQL_ADD_GROUP, parameters, holder, new String[] { "id" });
-        group.setId(holder.getKey().intValue());
         return group;
     }
 

@@ -80,6 +80,7 @@ public class GroupDaoImpl implements GroupDao {
             parameters.addValue("department_id", group.getDepartment().getId());
         }
         namedParameterJdbcTemplate.update(SQL_ADD_GROUP, parameters, holder, new String[] { "id" });
+        group.setId(holder.getKey().intValue());
         return group;
     }
 

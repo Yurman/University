@@ -7,23 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
-import com.foxminded.university.domain.Group;
 
-public class GroupMapper implements RowMapper<Group> {
+public class DepartmentMapper implements RowMapper<Department> {
 
     @Override
-    public Group mapRow(ResultSet result, int rowNum) throws SQLException {
-        Group group = new Group();
-        group.setId(result.getInt("group_id"));
-        group.setYear(result.getInt("year"));
-        group.setTitle(result.getString("group_title"));
-        if (result.getInt("department_id") != 0) {
-            group.setDepartment(mapDepartment(result));
-        }
-        return group;
-    }
-
-    private Department mapDepartment(ResultSet result) throws SQLException {
+    public Department mapRow(ResultSet result, int rowNum) throws SQLException {
         Department department = new Department();
         department.setId(result.getInt("department_id"));
         department.setTitle(result.getString("department_title"));

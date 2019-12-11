@@ -12,26 +12,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.config.DataConfigurator;
+import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfigurator.class);
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfiguration.class);
     private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Student testStudent = StudentRepository.getDaoTestStudent();
     private Student otherStudent = StudentRepository.getDaoTestStudent();
+    private Student studentWithoutGroup = new Student();
 
     @BeforeEach
     public void setUp() throws Exception {
         flyway.clean();
         flyway.migrate();
 
-        FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+        FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
         facultyDao.add(testStudent.getGroup().getDepartment().getFaculty());
 
-        DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
+        DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
         departmentDao.add(testStudent.getGroup().getDepartment());
 
         GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
@@ -40,11 +41,20 @@ public class StudentDaoImplIT {
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
         studentDao.add(otherStudent);
+        studentWithoutGroup.setFirstName("Jack");
+        studentWithoutGroup.setLastName("Daniels");
+        studentDao.add(studentWithoutGroup);
+
     }
 
     @Test
     public void shouldGetStudentById() throws Exception {
         assertEquals(testStudent, studentDao.getById(1));
+    }
+
+    @Test
+    public void shouldGetStudentWithoutGroupById() throws Exception {
+        assertEquals(studentWithoutGroup, studentDao.getById(3));
     }
 
     @Test
@@ -55,10 +65,20 @@ public class StudentDaoImplIT {
     }
 
     @Test
+    public void shouldUpdateStudentWithoutGroup() throws Exception {
+        studentWithoutGroup.setFirstName("Jonny");
+        studentWithoutGroup.setLastName("Walker");
+        studentWithoutGroup.setGroup(testStudent.getGroup());
+        studentDao.update(studentWithoutGroup);
+        assertEquals(studentWithoutGroup, studentDao.getById(3));
+    }
+
+    @Test
     public void shouldGetAllStudents() throws Exception {
         List<Student> expected = new ArrayList<>();
         expected.add(testStudent);
         expected.add(otherStudent);
+        expected.add(studentWithoutGroup);
         assertEquals(expected, studentDao.getAll());
     }
 

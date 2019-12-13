@@ -11,9 +11,6 @@ public class FacultyMapper implements RowMapper<Faculty> {
 
     @Override
     public Faculty mapRow(ResultSet result, int rowNum) throws SQLException {
-        Faculty faculty = new Faculty();
-        faculty.setId(result.getInt("faculty_id"));
-        faculty.setTitle(result.getString("faculty_title"));
-        return faculty;
+        return DataMapper.mapFaculty(result);
     }
 }

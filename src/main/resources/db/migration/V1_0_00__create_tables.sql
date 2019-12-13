@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS departments
             GENERATED ALWAYS AS IDENTITY UNIQUE
             PRIMARY KEY,
         title VARCHAR (20) NOT NULL,
-        faculty_id INT  
+        faculty_id INT  NOT NULL
             REFERENCES faculties(id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS groups
             PRIMARY KEY,
         year INT NOT NULL,
         title VARCHAR (50) NOT NULL,
-        department_id INT  
+        department_id INT  NOT NULL
             REFERENCES departments(id) 
             ON UPDATE CASCADE
             ON DELETE CASCADE
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS students
             PRIMARY KEY,
         first_name VARCHAR (20) NOT NULL,
         last_name VARCHAR (50) NOT NULL,
-        group_id INT 
+        group_id INT NOT NULL
             REFERENCES groups(id) 
             ON UPDATE CASCADE
             ON DELETE CASCADE

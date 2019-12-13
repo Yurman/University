@@ -8,16 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
 
-@Component
+@Repository
 public class StudentDaoImpl implements StudentDao {    
     private JdbcTemplate jdbcTemplate;    
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -45,12 +44,10 @@ public class StudentDaoImpl implements StudentDao {
             "left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id;";
     
-    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";
-    private final String SQL_ADD_STUDENT_WITHOUT_GROUP = "INSERT INTO students (first_name, last_name) VALUES (:first_name, :last_name) ;";
+    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";    
     private final String SQL_DELETE_STUDENT = "DELETE FROM students WHERE id = ?;";
     private final String SQL_UPDATE_STUDENT = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
-    private final String SQL_UPDATE_STUDENT_WITHOUT_GROUP = "UPDATE students SET  first_name = ?, last_name = ? WHERE id = ?;";
-
+    
     @Autowired
     public StudentDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -73,23 +70,17 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Student add(Student student) {
         KeyHolder holder = new GeneratedKeyHolder();
-        SqlParameterSource parameters;
+        MapSqlParameterSource parameters  = new MapSqlParameterSource()
+                .addValue("first_name", student.getFirstName())
+                .addValue("last_name", student.getLastName());
         if (student.getGroup() == null) {
-            parameters = new MapSqlParameterSource()
-                    .addValue("first_name", student.getFirstName())
-                    .addValue("last_name", student.getLastName());
-            namedParameterJdbcTemplate.update(SQL_ADD_STUDENT_WITHOUT_GROUP, parameters, holder, new String[] { "id" });
-            student.setId(holder.getKey().intValue());
-            return student;
+            parameters.addValue("group_id", null);
         } else {
-            parameters = new MapSqlParameterSource()
-                    .addValue("first_name", student.getFirstName())
-                    .addValue("last_name", student.getLastName())
-                    .addValue("group_id", student.getGroup().getId());
-            namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
-            student.setId(holder.getKey().intValue());
-            return student;
+            parameters.addValue("group_id", student.getGroup().getId());
         }
+        namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
+        student.setId(holder.getKey().intValue());
+        return student;
     }
 
     @Override
@@ -101,7 +92,7 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Student update(Student student) {
         if (student.getGroup() == null) {
-            jdbcTemplate.update(SQL_UPDATE_STUDENT_WITHOUT_GROUP, student.getFirstName(), student.getLastName(),
+            jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), null,
                     student.getId());
             return student;
         } else {

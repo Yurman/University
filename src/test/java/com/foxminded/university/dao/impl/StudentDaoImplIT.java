@@ -1,12 +1,11 @@
 package com.foxminded.university.dao.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -17,7 +16,8 @@ import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfiguration.class);
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+            DataConfiguration.class);
     private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Student testStudent = StudentRepository.getDaoTestStudent();
@@ -58,6 +58,11 @@ public class StudentDaoImplIT {
     }
 
     @Test
+    public void shouldGetAllStudents() throws Exception {
+        assertThat(studentDao.getAll()).hasSize(3).contains(testStudent, otherStudent, studentWithoutGroup);
+    }
+
+    @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
         studentDao.update(testStudent);
@@ -74,12 +79,10 @@ public class StudentDaoImplIT {
     }
 
     @Test
-    public void shouldGetAllStudents() throws Exception {
-        List<Student> expected = new ArrayList<>();
-        expected.add(testStudent);
-        expected.add(otherStudent);
-        expected.add(studentWithoutGroup);
-        assertEquals(expected, studentDao.getAll());
+    public void shouldUpdateStudentDeletingGroup() throws Exception {
+        studentWithoutGroup.setGroup(null);
+        studentDao.update(studentWithoutGroup);
+        assertEquals(studentWithoutGroup, studentDao.getById(3));
     }
 
     @Test

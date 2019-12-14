@@ -1,199 +1,98 @@
 package com.foxminded.university.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import com.foxminded.university.dao.DaoFactory;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
 import com.foxminded.university.dao.StudentDao;
-import com.foxminded.university.dao.exception.DaoException;
-import com.foxminded.university.domain.Department;
-import com.foxminded.university.domain.Faculty;
-import com.foxminded.university.domain.Group;
+import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
 
-public class StudentDaoImpl implements StudentDao {
-    private DaoFactory factory = new DaoFactory();
+@Repository
+public class StudentDaoImpl implements StudentDao {    
+    private JdbcTemplate jdbcTemplate;    
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+        
+    private final String SQL_GET_STUDENT = "select " +
+            "s.id as student_id, s.first_name, s.last_name, " +
+            "g.id as group_id, g.year, g.title as group_title, " +
+            "d.id as department_id, d.title as department_title, d.faculty_id, " +
+            "f.id as faculty_id, f.title as faculty_title  " +
+            "from " +
+            "students as s " +
+            "left join groups as g on s.group_id = g.id " +
+            "left join departments as d on g.department_id = d.id " +
+            "left join faculties as f on d.faculty_id = f.id " +
+            "where s.id = ?;";
+    
+    private final String SQL_GET_ALL_STUDENTS = "select " +
+            "s.id as student_id, s.first_name, s.last_name, " +
+            "g.id as group_id, g.year, g.title as group_title, " +
+            "d.id as department_id, d.title as department_title, d.faculty_id, " +
+            "f.id as faculty_id, f.title as faculty_title  " +
+            "from " +
+            "students as s " +
+            "left join groups as g on s.group_id = g.id " +
+            "left join departments as d on g.department_id = d.id " +
+            "left join faculties as f on d.faculty_id = f.id;";
+    
+    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";    
+    private final String SQL_DELETE_STUDENT = "DELETE FROM students WHERE id = ?;";
+    private final String SQL_UPDATE_STUDENT = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
+    
+    @Autowired
+    public StudentDaoImpl(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    public StudentDaoImpl() {
+    }
 
     @Override
     public Student getById(int id) {
-        String sql = "select " +
-                "s.id as student_id, " +
-                "first_name, " +
-                "last_name, " +
-                "g.id as group_id, " +
-                "year, " +
-                "g.title as group_title, " +
-                "d.id as department_id, " +
-                "d.title as department_title, " +
-                "f.id as faculty_id, " +
-                "f.title as faculty_title " +
-                "from students as s, groups as g, departments as d, faculties as f " +
-                "where s.group_id = g.id " +
-                "and g.department_id = d.id " +
-                "and d.faculty_id = f.id " +
-                "and s.id = ?;";
-
-        ResultSet result = null;
-        Student student = new Student();
-
-        try (Connection connection = factory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-
-            statement.setInt(1, id);
-            result = statement.executeQuery();
-            if (!result.isBeforeFirst()) {
-                throw new DaoException("no such student found");
-            }
-            while (result.next()) {
-                student = extractStudent(result);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (result != null) {
-                    result.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return student;
+        return jdbcTemplate.queryForObject(SQL_GET_STUDENT, new Object[] { id }, new StudentMapper());
     }
 
     @Override
     public List<Student> getAll() {
-        List<Student> students = new ArrayList<>();
-        String sql = "select " +
-                "s.id as student_id, " +
-                "first_name, " +
-                "last_name, " +
-                "g.id as group_id, " +
-                "year, " +
-                "g.title as group_title, " +
-                "d.id as department_id, " +
-                "d.title as department_title, " +
-                "f.id as faculty_id, " +
-                "f.title as faculty_title " +
-                "from students as s, groups as g, departments as d, faculties as f " +
-                "where s.group_id = g.id " +
-                "and g.department_id = d.id " +
-                "and d.faculty_id = f.id;";
-
-        try (Connection connection = factory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);
-                ResultSet result = statement.executeQuery();) {
-
-            while (result.next()) {
-                students.add(extractStudent(result));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return students;
+        return jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
     }
 
     @Override
     public Student add(Student student) {
-        String sql = "INSERT INTO students (first_name, last_name, group_id) VALUES (?, ?, ?) RETURNING id;";
-        ResultSet result = null;
-
-        try (Connection connection = factory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-
-            statement.setString(1, student.getFirstName());
-            statement.setString(2, student.getLastName());
-            if (student.getGroup() != null) {
-                statement.setInt(3, student.getGroup().getId());
-            }
-            result = statement.executeQuery();
-            while (result.next()) {
-                student.setId(result.getInt("id"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("Error while adding");
-        } finally {
-            try {
-                if (result != null) {
-                    result.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        KeyHolder holder = new GeneratedKeyHolder();
+        Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
+        SqlParameterSource parameters  = new MapSqlParameterSource()
+                .addValue("first_name", student.getFirstName())
+                .addValue("last_name", student.getLastName())
+                .addValue("group_id", groupId);       
+        namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
+        student.setId(holder.getKey().intValue());
         return student;
     }
 
     @Override
     public boolean delete(int id) {
-        String sql = "DELETE FROM students WHERE id = ?;";
-
-        try (Connection connection = factory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-
-            statement.setInt(1, id);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("Error while deleting");
-        }
+        jdbcTemplate.update(SQL_DELETE_STUDENT, id);
         return true;
     }
 
     @Override
     public Student update(Student student) {
-        String sql = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
-
-        try (Connection connection = factory.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
-
-            statement.setString(1, student.getFirstName());
-            statement.setString(2, student.getLastName());
-            if (student.getGroup() != null) {
-                statement.setInt(3, student.getGroup().getId());
-            }
-            statement.setInt(4, student.getId());
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new DaoException("Error while updating");
-        }
-        return student;
-    }
-
-    private Student extractStudent(ResultSet result) {
-        Student student = new Student();
-
-        try {
-            student.setId(result.getInt("student_id"));
-            student.setFirstName(result.getString("first_name"));
-            student.setLastName(result.getString("last_name"));
-
-            Group group = new Group();
-            group.setId(result.getInt("group_id"));
-            group.setYear(result.getInt("year"));
-            group.setTitle(result.getString("group_title"));
-
-            Department department = new Department();
-            department.setId(result.getInt("department_id"));
-            department.setTitle(result.getString("department_title"));
-
-            Faculty faculty = new Faculty();
-            faculty.setId(result.getInt("faculty_id"));
-            faculty.setTitle(result.getString("faculty_title"));
-
-            department.setFaculty(faculty);
-            group.setDepartment(department);
-            student.setGroup(group);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
+                student.getId());
         return student;
     }
 }

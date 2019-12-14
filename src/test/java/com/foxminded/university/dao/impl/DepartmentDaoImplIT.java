@@ -1,20 +1,25 @@
 package com.foxminded.university.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.exception.DaoException;
+import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 
 public class DepartmentDaoImplIT {
-    private DepartmentDaoImpl departmentDao = new DepartmentDaoImpl();
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfiguration.class);
+    private DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Department testDepartment = DepartmentRepository.getTestDepartment();
     private Department otherDepartment = DepartmentRepository.getTestDepartment();
@@ -24,7 +29,7 @@ public class DepartmentDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+        FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
         facultyDao.add(testDepartment.getFaculty());
 
         departmentDao.add(testDepartment);
@@ -56,9 +61,9 @@ public class DepartmentDaoImplIT {
     }
 
     @Test
-    public void shouldDeleteFacultyById() throws Exception {
+    public void shouldDeleteDepartmentById() throws Exception {
         departmentDao.delete(1);
-        Assertions.assertThrows(DaoException.class, () -> {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
             departmentDao.getById(1);
         });
     }

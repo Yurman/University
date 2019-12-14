@@ -1,20 +1,25 @@
 package com.foxminded.university.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.exception.DaoException;
+import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
 
 public class FacultyDaoImplIT {
-    private FacultyDaoImpl facultyDao = new FacultyDaoImpl();
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfiguration.class);
+    private FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Faculty testFaculty = FacultyRepository.getTestFaculty();
     private Faculty otherFaculty = FacultyRepository.getTestFaculty();
@@ -53,9 +58,9 @@ public class FacultyDaoImplIT {
     }
 
     @Test
-    public void shouldDeleteFacultyById() throws DaoException {
+    public void shouldDeleteFacultyById() throws Exception {
         facultyDao.delete(1);
-        Assertions.assertThrows(DaoException.class, () -> {
+        assertThrows(EmptyResultDataAccessException.class, () -> {
             facultyDao.getById(1);
         });
     }

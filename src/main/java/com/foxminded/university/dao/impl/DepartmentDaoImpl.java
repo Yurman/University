@@ -1,6 +1,7 @@
 package com.foxminded.university.dao.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -62,12 +64,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public Department add(Department department) {
         KeyHolder holder = new GeneratedKeyHolder();
-        MapSqlParameterSource parameters = new MapSqlParameterSource().addValue("title", department.getTitle());
-        if (department.getFaculty() == null) {
-            parameters.addValue("faculty_id", null);
-        } else {
-            parameters.addValue("faculty_id", department.getFaculty().getId());
-        }
+        Integer facultyId = Objects.nonNull(department.getFaculty()) ? department.getFaculty().getId() : null;
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("title", department.getTitle())
+                .addValue("faculty_id", facultyId);
         namedParameterJdbcTemplate.update(SQL_ADD_DEPARTMENT, parameters, holder, new String[] { "id" });
         department.setId(holder.getKey().intValue());
         return department;
@@ -81,13 +81,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     public Department update(Department department) {
-        if (department.getFaculty() == null) {
-            jdbcTemplate.update(SQL_UPDATE_DEPARTMENT, department.getTitle(),null, department.getId());
-            return department;
-        } else {
-            jdbcTemplate.update(SQL_UPDATE_DEPARTMENT, department.getTitle(), department.getFaculty().getId(),
-                    department.getId());
-            return department;
-        }
+        Integer facultyId = Objects.nonNull(department.getFaculty()) ? department.getFaculty().getId() : null;
+        jdbcTemplate.update(SQL_UPDATE_DEPARTMENT, department.getTitle(), facultyId, department.getId());
+        return department;
     }
 }

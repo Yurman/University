@@ -1,6 +1,7 @@
 package com.foxminded.university.dao.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -70,14 +72,11 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Student add(Student student) {
         KeyHolder holder = new GeneratedKeyHolder();
-        MapSqlParameterSource parameters  = new MapSqlParameterSource()
+        Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
+        SqlParameterSource parameters  = new MapSqlParameterSource()
                 .addValue("first_name", student.getFirstName())
-                .addValue("last_name", student.getLastName());
-        if (student.getGroup() == null) {
-            parameters.addValue("group_id", null);
-        } else {
-            parameters.addValue("group_id", student.getGroup().getId());
-        }
+                .addValue("last_name", student.getLastName())
+                .addValue("group_id", groupId);       
         namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
         student.setId(holder.getKey().intValue());
         return student;
@@ -91,14 +90,9 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student update(Student student) {
-        if (student.getGroup() == null) {
-            jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), null,
-                    student.getId());
-            return student;
-        } else {
-            jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(),
-                    student.getGroup().getId(), student.getId());
-            return student;
-        }
+        Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
+                student.getId());
+        return student;
     }
 }

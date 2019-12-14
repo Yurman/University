@@ -48,5 +48,4 @@ public class DataMapper {
         faculty.setTitle(result.getString("faculty_title"));
         return faculty;
     }
-
 }

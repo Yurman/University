@@ -1,6 +1,7 @@
 package com.foxminded.university.dao.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -64,14 +66,11 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public Group add(Group group) {
         KeyHolder holder = new GeneratedKeyHolder();
-        MapSqlParameterSource parameters = new MapSqlParameterSource()
+        Integer departmentId = Objects.nonNull(group.getDepartment()) ? group.getDepartment().getId() : null;
+        SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("title", group.getTitle())
-                .addValue("year", group.getYear());
-        if (group.getDepartment() == null) {
-            parameters.addValue("department_id", null);
-        } else {
-            parameters.addValue("department_id", group.getDepartment().getId());
-        }
+                .addValue("year", group.getYear())
+                .addValue("department_id", departmentId);
         namedParameterJdbcTemplate.update(SQL_ADD_GROUP, parameters, holder, new String[] { "id" });
         group.setId(holder.getKey().intValue());
         return group;
@@ -85,13 +84,8 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Group update(Group group) {
-        if (group.getDepartment() == null) {
-            jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getYear(), null, group.getId());
-            return group;
-        } else {
-            jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getYear(), group.getDepartment().getId(),
-                    group.getId());
-            return group;
-        }
-    }
+        Integer departmentId = Objects.nonNull(group.getDepartment()) ? group.getDepartment().getId() : null;
+        jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getYear(), departmentId, group.getId());
+        return group;
+    }    
 }

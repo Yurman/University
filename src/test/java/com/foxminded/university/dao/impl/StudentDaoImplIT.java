@@ -80,9 +80,9 @@ public class StudentDaoImplIT {
 
     @Test
     public void shouldUpdateStudentDeletingGroup() throws Exception {
-        studentWithoutGroup.setGroup(null);
-        studentDao.update(studentWithoutGroup);
-        assertEquals(studentWithoutGroup, studentDao.getById(3));
+        testStudent.setGroup(null);
+        studentDao.update(testStudent);
+        assertEquals(testStudent, studentDao.getById(1));
     }
 
     @Test

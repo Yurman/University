@@ -78,10 +78,10 @@ public class GroupDaoImplIT {
 
     @Test
     public void shouldUpdteGroupDeletingDepartment() throws Exception {
-        groupWithoutDepartment.setDepartment(null);
-        groupDao.update(groupWithoutDepartment);
+        testGroup.setDepartment(null);
+        groupDao.update(testGroup);
 
-        assertEquals(groupWithoutDepartment, groupDao.getById(3));
+        assertEquals(testGroup, groupDao.getById(1));
     }
 
     @Test

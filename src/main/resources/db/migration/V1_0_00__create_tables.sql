@@ -110,4 +110,3 @@ CREATE TABLE IF NOT EXISTS schedule_items_groups
             ON UPDATE CASCADE
             ON DELETE CASCADE
     );
-

@@ -20,9 +20,9 @@ import com.foxminded.university.domain.Group;
 
 @Repository
 public class GroupDaoImpl implements GroupDao {
-    private JdbcTemplate jdbcTemplate;    
+    private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
     private final String SQL_GET_GROUP = "select " +
             "g.id as group_id, g.year, g.title as group_title, " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
@@ -31,7 +31,7 @@ public class GroupDaoImpl implements GroupDao {
             "groups as g left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id " +
             "where g.id = ?;";
-    
+
     private final String SQL_GET_ALL_GROUPS = "select " +
             "g.id as group_id, g.year, g.title as group_title, " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
@@ -39,11 +39,11 @@ public class GroupDaoImpl implements GroupDao {
             "from " +
             "groups as g left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id; ";
-    
-    private final String SQL_ADD_GROUP = "INSERT INTO groups (title, year, department_id) VALUES (:title, :year, :department_id) ;";   
+
+    private final String SQL_ADD_GROUP = "INSERT INTO groups (title, year, department_id) VALUES (:title, :year, :department_id) ;";
     private final String SQL_DELETE_GROUP = "DELETE FROM groups WHERE id = ?;";
     private final String SQL_UPDATE_GROUP = "UPDATE groups SET  title = ?, year = ?, department_id = ? WHERE id = ?;";
-    
+
     @Autowired
     public GroupDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -87,5 +87,5 @@ public class GroupDaoImpl implements GroupDao {
         Integer departmentId = Objects.nonNull(group.getDepartment()) ? group.getDepartment().getId() : null;
         jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getYear(), departmentId, group.getId());
         return group;
-    }    
+    }
 }

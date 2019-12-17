@@ -12,8 +12,12 @@ import com.foxminded.university.service.GroupService;
 @Service
 public class GroupServiceImpl implements GroupService {
 
-    @Autowired
     private GroupDao groupDao;
+
+    @Autowired
+    public GroupServiceImpl(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
 
     @Override
     public Group addGroup(Group group) {
@@ -36,7 +40,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> Groups() {
+    public List<Group> getAllGroups() {
         return groupDao.getAll();
     }
 }

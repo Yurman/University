@@ -12,8 +12,12 @@ import com.foxminded.university.service.StudentService;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
     private StudentDao studentDao;
+
+    @Autowired
+    public StudentServiceImpl(StudentDao studentDao) {
+        this.studentDao = studentDao;
+    }
 
     @Override
     public Student addStudent(Student student) {

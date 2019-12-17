@@ -14,6 +14,6 @@ public interface GroupService {
 
     public boolean deleteGroup(int id);
 
-    public List<Group> Groups();
+    public List<Group> getAllGroups();
 
 }

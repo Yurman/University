@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.impl.StudentDaoImpl;
+import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.impl.StudentServiceImpl;
 
@@ -24,7 +24,7 @@ class StudentServiceImplTest {
     private StudentServiceImpl studentService;
 
     @Mock
-    private StudentDaoImpl studentDaoMock;
+    private StudentDao studentDaoMock;
 
     private Student expectedStudent = StudentRepository.getDaoTestStudent();
 

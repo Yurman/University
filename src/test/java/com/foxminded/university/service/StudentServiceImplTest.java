@@ -2,51 +2,56 @@ package com.foxminded.university.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.StudentDao;
+import com.foxminded.university.dao.impl.StudentDaoImpl;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.impl.StudentServiceImpl;
 
-@SpringBootTest(classes = StudentServiceImpl.class)
 class StudentServiceImplTest {
 
-    @Autowired
-    private StudentService studentService;
+    @InjectMocks
+    private StudentServiceImpl studentService;
 
-    @MockBean
-    private StudentDao studentDaoMock;
+    @Mock
+    private StudentDaoImpl studentDaoMock;
 
-    private Student studentMock = StudentRepository.getDaoTestStudent();
+    private Student expectedStudent = StudentRepository.getDaoTestStudent();
 
-    @Test
-    public void getStudentByIdTest() {
-        Mockito.when(studentDaoMock.getById(1)).thenReturn(studentMock);
-
-        Student student = studentService.getStudentById(1);
-        assertEquals(student, studentMock);
+    @BeforeEach
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void updateStudentTest() {
-        Mockito.when(studentDaoMock.update(studentMock)).thenReturn(studentMock);
+    public void shouldGetStudentById() {
+        when(studentDaoMock.getById(1)).thenReturn(expectedStudent);
 
-        Student student = studentService.updateStudent(studentMock);
-        assertEquals(student, studentMock);
+        Student actualStudent = studentService.getStudentById(1);
+        assertEquals(actualStudent, expectedStudent);
     }
 
     @Test
-    public void deleteStudentTest() {
-        Mockito.when(studentDaoMock.delete(1)).thenThrow(EmptyResultDataAccessException.class);
+    public void shouldUpdateStudent() {
+        when(studentDaoMock.update(expectedStudent)).thenReturn(expectedStudent);
+
+        Student actualStudent = studentService.updateStudent(expectedStudent);
+        assertEquals(actualStudent, expectedStudent);
+    }
+
+    @Test
+    public void shouldDeleteStudent() {
+        when(studentDaoMock.delete(1)).thenThrow(EmptyResultDataAccessException.class);
 
         assertThrows(EmptyResultDataAccessException.class, () -> {
             studentService.deleteStudent(1);
@@ -54,20 +59,20 @@ class StudentServiceImplTest {
     }
 
     @Test
-    public void getAllStudentsTest() {
-        List<Student> mockStudents = new ArrayList<>();
-        mockStudents.add(studentMock);
-        Mockito.when(studentDaoMock.getAll()).thenReturn(mockStudents);
+    public void shouldGetAllStudents() {
+        List<Student> expectedStudents = new ArrayList<>();
+        expectedStudents.add(expectedStudent);
+        when(studentDaoMock.getAll()).thenReturn(expectedStudents);
 
         List<Student> actualStudents = studentService.getAllStudents();
-        assertEquals(mockStudents, actualStudents);
+        assertEquals(expectedStudents, actualStudents);
     }
 
     @Test
-    public void addStudentTest() {
-        Mockito.when(studentDaoMock.add(studentMock)).thenReturn(studentMock);
+    public void shouldAddStudent() {
+        when(studentDaoMock.add(expectedStudent)).thenReturn(expectedStudent);
 
-        Student student = studentService.addStudent(studentMock);
-        assertEquals(student, studentMock);
+        Student actualStudent = studentService.addStudent(expectedStudent);
+        assertEquals(actualStudent, expectedStudent);
     }
 }

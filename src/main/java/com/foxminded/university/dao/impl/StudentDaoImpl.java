@@ -19,10 +19,10 @@ import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
 
 @Repository
-public class StudentDaoImpl implements StudentDao {    
-    private JdbcTemplate jdbcTemplate;    
+public class StudentDaoImpl implements StudentDao {
+    private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-        
+
     private final String SQL_GET_STUDENT = "select " +
             "s.id as student_id, s.first_name, s.last_name, " +
             "g.id as group_id, g.year, g.title as group_title, " +
@@ -34,7 +34,7 @@ public class StudentDaoImpl implements StudentDao {
             "left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id " +
             "where s.id = ?;";
-    
+
     private final String SQL_GET_ALL_STUDENTS = "select " +
             "s.id as student_id, s.first_name, s.last_name, " +
             "g.id as group_id, g.year, g.title as group_title, " +
@@ -45,11 +45,11 @@ public class StudentDaoImpl implements StudentDao {
             "left join groups as g on s.group_id = g.id " +
             "left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id;";
-    
-    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";    
+
+    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";
     private final String SQL_DELETE_STUDENT = "DELETE FROM students WHERE id = ?;";
     private final String SQL_UPDATE_STUDENT = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
-    
+
     @Autowired
     public StudentDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
@@ -73,10 +73,10 @@ public class StudentDaoImpl implements StudentDao {
     public Student add(Student student) {
         KeyHolder holder = new GeneratedKeyHolder();
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
-        SqlParameterSource parameters  = new MapSqlParameterSource()
+        SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("first_name", student.getFirstName())
                 .addValue("last_name", student.getLastName())
-                .addValue("group_id", groupId);       
+                .addValue("group_id", groupId);
         namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
         student.setId(holder.getKey().intValue());
         return student;

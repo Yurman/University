@@ -19,22 +19,22 @@ import com.foxminded.university.domain.Faculty;
 
 @Repository
 public class FacultyDaoImpl implements FacultyDao {
-    private JdbcTemplate jdbcTemplate;    
+    private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
     private final String SQL_GET_FACULTY = "select " +
             "f.id as faculty_id, f.title as faculty_title  " +
             "from faculties as f " +
             "where f.id = ?;";
-    
+
     private final String SQL_GET_ALL_FACULTIES = "select " +
             "f.id as faculty_id, f.title as faculty_title  " +
             "from faculties as f ;";
-    
+
     private final String SQL_ADD_FACULTY = "INSERT INTO faculties (title) VALUES (:title) ;";
     private final String SQL_DELETE_FACULTY = "DELETE FROM faculties WHERE id = ?;";
     private final String SQL_UPDATE_FACULTY = "UPDATE faculties SET  title = ? WHERE id = ?;";
-   
+
     @Autowired
     public FacultyDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);

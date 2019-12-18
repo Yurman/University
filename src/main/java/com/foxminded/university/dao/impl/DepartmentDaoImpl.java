@@ -20,9 +20,9 @@ import com.foxminded.university.domain.Department;
 
 @Repository
 public class DepartmentDaoImpl implements DepartmentDao {
-    private JdbcTemplate jdbcTemplate;    
+    private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
     private final String SQL_GET_DEPARTMENT = "select " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
             "f.id as faculty_id, f.title as faculty_title  " +
@@ -30,17 +30,17 @@ public class DepartmentDaoImpl implements DepartmentDao {
             "departments as d " +
             "left join faculties as f on d.faculty_id = f.id " +
             "where d.id = ?;";
-    
+
     private final String SQL_GET_ALL_DEPARTMENTS = "select " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
             "f.id as faculty_id, f.title as faculty_title  " +
             "from " +
             "departments as d " +
             "left join faculties as f on d.faculty_id = f.id; ";
-    
+
     private final String SQL_ADD_DEPARTMENT = "INSERT INTO departments (title, faculty_id) VALUES (:title, :faculty_id) ;";
     private final String SQL_DELETE_DEPARTMENT = "DELETE FROM departments WHERE id = ?;";
-    private final String SQL_UPDATE_DEPARTMENT = "UPDATE departments SET  title = ?, faculty_id = ? WHERE id = ?;";    
+    private final String SQL_UPDATE_DEPARTMENT = "UPDATE departments SET  title = ?, faculty_id = ? WHERE id = ?;";
 
     @Autowired
     public DepartmentDaoImpl(DataSource dataSource) {

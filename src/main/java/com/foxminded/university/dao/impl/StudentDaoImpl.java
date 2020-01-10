@@ -21,7 +21,8 @@ import org.springframework.stereotype.Repository;
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
-import com.foxminded.university.exception.DaoException;
+import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
 
 @Repository
 public class StudentDaoImpl implements StudentDao {
@@ -69,10 +70,13 @@ public class StudentDaoImpl implements StudentDao {
     public Student getById(int id) {
         Student student = null;
         try {
+            logger.debug("Searching for student with id = " + id);
             student = jdbcTemplate.queryForObject(SQL_GET_STUDENT, new Object[] { id }, new StudentMapper());
-        } catch (DataAccessException ex) {
-            throw new DaoException("Problem while extraction student with id = " + id);
+        } catch (EmptyResultDataAccessException ex) {
+            logger.warn("Problem while extraction student with id = " + id, ex);
+            throw new EntityNotFoundException("Problem while extraction student with id = " + id);
         }
+        logger.trace("Student with id = " + id + " was found");
         return student;
     }
 
@@ -80,10 +84,13 @@ public class StudentDaoImpl implements StudentDao {
     public List<Student> getAll() {
         List<Student> students = null;
         try {
+            logger.debug("Searching for all students");
             students = jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
         } catch (DataAccessException ex) {
-            throw new DaoException("Problem while extraction students");
+            logger.warn("Problem while students extraction", ex);
+            throw new QueryNotExecuteException("Problem while students extraction");
         }
+        logger.trace("All students were found");
         return students;
     }
 
@@ -96,34 +103,48 @@ public class StudentDaoImpl implements StudentDao {
                 .addValue("last_name", student.getLastName())
                 .addValue("group_id", groupId);
         try {
+            logger.debug("Trying to add new student " + student.getFirstName() + " " + student.getLastName());
             namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
             student.setId(holder.getKey().intValue());
         } catch (DataAccessException ex) {
-            throw new DaoException(
+            logger.warn("Problem while adding new student " + student.getFirstName() + " " + student.getLastName(),
+                    ex);
+            throw new QueryNotExecuteException(
                     "Problem while adding student" + student.getFirstName() + " " + student.getLastName());
         }
+        logger.trace("New student " + student.getFirstName() + " " + student.getLastName() + "was added");
         return student;
     }
 
     @Override
     public boolean delete(int id) {
         try {
+            logger.debug("Trying to delete student with id = " + id);
             jdbcTemplate.update(SQL_DELETE_STUDENT, id);
         } catch (EmptyResultDataAccessException ex) {
-            throw new DaoException("Problem while deleting student with id = " + id);
+            logger.warn("Problem while deleting student with id = " + id, ex);
+            throw new EntityNotFoundException("Problem while deleting student with id = " + id);
         }
+        logger.trace("Student with id = " + id + " was deleted");
         return true;
     }
 
     @Override
     public Student update(Student student) {
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
+        if (student.getId() == 0) {
+            logger.warn("There is no such student in database");
+            throw new EntityNotFoundException("There is no such student in database");
+        }
         try {
+            logger.debug("Trying to update student with id = " + student.getId());
             jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
                     student.getId());
-        } catch (DataAccessException ex) {
-            throw new DaoException("Problem while updating student with id = " + student.getId());
+        } catch (EmptyResultDataAccessException ex) {
+            logger.warn("Problem while student updating");
+            throw new EntityNotFoundException("Problem while updating student with id = " + student.getId());
         }
+        logger.trace("Student with id = " + student.getId() + " was updated");
         return student;
     }
 }

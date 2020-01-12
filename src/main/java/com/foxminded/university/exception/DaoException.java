@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.exception;
+package com.foxminded.university.exception;
 
 public class DaoException extends RuntimeException {
 

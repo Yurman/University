@@ -16,7 +16,7 @@ public class PropertyReader {
         Properties dbProperties = new Properties();
 
         try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
-            logger.debug("Trying to read properties from " + propertiesFileName);
+            logger.debug("Start readProperties() from " + propertiesFileName);
             dbProperties.load(fileInput);
         } catch (IOException e) {
             logger.warn("Problem while reading properties from " + propertiesFileName);

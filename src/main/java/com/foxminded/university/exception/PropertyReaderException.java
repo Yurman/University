@@ -8,4 +8,7 @@ public class PropertyReaderException extends RuntimeException {
         super(message);
     }
 
+    public PropertyReaderException() {
+    }
+
 }

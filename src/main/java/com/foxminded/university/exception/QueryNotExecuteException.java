@@ -8,4 +8,7 @@ public class QueryNotExecuteException extends RuntimeException {
         super(message);
     }
 
+    public QueryNotExecuteException() {
+    }
+
 }

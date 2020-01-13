@@ -26,74 +26,74 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student addStudent(Student student) {
-        logger.debug("Start addStudent()" + student.toString());
+        logger.debug("addStudent() [{}]", student.toString());
         try {
             studentDao.add(student);
         } catch (EntityNotFoundException ex) {
-            logger.error("Error while adding " + student.toString(), ex);
+            logger.error(String.format("addStudent() [{}]", student.toString()), ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error("Error while adding " + student.toString(), exc);
+            logger.error(String.format("addStudent() [{}]", student.toString()), exc);
         }
-        logger.trace("New student " + student.toString() + " was added");
+        logger.trace("Result: [{}] ", student.toString());
         return student;
     }
 
     @Override
     public Student updateStudent(Student student) {
-        logger.debug("Start updateStudent()" + student.toString());
+        logger.debug("updateStudent() [{}]", student.toString());
         try {
             studentDao.update(student);
         } catch (EntityNotFoundException ex) {
-            logger.error("Error while updating " + student.toString(), ex);
+            logger.error(String.format("updateStudent() [{}]", student.toString()), ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error("Error while updating " + student.toString(), exc);
+            logger.error(String.format("updateStudent() [{}]", student.toString()), exc);
         }
-        logger.trace("Student " + student.toString() + " was updated");
+        logger.trace("Result: [{}] ", student.toString());
         return student;
     }
 
     @Override
     public boolean deleteStudent(int id) {
-        logger.debug("Start deleteStudent() with id = " + id);
+        logger.debug("deleteStudent() [{}]", id);
         boolean isDeleted = false;
         try {
             isDeleted = studentDao.delete(id);
         } catch (EntityNotFoundException ex) {
-            logger.error("Error while deleting student with id = " + id, ex);
+            logger.error("deleteStudent() " + id, ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error("Error while deleting student with id = " + id, exc);
+            logger.error(String.format("deleteStudent() [{}]", id), exc);
         }
-        logger.trace("Student with id = " + id + " was deleted");
+        logger.trace("Result: [{}] ", isDeleted);
         return isDeleted;
     }
 
     @Override
     public Student getStudentById(int id) {
-        logger.debug("Start getStudentById() with id = " + id);
+        logger.debug("getStudentById() [{}]", id);
         Student student = null;
         try {
             student = studentDao.getById(id);
         } catch (EntityNotFoundException ex) {
-            logger.error("Error while extraction student with id = " + id, ex);
+            logger.error(String.format("getStudentById() [{}]", id), ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error("Error while extraction student with id = " + id, exc);
+            logger.error(String.format("getStudentById() [{}]", id), exc);
         }
-        logger.trace(student.toString() + " was found");
+        logger.trace("Result: [{}] ", id);
         return student;
     }
 
     @Override
     public List<Student> getAllStudents() {
-        logger.debug("Start getAllStudents()");
+        logger.debug("getAllStudents()");
         List<Student> students = null;
         try {
             students = studentDao.getAll();
         } catch (EntityNotFoundException ex) {
-            logger.error("Error while extraction students", ex);
+            logger.error("getAllStudents()", ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error("Error while extraction students", exc);
+            logger.error("getAllStudents()", exc);
         }
-        logger.trace(students.size() + " students were found");
+        logger.trace("Result: [{}] ", students.size());
         return students;
     }
 }

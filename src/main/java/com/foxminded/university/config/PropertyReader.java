@@ -16,13 +16,12 @@ public class PropertyReader {
         Properties dbProperties = new Properties();
 
         try (InputStream fileInput = ClassLoader.getSystemClassLoader().getResourceAsStream(propertiesFileName)) {
-            logger.debug("Start readProperties() from " + propertiesFileName);
+            logger.debug("readProperties() [{}]", propertiesFileName);
             dbProperties.load(fileInput);
         } catch (IOException e) {
-            logger.warn("Problem while reading properties from " + propertiesFileName);
-            throw new PropertyReaderException("Problem while reading properties");
+            throw new PropertyReaderException();
         }
-        logger.trace("Successfully read properties");
+        logger.trace("Result: [true] ");
         return dbProperties;
     }
 }

@@ -68,37 +68,40 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-        logger.debug("Start getById() with id = " + id);
+        logger.debug("getById() [{}]", id);
         Student student = null;
         try {
             student = jdbcTemplate.queryForObject(SQL_GET_STUDENT, new Object[] { id }, new StudentMapper());
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while extraction student with id = " + id);
+            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while extraction student with id = " + id);
+            throw new QueryNotExecuteException();
         }
-        logger.trace(student.toString() + " was found");
+        logger.trace("Result: [{}] ", student.toString());
         return student;
     }
 
     @Override
     public List<Student> getAll() {
-        logger.debug("Start getAll()");
+        logger.debug("getAll()");
         List<Student> students = null;
         try {
             students = jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while students extraction");
+            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while students extraction");
+            throw new QueryNotExecuteException();
         }
-        logger.trace(students.size() + " students were found");
+        if (students.isEmpty()) {
+            throw new QueryNotExecuteException("Empty list was returned");
+        }
+        logger.trace("Result: [{}] ", students.size());
         return students;
     }
 
     @Override
     public Student add(Student student) {
-        logger.debug("Start add() " + student.toString());
+        logger.debug("add() [{}]", student.toString());
         KeyHolder holder = new GeneratedKeyHolder();
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
         SqlParameterSource parameters = new MapSqlParameterSource()
@@ -109,31 +112,31 @@ public class StudentDaoImpl implements StudentDao {
             namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
             student.setId(holder.getKey().intValue());
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while adding student " + student.toString());
+            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while adding student " + student.toString());
+            throw new QueryNotExecuteException();
         }
-        logger.trace("New student " + student.toString() + " was added");
+        logger.trace("Result: [{}] ", student.toString());
         return student;
     }
 
     @Override
     public boolean delete(int id) {
-        logger.debug("Start delete() student with id = " + id);
+        logger.debug("delete() [{}]", id);
         try {
             jdbcTemplate.update(SQL_DELETE_STUDENT, id);
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while deleting student with id = " + id);
+            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while deleting student with id = " + id);
+            throw new QueryNotExecuteException();
         }
-        logger.trace("Student with id = " + id + " was deleted");
+        logger.trace("Result: [true] ");
         return true;
     }
 
     @Override
     public Student update(Student student) {
-        logger.debug("Start update() " + student.toString());
+        logger.debug("update() [{}]", student.toString());
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
         if (student.getId() == 0) {
             throw new EntityNotFoundException("There is no such student in database");
@@ -142,11 +145,11 @@ public class StudentDaoImpl implements StudentDao {
             jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
                     student.getId());
         } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while updating student with id = " + student.getId());
+            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while updating student with id = " + student.getId());
+            throw new QueryNotExecuteException();
         }
-        logger.trace("Student " + student.toString() + " was updated");
+        logger.trace("Result: [{}] ", student.toString());
         return student;
     }
 }

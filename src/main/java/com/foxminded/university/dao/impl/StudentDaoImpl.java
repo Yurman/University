@@ -5,11 +5,7 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,14 +17,11 @@ import org.springframework.stereotype.Repository;
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.dao.mapper.StudentMapper;
 import com.foxminded.university.domain.Student;
-import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.exception.QueryNotExecuteException;
 
 @Repository
 public class StudentDaoImpl implements StudentDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
 
     private final String SQL_GET_STUDENT = "select " +
             "s.id as student_id, s.first_name, s.last_name, " +
@@ -68,85 +61,38 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student getById(int id) {
-        logger.debug("Start getById() with id = " + id);
-        Student student = null;
-        try {
-            student = jdbcTemplate.queryForObject(SQL_GET_STUDENT, new Object[] { id }, new StudentMapper());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while extraction student with id = " + id);
-        } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while extraction student with id = " + id);
-        }
-        logger.trace(student.toString() + " was found");
-        return student;
+        return jdbcTemplate.queryForObject(SQL_GET_STUDENT, new Object[] { id }, new StudentMapper());
     }
 
     @Override
     public List<Student> getAll() {
-        logger.debug("Start getAll()");
-        List<Student> students = null;
-        try {
-            students = jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while students extraction");
-        } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while students extraction");
-        }
-        logger.trace(students.size() + " students were found");
-        return students;
+        return jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
     }
 
     @Override
     public Student add(Student student) {
-        logger.debug("Start add() " + student.toString());
         KeyHolder holder = new GeneratedKeyHolder();
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("first_name", student.getFirstName())
                 .addValue("last_name", student.getLastName())
                 .addValue("group_id", groupId);
-        try {
-            namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
-            student.setId(holder.getKey().intValue());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while adding student " + student.toString());
-        } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while adding student " + student.toString());
-        }
-        logger.trace("New student " + student.toString() + " was added");
+        namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
+        student.setId(holder.getKey().intValue());
         return student;
     }
 
     @Override
     public boolean delete(int id) {
-        logger.debug("Start delete() student with id = " + id);
-        try {
-            jdbcTemplate.update(SQL_DELETE_STUDENT, id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while deleting student with id = " + id);
-        } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while deleting student with id = " + id);
-        }
-        logger.trace("Student with id = " + id + " was deleted");
+        jdbcTemplate.update(SQL_DELETE_STUDENT, id);
         return true;
     }
 
     @Override
     public Student update(Student student) {
-        logger.debug("Start update() " + student.toString());
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
-        if (student.getId() == 0) {
-            throw new EntityNotFoundException("There is no such student in database");
-        }
-        try {
-            jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
-                    student.getId());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException("Problem while updating student with id = " + student.getId());
-        } catch (DataAccessException exc) {
-            throw new QueryNotExecuteException("Problem while updating student with id = " + student.getId());
-        }
-        logger.trace("Student " + student.toString() + " was updated");
+        jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
+                student.getId());
         return student;
     }
 }

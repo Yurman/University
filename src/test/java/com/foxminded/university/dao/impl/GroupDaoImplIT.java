@@ -9,10 +9,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupRepository;
 
 public class GroupDaoImplIT {
@@ -87,7 +87,7 @@ public class GroupDaoImplIT {
     @Test
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        assertThrows(EmptyResultDataAccessException.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             groupDao.getById(1);
         });
     }

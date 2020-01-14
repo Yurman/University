@@ -30,7 +30,7 @@ public class StudentDaoImpl implements StudentDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private static final Logger logger = LoggerFactory.getLogger(StudentDaoImpl.class);
 
-    private final String SQL_GET_STUDENT = "select " +
+    private static final String SQL_GET_STUDENT = "select " +
             "s.id as student_id, s.first_name, s.last_name, " +
             "g.id as group_id, g.year, g.title as group_title, " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
@@ -42,7 +42,7 @@ public class StudentDaoImpl implements StudentDao {
             "left join faculties as f on d.faculty_id = f.id " +
             "where s.id = ?;";
 
-    private final String SQL_GET_ALL_STUDENTS = "select " +
+    private static final String SQL_GET_ALL_STUDENTS = "select " +
             "s.id as student_id, s.first_name, s.last_name, " +
             "g.id as group_id, g.year, g.title as group_title, " +
             "d.id as department_id, d.title as department_title, d.faculty_id, " +
@@ -53,9 +53,9 @@ public class StudentDaoImpl implements StudentDao {
             "left join departments as d on g.department_id = d.id " +
             "left join faculties as f on d.faculty_id = f.id;";
 
-    private final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";
-    private final String SQL_DELETE_STUDENT = "DELETE FROM students WHERE id = ?;";
-    private final String SQL_UPDATE_STUDENT = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
+    private static final String SQL_ADD_STUDENT = "INSERT INTO students (first_name, last_name, group_id) VALUES (:first_name, :last_name, :group_id) ;";
+    private static final String SQL_DELETE_STUDENT = "DELETE FROM students WHERE id = ?;";
+    private static final String SQL_UPDATE_STUDENT = "UPDATE students SET  first_name = ?, last_name = ?, group_id = ? WHERE id = ?;";
 
     @Autowired
     public StudentDaoImpl(DataSource dataSource) {
@@ -77,7 +77,7 @@ public class StudentDaoImpl implements StudentDao {
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", student.toString());
+        logger.trace("Result: [{}] ", student);
         return student;
     }
 
@@ -101,7 +101,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student add(Student student) {
-        logger.debug("add() [{}]", student.toString());
+        logger.debug("add() [{}]", student);
         KeyHolder holder = new GeneratedKeyHolder();
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
         SqlParameterSource parameters = new MapSqlParameterSource()
@@ -116,7 +116,7 @@ public class StudentDaoImpl implements StudentDao {
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", student.toString());
+        logger.trace("Result: [{}] ", student);
         return student;
     }
 
@@ -136,7 +136,7 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Student update(Student student) {
-        logger.debug("update() [{}]", student.toString());
+        logger.debug("update() [{}]", student);
         Integer groupId = Objects.nonNull(student.getGroup()) ? student.getGroup().getId() : null;
         if (student.getId() == 0) {
             throw new EntityNotFoundException("There is no such student in database");
@@ -149,7 +149,7 @@ public class StudentDaoImpl implements StudentDao {
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", student.toString());
+        logger.trace("Result: [{}] ", student);
         return student;
     }
 }

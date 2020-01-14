@@ -26,29 +26,29 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student addStudent(Student student) {
-        logger.debug("addStudent() [{}]", student.toString());
+        logger.debug("addStudent() [{}]", student);
         try {
             studentDao.add(student);
         } catch (EntityNotFoundException ex) {
-            logger.error(String.format("addStudent() [{}]", student.toString()), ex);
+            logger.error("addStudent() [{}]", student, ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error(String.format("addStudent() [{}]", student.toString()), exc);
+            logger.error("addStudent() [{}]", student, exc);
         }
-        logger.trace("Result: [{}] ", student.toString());
+        logger.trace("Result: [{}] ", student);
         return student;
     }
 
     @Override
     public Student updateStudent(Student student) {
-        logger.debug("updateStudent() [{}]", student.toString());
+        logger.debug("updateStudent() [{}]", student);
         try {
             studentDao.update(student);
         } catch (EntityNotFoundException ex) {
-            logger.error(String.format("updateStudent() [{}]", student.toString()), ex);
+            logger.error("updateStudent() [{}]", student, ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error(String.format("updateStudent() [{}]", student.toString()), exc);
+            logger.error("updateStudent() [{}]", student, exc);
         }
-        logger.trace("Result: [{}] ", student.toString());
+        logger.trace("Result: [{}] ", student);
         return student;
     }
 
@@ -61,7 +61,7 @@ public class StudentServiceImpl implements StudentService {
         } catch (EntityNotFoundException ex) {
             logger.error("deleteStudent() " + id, ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error(String.format("deleteStudent() [{}]", id), exc);
+            logger.error("deleteStudent() [{}]", id, exc);
         }
         logger.trace("Result: [{}] ", isDeleted);
         return isDeleted;
@@ -74,9 +74,9 @@ public class StudentServiceImpl implements StudentService {
         try {
             student = studentDao.getById(id);
         } catch (EntityNotFoundException ex) {
-            logger.error(String.format("getStudentById() [{}]", id), ex);
+            logger.error("getStudentById() [{}]", id, ex);
         } catch (QueryNotExecuteException exc) {
-            logger.error(String.format("getStudentById() [{}]", id), exc);
+            logger.error("getStudentById() [{}]", id, exc);
         }
         logger.trace("Result: [{}] ", id);
         return student;

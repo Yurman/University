@@ -31,11 +31,6 @@ public class Person {
     }
 
     @Override
-    public String toString() {
-        return firstName + " " + lastName;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 11;
         int result = 19;
@@ -69,5 +64,11 @@ public class Person {
         } else if (!lastName.equals(other.lastName))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Person [" + (firstName != null ? "firstName=" + firstName + ", " : "")
+                + (lastName != null ? "lastName=" + lastName + ", " : "") + "age=" + age + "]";
     }
 }

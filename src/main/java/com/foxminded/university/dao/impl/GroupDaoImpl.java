@@ -86,9 +86,6 @@ public class GroupDaoImpl implements GroupDao {
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
-        if (groups.isEmpty()) {
-            throw new QueryNotExecuteException("Empty list was returned");
-        }
         logger.trace("Result: [{}] ", groups.size());
         return groups;
     }

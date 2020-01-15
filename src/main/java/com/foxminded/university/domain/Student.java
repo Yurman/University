@@ -52,7 +52,6 @@ public class Student extends Person {
 
     @Override
     public String toString() {
-        return (super.toString() != null ? super.toString() : "") + " id = " + id + ", "
-                + (group != null ? "group id = " + group.getId() + ", " : "");
+        return "Student [id=" + id + ", " + (group != null ? "group=" + group : "") + "]";
     }
 }

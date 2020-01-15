@@ -111,4 +111,12 @@ public class ScheduleItem {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "ScheduleItem [id=" + id + ", " + (lection != null ? "lection=" + lection + ", " : "")
+                + (professor != null ? "professor=" + professor + ", " : "")
+                + (groups != null ? "groups=" + groups + ", " : "") + (date != null ? "date=" + date + ", " : "")
+                + (classRoom != null ? "classRoom=" + classRoom : "") + "]";
+    }
 }

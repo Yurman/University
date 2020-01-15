@@ -45,4 +45,9 @@ public class Room {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Room [id=" + id + ", number=" + number + "]";
+    }
 }

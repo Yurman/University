@@ -81,4 +81,11 @@ public class Professor extends Person {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Professor [id=" + id + ", " + (degree != null ? "degree=" + degree + ", " : "")
+                + (position != null ? "position=" + position + ", " : "")
+                + (department != null ? "department=" + department : "") + "]";
+    }
 }

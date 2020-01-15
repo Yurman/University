@@ -80,6 +80,7 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Group [id = " + id + ", " + (title != null ? "title = " + title : "") + ", year = " + year + "]";
+        return "Group [id=" + id + ", " + (title != null ? "title=" + title + ", " : "")
+                + (department != null ? "department=" + department + ", " : "") + "year=" + year + "]";
     }
 }

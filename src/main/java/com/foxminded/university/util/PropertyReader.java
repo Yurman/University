@@ -1,4 +1,4 @@
-package com.foxminded.university.config;
+package com.foxminded.university.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +7,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.foxminded.university.exception.PropertyReaderException;
+import com.foxminded.university.exception.PropertyReadException;
 
 public class PropertyReader {
     private static final Logger logger = LoggerFactory.getLogger(PropertyReader.class);
@@ -19,9 +19,8 @@ public class PropertyReader {
             logger.debug("readProperties() [{}]", propertiesFileName);
             dbProperties.load(fileInput);
         } catch (IOException e) {
-            throw new PropertyReaderException();
+            throw new PropertyReadException();
         }
-        logger.trace("Result: [true] ");
         return dbProperties;
     }
 }

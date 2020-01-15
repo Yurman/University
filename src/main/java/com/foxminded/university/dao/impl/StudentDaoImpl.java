@@ -92,9 +92,6 @@ public class StudentDaoImpl implements StudentDao {
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
-        if (students.isEmpty()) {
-            throw new QueryNotExecuteException("Empty list was returned");
-        }
         logger.trace("Result: [{}] ", students.size());
         return students;
     }

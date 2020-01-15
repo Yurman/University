@@ -87,8 +87,6 @@ public class StudentDaoImpl implements StudentDao {
         List<Student> students = null;
         try {
             students = jdbcTemplate.query(SQL_GET_ALL_STUDENTS, new StudentMapper());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }

@@ -60,6 +60,14 @@ public class GroupDaoImplIT {
     }
 
     @Test
+    public void shouldGetAllGroupsFromEmptyDB() throws Exception {
+        groupDao.delete(1);
+        groupDao.delete(2);
+        groupDao.delete(3);
+        assertThat(groupDao.getAll().isEmpty());
+    }
+
+    @Test
     public void shouldUpdteGroup() throws Exception {
         testGroup.setTitle("Math");
         groupDao.update(testGroup);

@@ -81,8 +81,6 @@ public class GroupDaoImpl implements GroupDao {
         List<Group> groups = null;
         try {
             groups = jdbcTemplate.query(SQL_GET_ALL_GROUPS, new GroupMapper());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }

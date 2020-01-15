@@ -63,6 +63,14 @@ public class StudentDaoImplIT {
     }
 
     @Test
+    public void shouldGetAllStudentsFromEmptyDB() throws Exception {
+        studentDao.delete(1);
+        studentDao.delete(2);
+        studentDao.delete(3);
+        assertThat(studentDao.getAll().isEmpty());
+    }
+
+    @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
         studentDao.update(testStudent);

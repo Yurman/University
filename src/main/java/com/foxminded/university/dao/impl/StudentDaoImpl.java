@@ -106,8 +106,6 @@ public class StudentDaoImpl implements StudentDao {
         try {
             namedParameterJdbcTemplate.update(SQL_ADD_STUDENT, parameters, holder, new String[] { "id" });
             student.setId(holder.getKey().intValue());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
@@ -120,8 +118,6 @@ public class StudentDaoImpl implements StudentDao {
         logger.debug("delete() [{}]", id);
         try {
             jdbcTemplate.update(SQL_DELETE_STUDENT, id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
@@ -139,8 +135,6 @@ public class StudentDaoImpl implements StudentDao {
         try {
             jdbcTemplate.update(SQL_UPDATE_STUDENT, student.getFirstName(), student.getLastName(), groupId,
                     student.getId());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }

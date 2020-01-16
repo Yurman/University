@@ -100,8 +100,6 @@ public class GroupDaoImpl implements GroupDao {
         try {
             namedParameterJdbcTemplate.update(SQL_ADD_GROUP, parameters, holder, new String[] { "id" });
             group.setId(holder.getKey().intValue());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
@@ -114,8 +112,6 @@ public class GroupDaoImpl implements GroupDao {
         logger.debug("delete() [{}]", id);
         try {
             jdbcTemplate.update(SQL_DELETE_GROUP, id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }
@@ -132,8 +128,6 @@ public class GroupDaoImpl implements GroupDao {
         }
         try {
             jdbcTemplate.update(SQL_UPDATE_GROUP, group.getTitle(), group.getYear(), departmentId, group.getId());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new EntityNotFoundException();
         } catch (DataAccessException exc) {
             throw new QueryNotExecuteException();
         }

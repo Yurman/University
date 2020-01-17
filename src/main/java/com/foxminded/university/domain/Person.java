@@ -1,7 +1,6 @@
 package com.foxminded.university.domain;
 
 public class Person {
-
     private String firstName;
     private String lastName;
     private int age;

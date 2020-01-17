@@ -77,4 +77,10 @@ public class Group {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Group [id=" + id + ", " + (title != null ? "title=" + title + ", " : "")
+                + (department != null ? "department=" + department + ", " : "") + "year=" + year + "]";
+    }
 }

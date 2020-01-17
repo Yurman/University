@@ -1,7 +1,8 @@
 package com.foxminded.university.dao.impl;
 
 import org.flywaydb.core.Flyway;
-import com.foxminded.university.dao.PropertyReader;
+
+import com.foxminded.university.util.PropertyReader;
 
 public class FlywayWrapper {
 

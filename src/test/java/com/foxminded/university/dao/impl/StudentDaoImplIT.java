@@ -9,10 +9,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
@@ -63,6 +63,14 @@ public class StudentDaoImplIT {
     }
 
     @Test
+    public void shouldGetAllStudentsFromEmptyDB() throws Exception {
+        studentDao.delete(1);
+        studentDao.delete(2);
+        studentDao.delete(3);
+        assertThat(studentDao.getAll().isEmpty());
+    }
+
+    @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
         studentDao.update(testStudent);
@@ -88,7 +96,7 @@ public class StudentDaoImplIT {
     @Test
     public void shouldDeleteStudent() throws Exception {
         studentDao.delete(2);
-        assertThrows(EmptyResultDataAccessException.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             studentDao.getById(2);
         });
     }

@@ -83,4 +83,11 @@ public class Lection {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Lection [id=" + id + ", " + (title != null ? "title=" + title + ", " : "")
+                + (startTime != null ? "startTime=" + startTime + ", " : "")
+                + (endTime != null ? "endTime=" + endTime : "") + "]";
+    }
 }

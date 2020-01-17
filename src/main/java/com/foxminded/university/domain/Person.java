@@ -64,4 +64,10 @@ public class Person {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Person [" + (firstName != null ? "firstName=" + firstName + ", " : "")
+                + (lastName != null ? "lastName=" + lastName + ", " : "") + "age=" + age + "]";
+    }
 }

@@ -59,4 +59,10 @@ public class University {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "University [" + (title != null ? "title=" + title + ", " : "")
+                + (schedule != null ? "schedule=" + schedule : "") + "]";
+    }
 }

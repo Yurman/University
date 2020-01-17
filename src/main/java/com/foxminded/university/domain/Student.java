@@ -49,4 +49,9 @@ public class Student extends Person {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Student [id=" + id + ", " + (group != null ? "group=" + group : "") + "]";
+    }
 }

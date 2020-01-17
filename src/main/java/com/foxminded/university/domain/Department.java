@@ -67,4 +67,10 @@ public class Department {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Department [id=" + id + ", " + (title != null ? "title=" + title + ", " : "")
+                + (faculty != null ? "faculty=" + faculty : "") + "]";
+    }
 }

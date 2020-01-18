@@ -6,7 +6,7 @@
     <groupId>com.foxminded.university</groupId>
     <artifactId>University</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>University</name>
 
@@ -24,7 +24,11 @@
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <mockito.version>1.9.5</mockito.version>
         <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <spring-mvc.version>5.2.3.RELEASE</spring-mvc.version>
         <logback.version>1.2.3</logback.version>
+        <servlet.version>4.0.1</servlet.version>
+        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <thymeleaf-spring5.version>3.0.11.RELEASE</thymeleaf-spring5.version>
     </properties>
 
     <dependencies>
@@ -44,6 +48,28 @@
             <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring-mvc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf</artifactId>
+            <version>${thymeleaf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>${thymeleaf-spring5.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

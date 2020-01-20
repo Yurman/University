@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.foxminded.university.service.StudentService;
 
 @Controller
-@RequestMapping("/info")
+@RequestMapping("/StudentInfo")
 public class StudentInfoController {
 
     @Autowired
@@ -16,7 +16,7 @@ public class StudentInfoController {
 
     @RequestMapping
     public String handleRequest(Model model) {
-        model.addAttribute("msg", "Just a massage for now");
+        model.addAttribute("msg", "Just a massage for student");
         model.addAttribute("student", student.getStudentById(1).getFirstName());
         return "StudentInfo";
     }

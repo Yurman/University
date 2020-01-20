@@ -5,17 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.foxminded.university.service.StudentService;
+import com.foxminded.university.service.GroupService;
 
 @Controller
-@RequestMapping("/main")
-public class MainController {
+@RequestMapping("/Groups")
+public class GroupsController {
     @Autowired
-    StudentService student;
+    GroupService group;
 
     @RequestMapping
     public String handleRequest(Model model) {
-        model.addAttribute("msg", "Just a massage for main");
-        return "main";
+        model.addAttribute("groups", group.getAllGroups());
+        return "Groups";
     }
 }

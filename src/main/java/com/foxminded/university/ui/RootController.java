@@ -1,21 +1,16 @@
 package com.foxminded.university.ui;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.foxminded.university.service.StudentService;
-
 @Controller
-@RequestMapping("/main")
-public class MainController {
-    @Autowired
-    StudentService student;
+@RequestMapping("/")
+public class RootController {
 
     @RequestMapping
     public String handleRequest(Model model) {
-        model.addAttribute("msg", "Welcome to our University");
+        model.addAttribute("msg", "Just a massage for main");
         return "main";
     }
 }

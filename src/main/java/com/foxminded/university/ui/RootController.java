@@ -13,4 +13,5 @@ public class RootController {
         model.addAttribute("msg", "Just a massage for main");
         return "main";
     }
+
 }

@@ -16,8 +16,7 @@ public class StudentInfoController {
 
     @RequestMapping
     public String handleRequest(Model model) {
-        model.addAttribute("msg", "Just a massage for student");
-        model.addAttribute("student", student.getStudentById(1).getFirstName());
+        model.addAttribute("student", student.getStudentById(1));
         return "StudentInfo";
     }
 }

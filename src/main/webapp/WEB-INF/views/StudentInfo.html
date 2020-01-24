@@ -15,7 +15,7 @@
 <title>StudentInfo</title>
 </head>
 <body>
-	<h2 class="d-flex justify-content-center">Student Info</h2>
+    <h2 class="d-flex justify-content-center">Student Info</h2>
     <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr>
@@ -25,20 +25,30 @@
                 <th>Group Id</th>
             </tr>
         </thead>
-        <tbody>            
+        <tbody>
             <tr th:student="student">
-                <td><span th:text="${student.id}"> id </span></td>
-                <td><span th:text="${student.FirstName}"> First Name </span></td>
-                <td><span th:text="${student.LastName}"> Last Name </span></td>
-                <td><span th:text="${student.Group.Id}"> Group Id </span></td>
+                <td>
+                    <span th:text="${student.id}"> id </span>
+                </td>
+                <td>
+                    <span th:text="${student.FirstName}"> First Name </span>
+                </td>
+                <td>
+                    <span th:text="${student.LastName}"> Last Name </span>
+                </td>
+                <td>
+                    <span th:text="${student.Group.Id}"> Group Id</span>
+                </td>
             </tr>
         </tbody>
     </table>
-    <div class="d-flex">
-        <a href='main' class="btn btn-outline-info">Main</a>
-    </div>
-    <div class="d-flex">
-        <a href='Students' class="btn btn-outline-info">Main</a>
+    <div class="container">
+        <div class="d-flex justify-content-center col">
+            <a href='Students' class="btn btn-outline-info btn-lg btn-block">Students</a>
+        </div>
+        <div class="d-flex justify-content-center col">
+            <a href='main' class="btn btn-outline-info btn-lg btn-block">Main</a>
+        </div>
     </div>
 </body>
 </html>

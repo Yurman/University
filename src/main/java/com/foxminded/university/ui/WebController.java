@@ -30,12 +30,6 @@ public class WebController {
         return "main";
     }
 
-    @RequestMapping(value = "/GroupInfo", method = RequestMethod.POST)
-    public String handleRequestGroupInfo(@RequestParam(value = "id") int id, Model model) {
-        model.addAttribute("group", group.getGroupById(id));
-        return "GroupInfo";
-    }
-
     @RequestMapping("/Groups")
     public String handleRequestGroups(Model model) {
         model.addAttribute("groups", group.getAllGroups());
@@ -46,6 +40,12 @@ public class WebController {
     public String handleRequestStudents(Model model) {
         model.addAttribute("students", student.getAllStudents());
         return "Students";
+    }
+
+    @RequestMapping(value = "/GroupInfo", method = RequestMethod.POST)
+    public String handleRequestGroupInfo(@RequestParam(value = "id") int id, Model model) {
+        model.addAttribute("group", group.getGroupById(id));
+        return "GroupInfo";
     }
 
     @RequestMapping(value = "/StudentInfo", method = RequestMethod.POST)

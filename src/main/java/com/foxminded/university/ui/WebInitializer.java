@@ -4,7 +4,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 import com.foxminded.university.config.ThymleafConfiguration;
 
-public class AppInitializer extends
+public class WebInitializer extends
         AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override

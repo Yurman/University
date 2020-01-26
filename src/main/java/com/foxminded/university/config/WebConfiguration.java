@@ -14,10 +14,10 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @EnableWebMvc
 @Configuration
 @ComponentScan
-public class ThymleafConfiguration {
+public class WebConfiguration {
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Bean
     public SpringTemplateEngine templateEngine() {

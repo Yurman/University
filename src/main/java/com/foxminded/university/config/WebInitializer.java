@@ -1,8 +1,6 @@
-package com.foxminded.university.ui;
+package com.foxminded.university.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-
-import com.foxminded.university.config.ThymleafConfiguration;
 
 public class WebInitializer extends
         AbstractAnnotationConfigDispatcherServletInitializer {
@@ -14,7 +12,7 @@ public class WebInitializer extends
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class<?>[] { ThymleafConfiguration.class };
+        return new Class<?>[] { WebConfiguration.class };
     }
 
     @Override

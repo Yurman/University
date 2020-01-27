@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Groups</title>
+<title>groups</title>
 <link rel="stylesheet"
     href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -38,7 +38,7 @@
                     <span th:text="${group.Department.Id}">Department Id </span>
                 </td>
                 <td>
-                    <form action='GroupInfo' method='post'>
+                    <form action='groupInfo' method='post'>
                         <input type="hidden" th:name="id"
                             th:value="${group.id}" />
                         <button type="submit" value="Show more"

@@ -18,7 +18,8 @@ import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 
 public class DepartmentDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DataConfiguration.class);
+    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+            DataConfiguration.class);
     private DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Department testDepartment = DepartmentRepository.getTestDepartment();

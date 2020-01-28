@@ -1,6 +1,7 @@
 package com.foxminded.university.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,7 @@ class GroupServiceImplTest {
         when(groupDaoMock.getById(1)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.getGroupById(1);
-        assertEquals(actualGroup, expectedGroup);
+        assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 
     @Test
@@ -46,7 +47,7 @@ class GroupServiceImplTest {
         when(groupDaoMock.update(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.updateGroup(expectedGroup);
-        assertEquals(actualGroup, expectedGroup);
+        assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 
     @Test
@@ -73,6 +74,6 @@ class GroupServiceImplTest {
         when(groupDaoMock.add(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.addGroup(expectedGroup);
-        assertEquals(actualGroup, expectedGroup);
+        assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 }

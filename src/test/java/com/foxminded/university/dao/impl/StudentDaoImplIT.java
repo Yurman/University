@@ -44,7 +44,6 @@ public class StudentDaoImplIT {
         studentWithoutGroup.setFirstName("Jack");
         studentWithoutGroup.setLastName("Daniels");
         studentDao.add(studentWithoutGroup);
-
     }
 
     @Test

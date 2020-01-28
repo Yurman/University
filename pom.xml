@@ -23,10 +23,10 @@
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <mockito.version>1.9.5</mockito.version>
-        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>        
         <logback.version>1.2.3</logback.version>
         <servlet.version>4.0.1</servlet.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+        <thymeleaf-test.version>3.0.4.RELEASE</thymeleaf-test.version>
     </properties>
 
     <dependencies>
@@ -39,12 +39,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -62,12 +56,11 @@
             <version>${thymeleaf.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
-            <scope>provided</scope>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-testing</artifactId>
+            <version>${thymeleaf-test.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -85,7 +78,6 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>

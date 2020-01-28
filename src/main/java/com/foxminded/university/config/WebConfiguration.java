@@ -15,7 +15,7 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 public class WebConfiguration {
 
     @Autowired
-    ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
     @Bean
     public SpringTemplateEngine templateEngine() {

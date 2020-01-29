@@ -17,13 +17,13 @@ public class StudentController {
     private StudentService student;
 
     @RequestMapping("/students")
-    public String handleRequestStudents(Model model) {
+    public String getStudents(Model model) {
         model.addAttribute("students", student.getAllStudents());
         return "students";
     }
 
-    @RequestMapping(value = "/studentInfo", method = RequestMethod.POST)
-    public String handleRequestStudentInfo(@RequestParam(value = "id") int id, Model model) {
+    @RequestMapping(value = "/studentInfo", method = RequestMethod.GET)
+    public String getStudentInfo(@RequestParam(value = "id") int id, Model model) {
         model.addAttribute("student", student.getStudentById(id));
         return "studentInfo";
     }

@@ -38,7 +38,7 @@
                     <span th:text="${group.Department.Id}">Department Id </span>
                 </td>
                 <td>
-                    <form action='groupInfo' method='post'>
+                    <form action='groupInfo' method='get'>
                         <input type="hidden" th:name="id"
                             th:value="${group.id}" />
                         <button type="submit" value="Show more"

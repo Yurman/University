@@ -15,7 +15,6 @@ public class MainController {
 
     @RequestMapping("/main")
     public String handleRequestMain(Model model) {
-        model.addAttribute("msg", "Welcome to our University");
         return "main";
     }
 }

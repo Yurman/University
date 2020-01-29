@@ -17,13 +17,13 @@ public class GroupController {
     private GroupService group;
 
     @RequestMapping("/groups")
-    public String handleRequestGroups(Model model) {
+    public String getGroups(Model model) {
         model.addAttribute("groups", group.getAllGroups());
         return "groups";
     }
 
-    @RequestMapping(value = "/groupInfo", method = RequestMethod.POST)
-    public String handleRequestGroupInfo(@RequestParam(value = "id") int id, Model model) {
+    @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
+    public String getGroupInfo(@RequestParam(value = "id") int id, Model model) {
         model.addAttribute("group", group.getGroupById(id));
         return "groupInfo";
     }

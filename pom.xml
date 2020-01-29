@@ -17,9 +17,8 @@
         <spring.version>5.2.1.RELEASE</spring.version>
         <junit-jupiter-engine.version>5.5.2</junit-jupiter-engine.version>
         <assertj-core.version>3.4.1</assertj-core.version>
-        <postgresql.version>42.2.5</postgresql.version>
-        <flyway-core.version>4.0.1</flyway-core.version>
-        <flyway-maven-plugin.version>6.0.8</flyway-maven-plugin.version>
+        <postgresql.version>42.2.5</postgresql.version>        
+        <flyway.version>6.2.0</flyway.version>
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <mockito.version>1.9.5</mockito.version>
@@ -92,7 +91,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway-core.version}</version>
+            <version>${flyway.version}</version>
         </dependency>
     </dependencies>
 
@@ -101,7 +100,7 @@
             <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>${flyway-maven-plugin.version}</version>
+                <version>${flyway.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -14,6 +14,7 @@ import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupRepository;
+import com.foxminded.university.util.FlywayWrapper;
 
 public class GroupDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(

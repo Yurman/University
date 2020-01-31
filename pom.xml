@@ -104,7 +104,7 @@
                 <version>${flyway.version}</version>
                 <executions>
                     <execution>
-                        <phase>pre-integration-test</phase>
+                        <phase>package</phase>
                         <goals>                            
                             <goal>migrate</goal>
                         </goals>

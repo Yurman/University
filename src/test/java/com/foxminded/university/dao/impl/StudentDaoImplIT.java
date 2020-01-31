@@ -13,8 +13,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.service.FlywayWrapper;
 import com.foxminded.university.service.StudentRepository;
-import com.foxminded.university.util.FlywayWrapper;
 
 public class StudentDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(

@@ -1,8 +1,10 @@
-package com.foxminded.university.util;
+package com.foxminded.university.service;
 
 import java.util.Properties;
 
 import org.flywaydb.core.Flyway;
+
+import com.foxminded.university.util.PropertyReader;
 
 public class FlywayWrapper {
 

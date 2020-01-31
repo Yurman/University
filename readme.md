@@ -8,6 +8,14 @@ To start working with project you need to clone repository into your local works
 ## Running the tests
 Use `mvn test` to run tests and `mvn integration-test` to run integration tests
 ## Deployment
+Open project in your IDE as Maven project.
+Run pgAdmin to manage your database.
+
+1.Use sql script `university_db_Init.sql` from `src\main\resources\sql` to create schema and user.
+2.Use sql script `test_university_db_Init.sql` from `src\test\resources\` to create schema and user for integration tests.
+2.Execute `mvn package` command. While executing, Flyway migrations will be performed.
+3.Use `insert_university_data.sql` to insert data into the database.
+4.Run application on your local server.
 ## Built With
 Maven
 Tomcat

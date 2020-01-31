@@ -16,7 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import com.foxminded.university.config.DataConfiguration;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
-import com.foxminded.university.util.FlywayWrapper;
+import com.foxminded.university.service.FlywayWrapper;
 
 public class FacultyDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(

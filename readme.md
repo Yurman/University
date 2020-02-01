@@ -12,7 +12,7 @@ Open project in your IDE as Maven project.
 Run pgAdmin to manage your database.
 
 1. Use sql script `university_db_Init.sql` from `src\main\resources\sql` to create schema and user.
-1. Use sql script `test_university_db_Init.sql` from `src\test\resources\` to create schema and user for integration tests.
+1. Use sql script `test_university_db_Init.sql` from `src\test\resources` to create schema and user for integration tests.
 1. Execute `mvn package` command. While executing, Flyway migrations will be performed.
 1. Use `insert_university_data.sql` to insert data into the database.
 1. Run application on your local server.

@@ -22,8 +22,7 @@
         <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
         <mockito.version>1.9.5</mockito.version>
-        <logback.version>1.2.3</logback.version>
-        <servlet.version>4.0.1</servlet.version>
+        <logback.version>1.2.3</logback.version>        
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <thymeleaf-test.version>3.0.4.RELEASE</thymeleaf-test.version>
     </properties>

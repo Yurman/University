@@ -13,18 +13,22 @@ import com.foxminded.university.service.StudentService;
 @RequestMapping
 public class StudentController {
 
+    private StudentService studentService;
+
     @Autowired
-    private StudentService student;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @RequestMapping("/students")
     public String getStudents(Model model) {
-        model.addAttribute("students", student.getAllStudents());
+        model.addAttribute("students", studentService.getAllStudents());
         return "students";
     }
 
     @RequestMapping(value = "/studentInfo", method = RequestMethod.GET)
     public String getStudentInfo(@RequestParam(value = "id") int id, Model model) {
-        model.addAttribute("student", student.getStudentById(id));
+        model.addAttribute("student", studentService.getStudentById(id));
         return "studentInfo";
     }
 }

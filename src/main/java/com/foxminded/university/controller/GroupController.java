@@ -13,18 +13,22 @@ import com.foxminded.university.service.GroupService;
 @RequestMapping
 public class GroupController {
 
+    private GroupService groupService;
+
     @Autowired
-    private GroupService group;
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
+    }
 
     @RequestMapping("/groups")
     public String getGroups(Model model) {
-        model.addAttribute("groups", group.getAllGroups());
+        model.addAttribute("groups", groupService.getAllGroups());
         return "groups";
     }
 
     @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
     public String getGroupInfo(@RequestParam(value = "id") int id, Model model) {
-        model.addAttribute("group", group.getGroupById(id));
+        model.addAttribute("group", groupService.getGroupById(id));
         return "groupInfo";
     }
 }

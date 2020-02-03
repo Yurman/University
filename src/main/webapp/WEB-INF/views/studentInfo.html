@@ -11,43 +11,61 @@
     crossorigin="anonymous">
 </head>
 <body>
+
+    <nav
+        class="navbar navbar-expand-sm bg-dark navbar-dark justify-content-center fixed-bottom">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="main">Main</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="students">Students</a>
+            </li>
+        </ul>
+    </nav>
+    <h2 class="d-flex justify-content-center">Student Info</h2>
     <div class="container">
-        <h2 class="d-flex justify-content-center">Student Info</h2>
-        <table class="table table-bordered table-hover table-striped">
-            <thead>
-                <tr>
-                    <th>id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Group Id</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:student="student">
-                    <td>
-                        <span th:text="${student.id}"> id </span>
-                    </td>
-                    <td>
-                        <span th:text="${student.FirstName}">First Name </span>
-                    </td>
-                    <td>
-                        <span th:text="${student.LastName}">Last Name </span>
-                    </td>
-                    <td>
-                        <span th:text="${student.Group.Id}">Group Id</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="container">
-            <div class="d-flex justify-content-center col">
-                <a href='students'
-                    class="btn btn-outline-info btn-lg btn-block">Students</a>
-            </div>
-            <div class="d-flex justify-content-center col">
-                <a href='main'
-                    class="btn btn-outline-info btn-lg btn-block">Main</a>
-            </div>
+        <div class="d-flex justify-content-center">
+            <form th:student="student" name="Student Info"
+                class='card p-3 bg-light' style="width: 50%;">
+                <div class="form-group row">
+                    <label for="id"
+                        class="col-sm-6 col-form-label col-form-label-lg">ID</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="id" th:value="${student.id}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="firstName"
+                        class="col-sm-6 col-form-label col-form-label-lg">First Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="firstName"
+                            th:value="${student.firstName}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lastName"
+                        class="col-sm-6 col-form-label col-form-label-lg">Last Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="lastName" th:value="${student.lastName}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="groupId"
+                        class="col-sm-6 col-form-label col-form-label-lg">Group ID</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="groupId" th:value="${student.group.id}">
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </body>

@@ -22,13 +22,13 @@ public class StudentController {
 
     @RequestMapping("/students")
     public String getStudents(Model model) {
-        model.addAttribute("students", studentService.getAllStudents());
+        model.addAttribute("students", studentService.getAllStudentDto());
         return "students";
     }
 
     @RequestMapping(value = "/studentInfo", method = RequestMethod.GET)
     public String getStudentInfo(@RequestParam(value = "id") int id, Model model) {
-        model.addAttribute("student", studentService.getStudentById(id));
+        model.addAttribute("student", studentService.getStudentDto(id));
         return "studentInfo";
     }
 }

@@ -22,13 +22,13 @@ public class GroupController {
 
     @RequestMapping("/groups")
     public String getGroups(Model model) {
-        model.addAttribute("groups", groupService.getAllGroups());
+        model.addAttribute("groups", groupService.getAllGroupDto());
         return "groups";
     }
 
     @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
     public String getGroupInfo(@RequestParam(value = "id") int id, Model model) {
-        model.addAttribute("group", groupService.getGroupById(id));
+        model.addAttribute("group", groupService.getGroupDto(id));
         return "groupInfo";
     }
 }

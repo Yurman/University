@@ -1,5 +1,6 @@
 package com.foxminded.university.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.StudentService;
+import com.foxminded.university.service.dto.StudentDto;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -42,5 +44,29 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> getAllStudents() {
         return studentDao.getAll();
+    }
+
+    @Override
+    public StudentDto getStudentDto(int id) {
+        return convertToStudentDto(studentDao.getById(id));
+    }
+
+    @Override
+    public List<StudentDto> getAllStudentDto() {
+        List<StudentDto> allStudentDto = new ArrayList<>();
+        List<Student> students = studentDao.getAll();
+        for (Student student : students) {
+            allStudentDto.add(convertToStudentDto(student));
+        }
+        return allStudentDto;
+    }
+
+    private StudentDto convertToStudentDto(Student student) {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setId(student.getId());
+        studentDto.setFirstName(student.getFirstName());
+        studentDto.setLastName(student.getLastName());
+        studentDto.setGroupTitle(student.getGroup().getTitle());
+        return studentDto;
     }
 }

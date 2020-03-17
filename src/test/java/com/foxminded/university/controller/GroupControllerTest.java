@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,6 +15,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.foxminded.university.config.WebConfiguration;
@@ -44,21 +48,22 @@ public class GroupControllerTest {
         when(groupService.getGroupById(2)).thenReturn(testGroup);
     }
 
-    /*
-     * @Test public void shouldReturnGroupView() throws Exception {
-     * MockHttpServletRequestBuilder request =
-     * MockMvcRequestBuilders.get("/groups");
-     * 
-     * mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-     * .andExpect(MockMvcResultMatchers.view().name("groups"))
-     * .andExpect(MockMvcResultMatchers.model().attributeExists("groups")); }
-     * 
-     * @Test public void shouldReturnGroupsInfoView() throws Exception {
-     * MockHttpServletRequestBuilder request =
-     * MockMvcRequestBuilders.get("/groupInfo");
-     * 
-     * mockMvc.perform(request.param("id",
-     * "2")).andExpect(MockMvcResultMatchers.redirectedUrl("/groupInfo?id=2"))
-     * .andExpect(MockMvcResultMatchers.status().isOk()); }
-     */
+    @Test
+    public void shouldReturnGroupView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+
+        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("groups"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("groups"));
+    }
+
+    @Test
+    public void shouldReturnGroupsInfoView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
+
+        mockMvc.perform(request.param("id",
+                "2")).andExpect(MockMvcResultMatchers.redirectedUrl("/groupInfo?id=2"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
 }

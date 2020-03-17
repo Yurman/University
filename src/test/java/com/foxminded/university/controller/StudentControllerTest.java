@@ -21,48 +21,48 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.foxminded.university.config.WebConfiguration;
-import com.foxminded.university.domain.Group;
-import com.foxminded.university.service.GroupService;
+import com.foxminded.university.domain.Student;
+import com.foxminded.university.service.StudentService;
 
 @ContextConfiguration(classes = { WebConfiguration.class })
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 
-public class GroupControllerTest {
+public class StudentControllerTest {
 
     @InjectMocks
-    private GroupController controller;
+    private StudentController controller;
 
     private MockMvc mockMvc;
 
     @Mock
-    private GroupService groupService;
+    private StudentService studentService;
 
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        List<Group> groups = new ArrayList<>();
-        Group testGroup = new Group();
-        when(groupService.getAllGroups()).thenReturn(groups);
-        when(groupService.getGroupById(2)).thenReturn(testGroup);
+        List<Student> students = new ArrayList<>();
+        Student testStudent = new Student();
+        when(studentService.getAllStudents()).thenReturn(students);
+        when(studentService.getStudentById(2)).thenReturn(testStudent);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
-    public void shouldReturnGroupView() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+    public void shouldReturnStudentView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students");
 
         mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("groups.html"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("groups"));
+                .andExpect(MockMvcResultMatchers.view().name("students.html"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("students"));
     }
 
     @Test
-    public void shouldReturnGroupsInfoView() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
+    public void shouldReturnStudentsInfoView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/studentInfo");
 
         mockMvc.perform(request.param("id",
-                "2")).andExpect(MockMvcResultMatchers.view().name("groupInfo.html"))
+                "2")).andExpect(MockMvcResultMatchers.view().name("studentInfo.html"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 

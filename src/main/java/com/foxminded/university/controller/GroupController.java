@@ -2,10 +2,10 @@ package com.foxminded.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupService;
@@ -23,22 +23,23 @@ public class GroupController {
     }
 
     @RequestMapping("/groups")
-    public String getGroups(Model model) {
-        model.addAttribute("groups", groupService.getAllGroupDto());
-        return "groups";
+    public ModelAndView getGroups() {
+        ModelAndView model = new ModelAndView("groups.html");
+        model.addObject("groups", groupService.getAllGroupDto());
+        return model;
     }
 
     @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
-    public String getGroupInfo(@RequestParam(value = "id") int id, Model model) {
+    public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
         GroupDto groupDto;
         try {
             groupDto = groupService.getGroupDto(id);
         } catch (EntityNotFoundException e) {
             groupDto = new GroupDto();
             groupDto.setId(0);
-            model.addAttribute("group", groupDto);
         }
-        model.addAttribute("group", groupDto);
-        return "groupInfo";
+        ModelAndView model = new ModelAndView("groupInfo.html");
+        model.addObject("group", groupDto);
+        return model;
     }
 }

@@ -9,12 +9,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupService;
-import com.foxminded.university.service.dto.GroupDto;
 
 @Controller
 @RequestMapping
 public class GroupController {
 
+    private static final String ATTRIBUTE_HTML_GROUP = "group";
+    private static final String ATTRIBUTE_HTML_GROUPS = "groups";
+    private static final String ATTRIBUTE_HTML_ERROR_MESSAGE = "error";
     private GroupService groupService;
 
     @Autowired
@@ -25,21 +27,19 @@ public class GroupController {
     @RequestMapping("/groups")
     public ModelAndView getGroups() {
         ModelAndView model = new ModelAndView("groups.html");
-        model.addObject("groups", groupService.getAllGroupDto());
+        model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         return model;
     }
 
     @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
     public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
-        GroupDto groupDto;
-        try {
-            groupDto = groupService.getGroupDto(id);
-        } catch (EntityNotFoundException e) {
-            groupDto = new GroupDto();
-            groupDto.setId(0);
-        }
         ModelAndView model = new ModelAndView("groupInfo.html");
-        model.addObject("group", groupDto);
+        try {
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
+        } catch (EntityNotFoundException e) {
+            String errorMessage = "Problem with finding group";
+            model.addObject(ATTRIBUTE_HTML_ERROR_MESSAGE, errorMessage);
+        }
         return model;
     }
 }

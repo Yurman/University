@@ -1,6 +1,9 @@
 package com.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.foxminded.university.config.WebConfiguration;
-import com.foxminded.university.domain.Student;
+import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.StudentService;
+import com.foxminded.university.service.dto.StudentDto;
 
 @ContextConfiguration(classes = { WebConfiguration.class })
 @WebAppConfiguration
@@ -41,15 +45,13 @@ public class StudentControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        List<Student> students = new ArrayList<>();
-        Student testStudent = new Student();
-        when(studentService.getAllStudents()).thenReturn(students);
-        when(studentService.getStudentById(2)).thenReturn(testStudent);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
     public void shouldReturnStudentView() throws Exception {
+        List<StudentDto> students = new ArrayList<>();
+        when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students");
 
         mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
@@ -59,11 +61,27 @@ public class StudentControllerTest {
 
     @Test
     public void shouldReturnStudentsInfoView() throws Exception {
+        StudentDto student = new StudentDto();
+        when(studentService.getStudentDto(2)).thenReturn(student);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/studentInfo");
 
-        mockMvc.perform(request.param("id",
-                "2")).andExpect(MockMvcResultMatchers.view().name("studentInfo.html"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(request.param("id", "2"))
+                .andExpect(MockMvcResultMatchers.view().name("studentInfo.html"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("student"));
+    }
+
+    @Test
+    public void shouldReturnStudentInfoViewWithErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/studentInfo");
+        when(studentService.getStudentDto(33)).thenThrow(new EntityNotFoundException("Error occurred"));
+
+        mockMvc.perform(request.param("id", "33"))
+                .andExpect(view().name("studentInfo.html"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("error"));
     }
 
 }

@@ -1,6 +1,9 @@
 package com.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +20,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.foxminded.university.config.WebConfiguration;
-import com.foxminded.university.domain.Group;
+import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupService;
+import com.foxminded.university.service.dto.GroupDto;
 
 @ContextConfiguration(classes = { WebConfiguration.class })
 @WebAppConfiguration
@@ -41,29 +44,43 @@ public class GroupControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        List<Group> groups = new ArrayList<>();
-        Group testGroup = new Group();
-        when(groupService.getAllGroups()).thenReturn(groups);
-        when(groupService.getGroupById(2)).thenReturn(testGroup);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
     public void shouldReturnGroupView() throws Exception {
+        List<GroupDto> groups = new ArrayList<>();
+        when(groupService.getAllGroupDto()).thenReturn(groups);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
 
-        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("groups.html"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("groups"));
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(view().name("groups.html"))
+                .andExpect(model().attributeExists("groups"));
     }
 
     @Test
     public void shouldReturnGroupsInfoView() throws Exception {
+        GroupDto group = new GroupDto();
+        when(groupService.getGroupDto(2)).thenReturn(group);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
 
-        mockMvc.perform(request.param("id",
-                "2")).andExpect(MockMvcResultMatchers.view().name("groupInfo.html"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(request.param("id", "2"))
+                .andExpect(view().name("groupInfo.html"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("group"));
+    }
+
+    @Test
+    public void shouldReturnGroupsInfoViewWithErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
+        when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
+
+        mockMvc.perform(request.param("id", "3"))
+                .andExpect(view().name("groupInfo.html"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("error"));
     }
 
 }

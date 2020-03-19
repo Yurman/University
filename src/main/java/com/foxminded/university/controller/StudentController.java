@@ -9,12 +9,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.StudentService;
-import com.foxminded.university.service.dto.StudentDto;
 
 @Controller
 @RequestMapping
 public class StudentController {
 
+    private static final String ATTRIBUTE_HTML_STUDENT = "student";
+    private static final String ATTRIBUTE_HTML_ERROR_MESSAGE = "error";
     private StudentService studentService;
 
     @Autowired
@@ -31,15 +32,13 @@ public class StudentController {
 
     @RequestMapping(value = "/studentInfo", method = RequestMethod.GET)
     public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
-        StudentDto studentDto;
-        try {
-            studentDto = studentService.getStudentDto(id);
-        } catch (EntityNotFoundException e) {
-            studentDto = new StudentDto();
-            studentDto.setId(0);
-        }
         ModelAndView model = new ModelAndView("studentInfo.html");
-        model.addObject("student", studentDto);
+        try {
+            model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDto(id));
+        } catch (EntityNotFoundException e) {
+            String errorMessage = "Problem with finding student";
+            model.addObject(ATTRIBUTE_HTML_ERROR_MESSAGE, errorMessage);
+        }
         return model;
     }
 }

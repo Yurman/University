@@ -10,60 +10,68 @@
     <div th:replace="navigation :: navigation"></div>
     <div class="container">
         <h2 class="d-flex justify-content-center">Student Info</h2>
-        <div th:switch="${student.id}">
-            <div th:case="0" class="d-flex justify-content-center">
+        <th:block th:if="${student != null}"
+            class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
+                <form th:student="student" name="Student Info"
+                    class='card p-3 bg-light' style="width: 50%;">
+                    <div class="form-group row">
+                        <label for="id"
+                            class="col-sm-5 col-form-label col-form-label-lg">ID</label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly
+                                class="form-control-plaintext card p-3 bg-light"
+                                id="id" th:value="${student.id}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="firstName"
+                            class="col-sm-5 col-form-label col-form-label-lg">First
+                            Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly
+                                class="form-control-plaintext card p-3 bg-light"
+                                id="firstName"
+                                th:value="${student.firstName}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="lastName"
+                            class="col-sm-5 col-form-label col-form-label-lg">Last
+                            Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly
+                                class="form-control-plaintext card p-3 bg-light"
+                                id="lastName"
+                                th:value="${student.lastName}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="group"
+                            class="col-sm-5 col-form-label col-form-label-lg">Group</label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly
+                                class="form-control-plaintext card p-3 bg-light"
+                                id="group"
+                                th:value="${student.groupTitle}">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </th:block>
+        <th:block th:if="${error != null}"
+            class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
                 <div class="alert alert-dark alert-dismissible"
                     style="width: 50%;">
                     <form action='students' method='get'>
                         <button type="submit" class="close"
                             data-dismiss="alert">&times;</button>
                     </form>
-                    <strong class="text-center">There is no such student</strong>
+                    <strong class="text-center" th:text="${error}"></strong>
                 </div>
             </div>
-            <div th:case="*">
-                <div class="d-flex justify-content-center">
-                    <form th:student="student" name="Student Info"
-                        class='card p-3 bg-light' style="width: 50%;">
-                        <div class="form-group row">
-                            <label for="id"
-                                class="col-sm-5 col-form-label col-form-label-lg">ID</label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly
-                                    class="form-control-plaintext card p-3 bg-light"
-                                    id="id" th:value="${student.id}">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="firstName"
-                                class="col-sm-5 col-form-label col-form-label-lg">First Name</label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly
-                                    class="form-control-plaintext card p-3 bg-light"
-                                    id="firstName" th:value="${student.firstName}">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="lastName"
-                                class="col-sm-5 col-form-label col-form-label-lg">Last Name</label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly
-                                    class="form-control-plaintext card p-3 bg-light"
-                                    id="lastName" th:value="${student.lastName}">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="group"
-                                class="col-sm-5 col-form-label col-form-label-lg">Group</label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly
-                                    class="form-control-plaintext card p-3 bg-light"
-                                    id="group" th:value="${student.groupTitle}">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </th:block>
+    </div>
 </body>
 </html>

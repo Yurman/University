@@ -25,14 +25,14 @@ public class StudentController {
 
     @RequestMapping("/students")
     public ModelAndView getStudents() {
-        ModelAndView model = new ModelAndView("students.html");
+        ModelAndView model = new ModelAndView("students");
         model.addObject("students", studentService.getAllStudentDto());
         return model;
     }
 
     @RequestMapping(value = "/studentInfo", method = RequestMethod.GET)
     public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("studentInfo.html");
+        ModelAndView model = new ModelAndView("studentInfo");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDto(id));
         } catch (EntityNotFoundException e) {

@@ -26,14 +26,14 @@ public class GroupController {
 
     @RequestMapping("/groups")
     public ModelAndView getGroups() {
-        ModelAndView model = new ModelAndView("groups.html");
+        ModelAndView model = new ModelAndView("groups");
         model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         return model;
     }
 
     @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
     public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("groupInfo.html");
+        ModelAndView model = new ModelAndView("groupInfo");
         try {
             model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
         } catch (EntityNotFoundException e) {

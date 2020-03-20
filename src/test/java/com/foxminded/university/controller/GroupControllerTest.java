@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
@@ -44,7 +45,14 @@ public class GroupControllerTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("/WEB-INF/views/");
+        viewResolver.setSuffix(".html");
+
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setViewResolvers(viewResolver)
+                .build();
     }
 
     @Test
@@ -54,7 +62,7 @@ public class GroupControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
 
         mockMvc.perform(request).andExpect(status().isOk())
-                .andExpect(view().name("groups.html"))
+                .andExpect(view().name("groups"))
                 .andExpect(model().attributeExists("groups"));
     }
 
@@ -65,7 +73,7 @@ public class GroupControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(view().name("groupInfo.html"))
+                .andExpect(view().name("groupInfo"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(1))
                 .andExpect(model().attributeExists("group"));
@@ -77,7 +85,7 @@ public class GroupControllerTest {
         when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
 
         mockMvc.perform(request.param("id", "3"))
-                .andExpect(view().name("groupInfo.html"))
+                .andExpect(view().name("groupInfo"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(1))
                 .andExpect(model().attributeExists("error"));

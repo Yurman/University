@@ -1,6 +1,7 @@
 package com.foxminded.university.service;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +39,7 @@ class StudentServiceImplTest {
         when(studentDaoMock.getById(1)).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.getStudentById(1);
-        assertEquals(actualStudent, expectedStudent);
+        assertThat(actualStudent).isEqualTo(expectedStudent);
     }
 
     @Test
@@ -46,7 +47,7 @@ class StudentServiceImplTest {
         when(studentDaoMock.update(expectedStudent)).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.updateStudent(expectedStudent);
-        assertEquals(actualStudent, expectedStudent);
+        assertThat(actualStudent).isEqualTo(expectedStudent);
     }
 
     @Test

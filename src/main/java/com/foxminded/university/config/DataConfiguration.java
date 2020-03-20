@@ -12,7 +12,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
 @ComponentScan("com.foxminded.university")
-@PropertySource("classpath:db.properties")
+@PropertySource("classpath:application.properties")
 public class DataConfiguration {
 
     @Autowired

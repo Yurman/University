@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>addGroup</title>
+</head>
+<body>
+    <div th:replace="navigation :: navigation"></div>
+    <div class="container">
+        <h2 class="d-flex justify-content-center">New Group</h2>
+        <div class="d-flex justify-content-center">
+            <form action='addGroup' method='get' name="Add new Group"
+                class='card p-3 bg-light' style="width: 50%;">
+                <div class="form-group row">
+                    <label for="title"
+                        class="col-sm-5 col-form-label col-form-label-lg">Title</label>
+                    <div class="col-sm-7">
+                        <input type="text"
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="title">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="year"
+                        class="col-sm-5 col-form-label col-form-label-lg">Year</label>
+                    <div class="col-sm-7">
+                        <input type="text"
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="year">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="department"
+                        class="col-sm-5 col-form-label col-form-label-lg">Department</label>
+                    <div class="col-sm-7">
+                        <input type="text"
+                            class="form-control-plaintext card p-3 bg-light"
+                            id="department" value="ergqergegvs">
+                    </div>
+                </div>
+                <button type="submit" value="Add"
+                    class="btn btn-outline-info">Add</button>
+            </form>
+
+        </div>
+        <th:block th:if="${error != null}"
+            class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
+                <div class="alert alert-dark alert-dismissible"
+                    style="width: 50%;">
+                    <form action='groups' method='get'>
+                        <button type="submit" class="close"
+                            data-dismiss="alert">&times;</button>
+                    </form>
+                    <strong class="text-center" th:text="${error}"></strong>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</body>
+</html>

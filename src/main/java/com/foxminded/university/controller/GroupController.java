@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupService;
 
@@ -42,4 +43,31 @@ public class GroupController {
         }
         return model;
     }
+
+    @RequestMapping(value = "/updateGroup", method = RequestMethod.GET)
+    public ModelAndView updateGroupInfo(@RequestParam(value = "id") int id) {
+        ModelAndView model = new ModelAndView("updateGroup");
+        try {
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
+        } catch (EntityNotFoundException e) {
+            String errorMessage = "Problem with finding group";
+            model.addObject(ATTRIBUTE_HTML_ERROR_MESSAGE, errorMessage);
+        }
+        return model;
+    }
+
+    @RequestMapping(value = "/addGroup", method = RequestMethod.GET)
+    public ModelAndView addNewGroup() {
+        ModelAndView model = new ModelAndView("groups");
+        try {
+            Group newGroup = new Group();
+
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+        } catch (EntityNotFoundException e) {
+            String errorMessage = "Problem with finding group";
+            model.addObject(ATTRIBUTE_HTML_ERROR_MESSAGE, errorMessage);
+        }
+        return model;
+    }
+
 }

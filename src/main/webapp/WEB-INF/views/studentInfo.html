@@ -56,10 +56,29 @@
                                 th:value="${student.groupTitle}">
                         </div>
                     </div>
+                    <div
+                        class="btn-group btn-group-lg d-flex justify-content-center">
+                        <div class="align-self-start">
+                            <form action='updateStudent' method='get'>
+                                <input type="hidden" th:name="id"
+                                    th:value="${student.id}" />
+                                <button type="submit" value="Update"
+                                    class="btn btn-outline-info">Update</button>
+                            </form>
+                        </div>
+                        <div class="align-self-end">
+                            <form action='students' method='post'>
+                                <input type="hidden" th:name="id"
+                                    th:value="${student.id}" />
+                                <button type="submit" value="Delete"
+                                    class="btn btn-outline-info">Delete</button>
+                            </form>
+                        </div>
+                    </div>
                 </form>
             </div>
         </th:block>
-        <th:block th:if="${error != null}"
+        <th:block th:if="${message != null}"
             class="d-flex justify-content-center">
             <div class="d-flex justify-content-center">
                 <div class="alert alert-dark alert-dismissible"
@@ -68,7 +87,7 @@
                         <button type="submit" class="close"
                             data-dismiss="alert">&times;</button>
                     </form>
-                    <strong class="text-center" th:text="${error}"></strong>
+                    <strong class="text-center" th:text="${message}"></strong>
                 </div>
             </div>
         </th:block>

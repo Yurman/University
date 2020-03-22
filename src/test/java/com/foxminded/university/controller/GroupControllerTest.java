@@ -88,7 +88,7 @@ public class GroupControllerTest {
                 .andExpect(view().name("groupInfo"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(1))
-                .andExpect(model().attributeExists("error"));
+                .andExpect(model().attributeExists("message"));
     }
 
 }

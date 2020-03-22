@@ -89,7 +89,7 @@ public class StudentControllerTest {
                 .andExpect(view().name("studentInfo"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(1))
-                .andExpect(model().attributeExists("error"));
+                .andExpect(model().attributeExists("message"));
     }
 
 }

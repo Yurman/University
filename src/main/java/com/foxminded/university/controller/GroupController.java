@@ -1,10 +1,10 @@
 package com.foxminded.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,28 +31,28 @@ public class GroupController {
         this.departmentService = departmentService;
     }
 
-    @RequestMapping("/groups")
+    @GetMapping("/groups")
     public ModelAndView getGroups() {
         ModelAndView model = new ModelAndView("groups");
         model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         return model;
     }
 
-    @RequestMapping(value = "/groups", method = RequestMethod.POST)
+    @PostMapping(value = "/groups")
     public ModelAndView deleteGroup(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("groups");
         try {
             groupService.deleteGroup(id);
             String message = "Successfully delete group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (DataAccessException e) {
+        } catch (QueryNotExecuteException e) {
             String errorMessage = "Problem with deleting group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;
     }
 
-    @RequestMapping(value = "/groupInfo", method = RequestMethod.GET)
+    @GetMapping(value = "/groupInfo")
     public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("groupInfo");
         try {
@@ -64,7 +64,7 @@ public class GroupController {
         return model;
     }
 
-    @RequestMapping(value = "/updateGroup", method = RequestMethod.GET)
+    @GetMapping(value = "/updateGroup")
     public ModelAndView updateGroupInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("updateGroup");
         try {
@@ -77,7 +77,7 @@ public class GroupController {
         return model;
     }
 
-    @RequestMapping(value = "/updateGroup", method = RequestMethod.POST)
+    @PostMapping(value = "/updateGroup")
     public ModelAndView updateGroup(@RequestParam(value = "id") int id, @RequestParam(value = "title") String title,
             @RequestParam(value = "year") int year, @RequestParam(value = "departmentId") int departmentId) {
         ModelAndView model = new ModelAndView("updateGroup");
@@ -87,7 +87,7 @@ public class GroupController {
             newGroup.setYear(year);
             newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
             groupService.updateGroup(newGroup);
-            String message = "Succeccfully update group";
+            String message = "Successfully update group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         } catch (QueryNotExecuteException e) {
             String errorMessage = "Problem with updating group";
@@ -96,24 +96,24 @@ public class GroupController {
         return model;
     }
 
-    @RequestMapping(value = "/addGroup", method = RequestMethod.GET)
+    @GetMapping(value = "/addGroup")
     public ModelAndView addGroup() {
         ModelAndView model = new ModelAndView("addGroup");
         model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         return model;
     }
 
-    @RequestMapping(value = "/addGroup", method = RequestMethod.POST)
+    @PostMapping(value = "/addGroup")
     public ModelAndView addNewGroup(@RequestParam(value = "title") String title,
             @RequestParam(value = "year") int year, @RequestParam(value = "departmentId") int departmentId) {
-        ModelAndView model = new ModelAndView("groups");
+        ModelAndView model = new ModelAndView("addGroup");
         try {
             Group newGroup = new Group();
             newGroup.setTitle(title);
             newGroup.setYear(year);
             newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
             groupService.addGroup(newGroup);
-            String message = "Succeccfully add new group";
+            String message = "Successfully add new group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         } catch (QueryNotExecuteException e) {
             String errorMessage = "Problem with adding group";

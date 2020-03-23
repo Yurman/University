@@ -25,7 +25,10 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
+import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
+import com.foxminded.university.service.dto.DepartmentDto;
 import com.foxminded.university.service.dto.GroupDto;
 
 @ContextConfiguration(classes = { WebConfiguration.class })
@@ -41,6 +44,9 @@ public class GroupControllerTest {
 
     @Mock
     private GroupService groupService;
+
+    @Mock
+    private DepartmentService departmentService;
 
     @BeforeEach
     public void setup() {
@@ -67,6 +73,22 @@ public class GroupControllerTest {
     }
 
     @Test
+    public void shouldReturnGroupViewWhenGroupWasDelete() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+
+        mockMvc.perform(request).andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldShowMessageOnGroupViewWhenGroupWasNotDeleted() throws Exception {
+        when(groupService.deleteGroup(5)).thenThrow(new QueryNotExecuteException());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void shouldReturnGroupsInfoView() throws Exception {
         GroupDto group = new GroupDto();
         when(groupService.getGroupDto(2)).thenReturn(group);
@@ -86,6 +108,47 @@ public class GroupControllerTest {
 
         mockMvc.perform(request.param("id", "3"))
                 .andExpect(view().name("groupInfo"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("message"));
+    }
+
+    @Test
+    public void shouldReturnAddGroupView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/addGroup");
+        List<DepartmentDto> departments = new ArrayList<>();
+        when(departmentService.getAllDepartmentDto()).thenReturn(departments);
+
+        mockMvc.perform(request)
+                .andExpect(view().name("addGroup"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(1))
+                .andExpect(model().attributeExists("departments"));
+    }
+
+    @Test
+    public void shouldReturnUpdateGroupView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/updateGroup");
+        List<DepartmentDto> departments = new ArrayList<>();
+        GroupDto group = new GroupDto();
+        when(departmentService.getAllDepartmentDto()).thenReturn(departments);
+        when(groupService.getGroupDto(2)).thenReturn(group);
+
+        mockMvc.perform(request.param("id", "2"))
+                .andExpect(view().name("updateGroup"))
+                .andExpect(status().isOk())
+                .andExpect(model().size(2))
+                .andExpect(model().attributeExists("departments"))
+                .andExpect(model().attributeExists("group"));
+    }
+
+    @Test
+    public void shouldReturnUpdateGroupViewWithErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/updateGroup");
+        when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
+
+        mockMvc.perform(request.param("id", "3"))
+                .andExpect(view().name("updateGroup"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(1))
                 .andExpect(model().attributeExists("message"));

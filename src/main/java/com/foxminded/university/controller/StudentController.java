@@ -1,7 +1,6 @@
 package com.foxminded.university.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +44,7 @@ public class StudentController {
             studentService.deleteStudent(id);
             String message = "Successfully delete student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (DataAccessException e) {
+        } catch (QueryNotExecuteException e) {
             String errorMessage = "Problem with deleting student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
@@ -90,7 +89,7 @@ public class StudentController {
             studentService.updateStudent(newStudent);
             String message = "Succeccfully update student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (DataAccessException e) {
+        } catch (QueryNotExecuteException e) {
             String errorMessage = "Problem with updating student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }

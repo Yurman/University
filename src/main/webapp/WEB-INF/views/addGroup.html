@@ -10,44 +10,48 @@
     <div th:replace="navigation :: navigation"></div>
     <div class="container">
         <h2 class="d-flex justify-content-center">New Group</h2>
-        <div class="d-flex justify-content-center">
-            <form action='addGroup' method='post' name="Add new Group"
-                class='card p-3 bg-light' style="width: 50%;">
-                <div class="form-group row">
-                    <label for="title"
-                        class="col-sm-5 col-form-label col-form-label-lg">Title</label>
-                    <div class="col-sm-7">
-                        <input type="text"
-                            class="form-control-plaintext card p-3 bg-light"
-                            name="title" required>
+        <th:block th:if="${message == null}"
+            class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
+                <form action='addGroup' method='post'
+                    name="Add new Group" class='card p-3 bg-light'
+                    style="width: 50%;">
+                    <div class="form-group row">
+                        <label for="title"
+                            class="col-sm-5 col-form-label col-form-label-lg">Title</label>
+                        <div class="col-sm-7">
+                            <input type="text"
+                                class="form-control-plaintext card p-3 bg-light"
+                                name="title" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="year"
-                        class="col-sm-5 col-form-label col-form-label-lg">Year</label>
-                    <div class="col-sm-7">
-                        <input type="number"
-                            class="form-control-plaintext card p-3 bg-light"
-                            name="year" required>
+                    <div class="form-group row">
+                        <label for="year"
+                            class="col-sm-5 col-form-label col-form-label-lg">Year</label>
+                        <div class="col-sm-7">
+                            <input type="number"
+                                class="form-control-plaintext card p-3 bg-light"
+                                name="year" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="department"
-                        class="col-sm-5 col-form-label col-form-label-lg">Group</label>
-                    <div class="col-sm-7">
-                        <select id="department" name="departmentId">
-                            <option
-                                th:each="department : ${departments}"
-                                th:value="${department.id}"
-                                th:text="${department.title}"></option>
-                        </select>
+                    <div class="form-group row">
+                        <label for="department"
+                            class="col-sm-5 col-form-label col-form-label-lg">Group</label>
+                        <div class="col-sm-7">
+                            <select id="department" name="departmentId">
+                                <option
+                                    th:each="department : ${departments}"
+                                    th:value="${department.id}"
+                                    th:text="${department.title}"></option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" value="Add"
-                    class="btn btn-outline-info">Add</button>
-            </form>
+                    <button type="submit" value="Add"
+                        class="btn btn-outline-info">Add</button>
+                </form>
 
-        </div>
+            </div>
+        </th:block>
         <th:block th:if="${message != null}"
             class="d-flex justify-content-center">
             <div class="d-flex justify-content-center">

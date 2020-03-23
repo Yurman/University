@@ -68,6 +68,7 @@ public class StudentServiceImpl implements StudentService {
         studentDto.setLastName(student.getLastName());
         if (student.getGroup() != null) {
             studentDto.setGroupTitle(student.getGroup().getTitle());
+            studentDto.setGroupId(student.getGroup().getId());
         }
         return studentDto;
     }

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
+import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 
 @Controller
@@ -19,11 +20,15 @@ public class StudentController {
 
     private static final String ATTRIBUTE_HTML_STUDENT = "student";
     private static final String ATTRIBUTE_HTML_MESSAGE = "message";
+    private static final String ATTRIBUTE_HTML_GROUPS = "groups";
     private StudentService studentService;
+    private GroupService groupService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, GroupService groupService) {
         this.studentService = studentService;
+        this.groupService = groupService;
+
     }
 
     @RequestMapping("/students")
@@ -64,6 +69,7 @@ public class StudentController {
         ModelAndView model = new ModelAndView("updateStudent");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDto(id));
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with finding student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -74,12 +80,13 @@ public class StudentController {
     @RequestMapping(value = "/updateStudent", method = RequestMethod.POST)
     public ModelAndView updateStudent(@RequestParam(value = "id") int id,
             @RequestParam(value = "firstName") String firstName,
-            @RequestParam(value = "lastName") String lastName, @RequestParam(value = "groupTitle") String groupTitle) {
+            @RequestParam(value = "lastName") String lastName, @RequestParam(value = "groupId") int groupId) {
         ModelAndView model = new ModelAndView("updateStudent");
         try {
             Student newStudent = studentService.getStudentById(id);
             newStudent.setFirstName(firstName);
             newStudent.setLastName(lastName);
+            newStudent.setGroup(groupService.getGroupById(groupId));
             studentService.updateStudent(newStudent);
             String message = "Succeccfully update student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
@@ -93,17 +100,19 @@ public class StudentController {
     @RequestMapping(value = "/addStudent", method = RequestMethod.GET)
     public ModelAndView addStudent() {
         ModelAndView model = new ModelAndView("addStudent");
+        model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         return model;
     }
 
     @RequestMapping(value = "/addStudent", method = RequestMethod.POST)
     public ModelAndView addNewStudent(@RequestParam(value = "firstName") String firstName,
-            @RequestParam(value = "lastName") String lastName, @RequestParam(value = "groupTitle") String groupTitle) {
+            @RequestParam(value = "lastName") String lastName, @RequestParam(value = "groupId") int groupId) {
         ModelAndView model = new ModelAndView("students");
         try {
             Student newStudent = new Student();
             newStudent.setFirstName(firstName);
             newStudent.setLastName(lastName);
+            newStudent.setGroup(groupService.getGroupById(groupId));
             studentService.addStudent(newStudent);
             String message = "Succeccfully add new student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);

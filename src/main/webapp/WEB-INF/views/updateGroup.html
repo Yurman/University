@@ -47,12 +47,17 @@
                     </div>
                     <div class="form-group row">
                         <label for="department"
-                            class="col-sm-5 col-form-label col-form-label-lg">Department</label>
+                            class="col-sm-5 col-form-label col-form-label-lg">Group</label>
                         <div class="col-sm-7">
-                            <input type="text"
-                                class="form-control-plaintext card p-3 bg-light"
-                                name="department" id="department"
-                                th:value="${group.DepartmentTitle}">
+                            <select id="department" name="departmentId">
+                                <option th:value="${group.DepartmentId}"
+                                    th:text="${group.DepartmentTitle}"
+                                    selected></option>
+                                <option
+                                    th:each="department : ${departments}"
+                                    th:value="${department.id}"
+                                    th:text="${department.title}"></option>
+                            </select>
                         </div>
                     </div>
                     <button type="submit" value="Update"

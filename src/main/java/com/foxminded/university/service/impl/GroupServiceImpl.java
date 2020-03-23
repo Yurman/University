@@ -68,6 +68,7 @@ public class GroupServiceImpl implements GroupService {
         groupDto.setYear(group.getYear());
         if (group.getDepartment() != null) {
             groupDto.setDepartmentTitle(group.getDepartment().getTitle());
+            groupDto.setDepartmentId(group.getDepartment().getId());
         }
         return groupDto;
     }

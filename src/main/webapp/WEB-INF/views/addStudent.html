@@ -38,9 +38,11 @@
                     <label for="group"
                         class="col-sm-5 col-form-label col-form-label-lg">Group</label>
                     <div class="col-sm-7">
-                        <input type="text"
-                            class="form-control-plaintext card p-3 bg-light"
-                            id="group" name="groupTitle">
+                        <select id="group" name="groupId">
+                            <option th:each="group : ${groups}"
+                                th:value="${group.id}"
+                                th:text="${group.title}"></option>
+                        </select>
                     </div>
                 </div>
                 <button type="submit" value="Add"

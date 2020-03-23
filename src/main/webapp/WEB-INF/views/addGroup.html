@@ -38,7 +38,7 @@
                         <label for="department"
                             class="col-sm-5 col-form-label col-form-label-lg">Group</label>
                         <div class="col-sm-7">
-                            <select id="department" name="departmentId">
+                            <select id="department" name="departmentId" class="form-control">
                                 <option
                                     th:each="department : ${departments}"
                                     th:value="${department.id}"

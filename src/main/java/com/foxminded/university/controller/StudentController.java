@@ -85,7 +85,10 @@ public class StudentController {
             Student newStudent = studentService.getStudentById(id);
             newStudent.setFirstName(firstName);
             newStudent.setLastName(lastName);
-            newStudent.setGroup(groupService.getGroupById(groupId));
+            if (groupId != 0) {
+                newStudent.setGroup(groupService.getGroupById(groupId));
+            } else
+                newStudent.setGroup(null);
             studentService.updateStudent(newStudent);
             String message = "Succeccfully update student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
@@ -111,7 +114,9 @@ public class StudentController {
             Student newStudent = new Student();
             newStudent.setFirstName(firstName);
             newStudent.setLastName(lastName);
-            newStudent.setGroup(groupService.getGroupById(groupId));
+            if (groupId != 0) {
+                newStudent.setGroup(groupService.getGroupById(groupId));
+            }
             studentService.addStudent(newStudent);
             String message = "Succeccfully add new student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);

@@ -38,11 +38,13 @@
                         <label for="department"
                             class="col-sm-5 col-form-label col-form-label-lg">Group</label>
                         <div class="col-sm-7">
-                            <select id="department" name="departmentId" class="form-control">
+                            <select id="department" name="departmentId"
+                                class="form-control">
+                                <option th:value="0" text="" selected></option>
                                 <option
                                     th:each="department : ${departments}"
                                     th:value="${department.id}"
-                                    th:text="${department.title}"></option>
+                                    th:text="${department.title}"></option>                                
                             </select>
                         </div>
                     </div>

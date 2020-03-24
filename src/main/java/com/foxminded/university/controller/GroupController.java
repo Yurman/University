@@ -85,7 +85,10 @@ public class GroupController {
             Group newGroup = groupService.getGroupById(id);
             newGroup.setTitle(title);
             newGroup.setYear(year);
-            newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
+            if (departmentId != 0) {
+                newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
+            } else
+                newGroup.setDepartment(null);
             groupService.updateGroup(newGroup);
             String message = "Successfully update group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
@@ -111,7 +114,9 @@ public class GroupController {
             Group newGroup = new Group();
             newGroup.setTitle(title);
             newGroup.setYear(year);
-            newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
+            if (departmentId != 0) {
+                newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
+            }
             groupService.addGroup(newGroup);
             String message = "Successfully add new group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);

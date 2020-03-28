@@ -21,4 +21,6 @@ public interface StudentService {
 
     public StudentDto getStudentDto(int id);
 
+    public Student convertDtoToStudent(StudentDto studentDto);
+
 }

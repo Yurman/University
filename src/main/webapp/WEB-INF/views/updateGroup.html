@@ -4,82 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Update Group</title>
+<title>updateGroup</title>
 </head>
 <body>
     <div th:replace="navigation :: navigation"></div>
-    <div class="container">
-        <h2 class="d-flex justify-content-center">Update group</h2>
-        <th:block th:if="${group != null}"
-            class="d-flex justify-content-center">
-            <div class="d-flex justify-content-center">
-                <form th:group="group" action='updateGroup'
-                    method='post' name="Update Group info"
-                    class='card p-3 bg-light' style="width: 50%;">
-                    <div class="form-group row">
-                        <label for="id"
-                            class="col-sm-5 col-form-label col-form-label-lg">ID</label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly
-                                class="form-control-plaintext card p-3 bg-light"
-                                name="id" id="id" th:value="${group.id}">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="title"
-                            class="col-sm-5 col-form-label col-form-label-lg">Title</label>
-                        <div class="col-sm-7">
-                            <input type="text"
-                                class="form-control-plaintext card p-3 bg-light"
-                                name="title" id="title"
-                                th:value="${group.title}" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="year"
-                            class="col-sm-5 col-form-label col-form-label-lg">Year</label>
-                        <div class="col-sm-7">
-                            <input type="number"
-                                class="form-control-plaintext card p-3 bg-light"
-                                name="year" id="year"
-                                th:value="${group.year}" required>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="department"
-                            class="col-sm-5 col-form-label col-form-label-lg">Group</label>
-                        <div class="col-sm-7">
-                            <select id="department" name="departmentId"
-                                class="form-control">
-                                <option th:value="${group.DepartmentId}"
-                                    th:text="${group.DepartmentTitle}"
-                                    selected></option>
-                                <option
-                                    th:each="department : ${departments}"
-                                    th:value="${department.id}"
-                                    th:text="${department.title}"></option>
-                                <option th:value="0" text=""></option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" value="Update"
-                        class="btn btn-outline-info">Save</button>
-                </form>
-            </div>
-        </th:block>
-        <th:block th:if="${message != null}"
-            class="d-flex justify-content-center">
-            <div class="d-flex justify-content-center">
-                <div class="alert alert-dark alert-dismissible"
-                    style="width: 50%;">
-                    <form action='groups' method='get'>
-                        <button type="submit" class="close"
-                            data-dismiss="alert">&times;</button>
-                    </form>
-                    <strong class="text-center" th:text="${message}"></strong>
-                </div>
-            </div>
-        </th:block>
-    </div>
+    <div th:replace="groupForm :: form"></div>
 </body>
 </html>

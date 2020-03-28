@@ -3,16 +3,17 @@ package com.foxminded.university.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
+import com.foxminded.university.service.dto.GroupDto;
 
 @Controller
 @RequestMapping
@@ -22,6 +23,8 @@ public class GroupController {
     private static final String ATTRIBUTE_HTML_GROUPS = "groups";
     private static final String ATTRIBUTE_HTML_DEPARTMENTS = "departments";
     private static final String ATTRIBUTE_HTML_MESSAGE = "message";
+    private static final String ATTRIBUTE_HTML_PAGE_ADDRESS = "pageAddress";
+    private static final String ATTRIBUTE_HTML_PAGE_TITLE = "pageTitle";
     private GroupService groupService;
     private DepartmentService departmentService;
 
@@ -29,6 +32,11 @@ public class GroupController {
     public GroupController(GroupService groupService, DepartmentService departmentService) {
         this.groupService = groupService;
         this.departmentService = departmentService;
+    }
+
+    @ModelAttribute(value = "groupDto")
+    public GroupDto newGroupDto() {
+        return new GroupDto();
     }
 
     @GetMapping("/groups")
@@ -68,7 +76,10 @@ public class GroupController {
     public ModelAndView updateGroupInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("updateGroup");
         try {
-            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
+            GroupDto groupDto = groupService.getGroupDto(id);
+            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "updateGroup");
+            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Update Group");
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
             model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with updating group";
@@ -78,18 +89,10 @@ public class GroupController {
     }
 
     @PostMapping(value = "/updateGroup")
-    public ModelAndView updateGroup(@RequestParam(value = "id") int id, @RequestParam(value = "title") String title,
-            @RequestParam(value = "year") int year, @RequestParam(value = "departmentId") int departmentId) {
+    public ModelAndView updateGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
         ModelAndView model = new ModelAndView("updateGroup");
         try {
-            Group newGroup = groupService.getGroupById(id);
-            newGroup.setTitle(title);
-            newGroup.setYear(year);
-            if (departmentId != 0) {
-                newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
-            } else
-                newGroup.setDepartment(null);
-            groupService.updateGroup(newGroup);
+            groupService.updateGroup(groupService.convertDtoToGroup(groupDto));
             String message = "Successfully update group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         } catch (QueryNotExecuteException e) {
@@ -102,22 +105,21 @@ public class GroupController {
     @GetMapping(value = "/addGroup")
     public ModelAndView addGroup() {
         ModelAndView model = new ModelAndView("addGroup");
+        GroupDto groupDto = new GroupDto();
+        model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
+        model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
+        model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
         model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         return model;
     }
 
     @PostMapping(value = "/addGroup")
-    public ModelAndView addNewGroup(@RequestParam(value = "title") String title,
-            @RequestParam(value = "year") int year, @RequestParam(value = "departmentId") int departmentId) {
+    public ModelAndView addNewGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
         ModelAndView model = new ModelAndView("addGroup");
+        model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
+        model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
         try {
-            Group newGroup = new Group();
-            newGroup.setTitle(title);
-            newGroup.setYear(year);
-            if (departmentId != 0) {
-                newGroup.setDepartment(departmentService.getDepartmentById(departmentId));
-            }
-            groupService.addGroup(newGroup);
+            groupService.addGroup(groupService.convertDtoToGroup(groupDto));
             String message = "Successfully add new group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         } catch (QueryNotExecuteException e) {

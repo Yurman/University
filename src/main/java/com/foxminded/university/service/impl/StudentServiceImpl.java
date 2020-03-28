@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
 
@@ -15,10 +16,12 @@ import com.foxminded.university.service.dto.StudentDto;
 public class StudentServiceImpl implements StudentService {
 
     private StudentDao studentDao;
+    private GroupService groupService;
 
     @Autowired
-    public StudentServiceImpl(StudentDao studentDao) {
+    public StudentServiceImpl(StudentDao studentDao, GroupService groupService) {
         this.studentDao = studentDao;
+        this.groupService = groupService;
     }
 
     @Override
@@ -71,5 +74,17 @@ public class StudentServiceImpl implements StudentService {
             studentDto.setGroupId(student.getGroup().getId());
         }
         return studentDto;
+    }
+
+    @Override
+    public Student convertDtoToStudent(StudentDto studentDto) {
+        Student student = new Student();
+        student.setId(studentDto.getId());
+        student.setFirstName(studentDto.getFirstName());
+        student.setLastName(studentDto.getLastName());
+        if (studentDto.getGroupId() != 0) {
+            student.setGroup(groupService.getGroupById(studentDto.getGroupId()));
+        }
+        return student;
     }
 }

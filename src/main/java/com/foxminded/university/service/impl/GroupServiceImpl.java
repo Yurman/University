@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.GroupDto;
 
@@ -15,10 +16,12 @@ import com.foxminded.university.service.dto.GroupDto;
 public class GroupServiceImpl implements GroupService {
 
     private GroupDao groupDao;
+    private DepartmentService departmentService;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao) {
+    public GroupServiceImpl(GroupDao groupDao, DepartmentService departmentService) {
         this.groupDao = groupDao;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -71,5 +74,17 @@ public class GroupServiceImpl implements GroupService {
             groupDto.setDepartmentId(group.getDepartment().getId());
         }
         return groupDto;
+    }
+
+    @Override
+    public Group convertDtoToGroup(GroupDto groupDto) {
+        Group group = new Group();
+        group.setId(groupDto.getId());
+        group.setTitle(groupDto.getTitle());
+        group.setYear(groupDto.getYear());
+        if (groupDto.getDepartmentId() != 0) {
+            group.setDepartment(departmentService.getDepartmentById(groupDto.getDepartmentId()));
+        }
+        return group;
     }
 }

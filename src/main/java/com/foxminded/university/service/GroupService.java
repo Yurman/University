@@ -21,4 +21,6 @@ public interface GroupService {
 
     public GroupDto getGroupDto(int id);
 
+    public Group convertDtoToGroup(GroupDto groupDto);
+
 }

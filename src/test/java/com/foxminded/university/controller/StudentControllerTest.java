@@ -100,7 +100,7 @@ public class StudentControllerTest {
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(MockMvcResultMatchers.view().name("studentInfo"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("student"));
     }
 
@@ -112,7 +112,7 @@ public class StudentControllerTest {
         mockMvc.perform(request.param("id", "33"))
                 .andExpect(view().name("studentInfo"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("message"));
     }
 
@@ -125,8 +125,11 @@ public class StudentControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("addStudent"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
-                .andExpect(model().attributeExists("groups"));
+                .andExpect(model().size(5))
+                .andExpect(model().attributeExists("groups"))
+                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().attributeExists("pageTitle"))
+                .andExpect(model().attributeExists("student"));
     }
 
     @Test
@@ -140,8 +143,10 @@ public class StudentControllerTest {
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(view().name("updateStudent"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
+                .andExpect(model().size(5))
                 .andExpect(model().attributeExists("groups"))
+                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().attributeExists("pageTitle"))
                 .andExpect(model().attributeExists("student"));
     }
 
@@ -153,7 +158,7 @@ public class StudentControllerTest {
         mockMvc.perform(request.param("id", "3"))
                 .andExpect(view().name("updateStudent"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("message"));
     }
 

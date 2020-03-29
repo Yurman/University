@@ -76,10 +76,9 @@ public class GroupController {
     public ModelAndView updateGroupInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("updateGroup");
         try {
-            GroupDto groupDto = groupService.getGroupDto(id);
             model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "updateGroup");
             model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Update Group");
-            model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
             model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with updating group";
@@ -103,21 +102,23 @@ public class GroupController {
     }
 
     @GetMapping(value = "/addGroup")
-    public ModelAndView addGroup() {
+    public ModelAndView addGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
         ModelAndView model = new ModelAndView("addGroup");
-        GroupDto groupDto = new GroupDto();
-        model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
-        model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
-        model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
-        model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
+        try {
+            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
+            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
+            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
+        } catch (QueryNotExecuteException e) {
+            String errorMessage = "Problem with updating group";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        }
         return model;
     }
 
     @PostMapping(value = "/addGroup")
     public ModelAndView addNewGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
         ModelAndView model = new ModelAndView("addGroup");
-        model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
-        model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
         try {
             groupService.addGroup(groupService.convertDtoToGroup(groupDto));
             String message = "Successfully add new group";

@@ -97,7 +97,7 @@ public class GroupControllerTest {
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(view().name("groupInfo"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("group"));
     }
 
@@ -109,7 +109,7 @@ public class GroupControllerTest {
         mockMvc.perform(request.param("id", "3"))
                 .andExpect(view().name("groupInfo"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("message"));
     }
 
@@ -122,8 +122,11 @@ public class GroupControllerTest {
         mockMvc.perform(request)
                 .andExpect(view().name("addGroup"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
-                .andExpect(model().attributeExists("departments"));
+                .andExpect(model().size(5))
+                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().attributeExists("pageTitle"))
+                .andExpect(model().attributeExists("departments"))
+                .andExpect(model().attributeExists("group"));
     }
 
     @Test
@@ -137,7 +140,9 @@ public class GroupControllerTest {
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(view().name("updateGroup"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
+                .andExpect(model().size(5))
+                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().attributeExists("pageTitle"))
                 .andExpect(model().attributeExists("departments"))
                 .andExpect(model().attributeExists("group"));
     }
@@ -150,8 +155,10 @@ public class GroupControllerTest {
         mockMvc.perform(request.param("id", "3"))
                 .andExpect(view().name("updateGroup"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(model().size(4))
+                .andExpect(model().attributeExists("message"))
+                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().attributeExists("pageTitle"));
     }
 
 }

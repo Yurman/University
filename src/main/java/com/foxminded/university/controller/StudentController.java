@@ -104,13 +104,17 @@ public class StudentController {
     }
 
     @GetMapping(value = "/addStudent")
-    public ModelAndView addStudent() {
-        StudentDto studentDto = new StudentDto();
+    public ModelAndView addStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
         ModelAndView model = new ModelAndView("addStudent");
-        model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addStudent");
-        model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Student");
-        model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-        model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+        try {
+            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addStudent");
+            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Student");
+            model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+        } catch (QueryNotExecuteException e) {
+            String errorMessage = "Problem with updating student";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        }
         return model;
     }
 

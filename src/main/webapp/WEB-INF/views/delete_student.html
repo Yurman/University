@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>delete_student</title>
+</head>
+<body>
+    <div th:replace="navigation :: navigation"></div>
+    <div class="container">
+        <h2 class="d-flex justify-content-center">Delete Student</h2>
+        <th:block class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center">
+                <div class="alert alert-dark alert-dismissible"
+                    style="width: 50%;">
+                    <form th:action="students" method='get'>
+                        <button type="submit" class="close"
+                            data-dismiss="alert">&times;</button>
+                    </form>
+                    <strong class="text-center" th:text="${message}"></strong>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</body>
+</html>

@@ -39,7 +39,7 @@
                             <div th:text="${student.groupTitle}">Group</div>
                         </td>
                         <td>
-                            <form action='studentInfo' method='get'>
+                            <form action='student_info' method='get'>
                                 <input type="hidden" th:name="id"
                                     th:value="${student.id}" />
                                 <button type="submit" value="Show more"
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
             <div class="d-flex justify-content-center">
-                <form action='addStudent' method='get'>
+                <form action='edit_student' method='get'>
                     <button button type="submit" value="Show more"
                         class="btn btn-outline-info">Add new
                         student</button>

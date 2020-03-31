@@ -67,35 +67,43 @@ public class GroupControllerTest {
         when(groupService.getAllGroupDto()).thenReturn(groups);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
 
-        mockMvc.perform(request).andExpect(status().isOk())
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
                 .andExpect(view().name("groups"))
                 .andExpect(model().attributeExists("groups"));
     }
 
     @Test
     public void shouldReturnGroupViewWhenGroupWasDelete() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+        when(groupService.deleteGroup(5)).thenReturn(true);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete_group");
 
-        mockMvc.perform(request).andExpect(status().isOk());
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("delete_group"))
+                .andExpect(model().attributeExists("message"));
+        ;
     }
 
     @Test
     public void shouldShowMessageOnGroupViewWhenGroupWasNotDeleted() throws Exception {
         when(groupService.deleteGroup(5)).thenThrow(new QueryNotExecuteException());
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete_group");
 
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("delete_group"))
+                .andExpect(model().attributeExists("message"));
     }
 
     @Test
     public void shouldReturnGroupsInfoView() throws Exception {
         GroupDto group = new GroupDto();
         when(groupService.getGroupDto(2)).thenReturn(group);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group_info");
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(view().name("groupInfo"))
+                .andExpect(view().name("group_info"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(2))
                 .andExpect(model().attributeExists("group"));
@@ -103,45 +111,28 @@ public class GroupControllerTest {
 
     @Test
     public void shouldReturnGroupsInfoViewWithErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groupInfo");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group_info");
         when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
 
         mockMvc.perform(request.param("id", "3"))
-                .andExpect(view().name("groupInfo"))
+                .andExpect(view().name("group_info"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(2))
                 .andExpect(model().attributeExists("message"));
     }
 
     @Test
-    public void shouldReturnAddGroupView() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/addGroup");
-        List<DepartmentDto> departments = new ArrayList<>();
-        when(departmentService.getAllDepartmentDto()).thenReturn(departments);
-
-        mockMvc.perform(request)
-                .andExpect(view().name("addGroup"))
-                .andExpect(status().isOk())
-                .andExpect(model().size(5))
-                .andExpect(model().attributeExists("pageAddress"))
-                .andExpect(model().attributeExists("pageTitle"))
-                .andExpect(model().attributeExists("departments"))
-                .andExpect(model().attributeExists("group"));
-    }
-
-    @Test
     public void shouldReturnUpdateGroupView() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/updateGroup");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit_group");
         List<DepartmentDto> departments = new ArrayList<>();
         GroupDto group = new GroupDto();
         when(departmentService.getAllDepartmentDto()).thenReturn(departments);
         when(groupService.getGroupDto(2)).thenReturn(group);
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(view().name("updateGroup"))
+                .andExpect(view().name("edit_group"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(5))
-                .andExpect(model().attributeExists("pageAddress"))
+                .andExpect(model().size(4))
                 .andExpect(model().attributeExists("pageTitle"))
                 .andExpect(model().attributeExists("departments"))
                 .andExpect(model().attributeExists("group"));
@@ -149,16 +140,13 @@ public class GroupControllerTest {
 
     @Test
     public void shouldReturnUpdateGroupViewWithErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/updateGroup");
-        when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit_group");
+        when(groupService.getGroupDto(3)).thenThrow(new QueryNotExecuteException("Error occurred"));
 
         mockMvc.perform(request.param("id", "3"))
-                .andExpect(view().name("updateGroup"))
+                .andExpect(view().name("edit_group"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(4))
-                .andExpect(model().attributeExists("message"))
-                .andExpect(model().attributeExists("pageAddress"))
-                .andExpect(model().attributeExists("pageTitle"));
+                .andExpect(model().attributeExists("message"));
     }
 
 }

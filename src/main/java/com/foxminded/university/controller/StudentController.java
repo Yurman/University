@@ -20,9 +20,9 @@ import com.foxminded.university.service.dto.StudentDto;
 public class StudentController {
 
     private static final String ATTRIBUTE_HTML_STUDENT = "student";
+    private static final String ATTRIBUTE_HTML_STUDENTS = "students";
     private static final String ATTRIBUTE_HTML_MESSAGE = "message";
     private static final String ATTRIBUTE_HTML_GROUPS = "groups";
-    private static final String ATTRIBUTE_HTML_PAGE_ADDRESS = "pageAddress";
     private static final String ATTRIBUTE_HTML_PAGE_TITLE = "pageTitle";
 
     private StudentService studentService;
@@ -43,27 +43,13 @@ public class StudentController {
     @RequestMapping("/students")
     public ModelAndView getStudents() {
         ModelAndView model = new ModelAndView("students");
-        model.addObject("students", studentService.getAllStudentDto());
+        model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
         return model;
     }
 
-    @PostMapping(value = "/studentInfo")
-    public ModelAndView deleteStudent(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("students");
-        try {
-            studentService.deleteStudent(id);
-            String message = "Successfully delete student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with deleting student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
-        }
-        return model;
-    }
-
-    @GetMapping(value = "/studentInfo")
+    @GetMapping(value = "/student_info")
     public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("studentInfo");
+        ModelAndView model = new ModelAndView("student_info");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDto(id));
         } catch (EntityNotFoundException e) {
@@ -73,60 +59,57 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/updateStudent")
-    public ModelAndView updateStudentInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("updateStudent");
+    @GetMapping(value = "/delete_student")
+    public ModelAndView deleteStudent(@RequestParam(value = "id") int id) {
+        ModelAndView model = new ModelAndView("delete_student");
+        String message = null;
         try {
-            StudentDto studentDto = studentService.getStudentDto(id);
-            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "updateStudent");
-            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Update Student");
-            model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
-        } catch (EntityNotFoundException e) {
-            String errorMessage = "Problem with finding student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
-        }
-        return model;
-    }
-
-    @PostMapping(value = "/updateStudent")
-    public ModelAndView updateStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
-        ModelAndView model = new ModelAndView("updateStudent");
-        try {
-            studentService.updateStudent(studentService.convertDtoToStudent(studentDto));
-            String message = "Succeccfully update student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
+            studentService.deleteStudent(id);
+            message = "Successfully delete student";
         } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with updating student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+            message = "Problem with deleting student";
         }
+        model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         return model;
     }
 
-    @GetMapping(value = "/addStudent")
-    public ModelAndView addStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
-        ModelAndView model = new ModelAndView("addStudent");
+    @GetMapping(value = "/edit_student")
+    public ModelAndView editStudentView(@RequestParam(name = "id", required = false) Integer id) {
+        ModelAndView model = new ModelAndView("edit_student");
+        StudentDto studentDto = new StudentDto();
+        String pageTitle = null;
         try {
-            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addStudent");
-            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Student");
+            if (id != null) {
+                pageTitle = "Update Student";
+                studentDto = studentService.getStudentDto(id);
+            } else {
+                pageTitle = "Add Student";
+            }
+            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, pageTitle);
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
             model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with updating student";
+            String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;
     }
 
-    @PostMapping(value = "/addStudent")
-    public ModelAndView addNewStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
-        ModelAndView model = new ModelAndView("addStudent");
+    @PostMapping(value = "/edit_student")
+    public ModelAndView editStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
+        ModelAndView model = new ModelAndView("edit_student");
+        String message = null;
         try {
-            studentService.addStudent(studentService.convertDtoToStudent(studentDto));
-            String message = "Succeccfully add new student";
+            if (studentDto.getId() != 0) {
+                studentService.updateStudent(studentService.convertDtoToStudent(studentDto));
+                message = "Succeccfully update student";
+            } else {
+                studentService.addStudent(studentService.convertDtoToStudent(studentDto));
+                message = "Succeccfully add new student";
+            }
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with adding student";
+            String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;

@@ -23,8 +23,8 @@ public class GroupController {
     private static final String ATTRIBUTE_HTML_GROUPS = "groups";
     private static final String ATTRIBUTE_HTML_DEPARTMENTS = "departments";
     private static final String ATTRIBUTE_HTML_MESSAGE = "message";
-    private static final String ATTRIBUTE_HTML_PAGE_ADDRESS = "pageAddress";
     private static final String ATTRIBUTE_HTML_PAGE_TITLE = "pageTitle";
+
     private GroupService groupService;
     private DepartmentService departmentService;
 
@@ -46,9 +46,21 @@ public class GroupController {
         return model;
     }
 
-    @PostMapping(value = "/groups")
+    @GetMapping(value = "/group_info")
+    public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
+        ModelAndView model = new ModelAndView("group_info");
+        try {
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
+        } catch (EntityNotFoundException e) {
+            String errorMessage = "Problem with finding group";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        }
+        return model;
+    }
+
+    @GetMapping(value = "/delete_group")
     public ModelAndView deleteGroup(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("groups");
+        ModelAndView model = new ModelAndView("delete_group");
         try {
             groupService.deleteGroup(id);
             String message = "Successfully delete group";
@@ -60,71 +72,43 @@ public class GroupController {
         return model;
     }
 
-    @GetMapping(value = "/groupInfo")
-    public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("groupInfo");
+    @GetMapping(value = "/edit_group")
+    public ModelAndView addGroup(@RequestParam(name = "id", required = false) Integer id) {
+        ModelAndView model = new ModelAndView("edit_group");
+        GroupDto groupDto = new GroupDto();
+        String pageTitle = null;
         try {
-            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
-        } catch (EntityNotFoundException e) {
-            String errorMessage = "Problem with finding group";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
-        }
-        return model;
-    }
-
-    @GetMapping(value = "/updateGroup")
-    public ModelAndView updateGroupInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("updateGroup");
-        try {
-            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "updateGroup");
-            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Update Group");
-            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDto(id));
-            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
-        } catch (EntityNotFoundException e) {
-            String errorMessage = "Problem with updating group";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
-        }
-        return model;
-    }
-
-    @PostMapping(value = "/updateGroup")
-    public ModelAndView updateGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
-        ModelAndView model = new ModelAndView("updateGroup");
-        try {
-            groupService.updateGroup(groupService.convertDtoToGroup(groupDto));
-            String message = "Successfully update group";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with updating group";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
-        }
-        return model;
-    }
-
-    @GetMapping(value = "/addGroup")
-    public ModelAndView addGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
-        ModelAndView model = new ModelAndView("addGroup");
-        try {
-            model.addObject(ATTRIBUTE_HTML_PAGE_ADDRESS, "addGroup");
-            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, "Add Group");
+            if (id != null) {
+                groupDto = groupService.getGroupDto(id);
+                pageTitle = "Update group";
+            } else {
+                pageTitle = "Add group";
+            }
+            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, pageTitle);
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
             model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with updating group";
+            String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;
     }
 
-    @PostMapping(value = "/addGroup")
+    @PostMapping(value = "/edit_group")
     public ModelAndView addNewGroup(@ModelAttribute("groupDto") GroupDto groupDto) {
-        ModelAndView model = new ModelAndView("addGroup");
+        ModelAndView model = new ModelAndView("edit_group");
+        String successMessage = null;
         try {
-            groupService.addGroup(groupService.convertDtoToGroup(groupDto));
-            String message = "Successfully add new group";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
+            if (groupDto.getId() != 0) {
+                groupService.updateGroup(groupService.convertDtoToGroup(groupDto));
+                successMessage = "Successfully update group";
+            } else {
+                groupService.addGroup(groupService.convertDtoToGroup(groupDto));
+                successMessage = "Successfully add new group";
+            }
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, successMessage);
         } catch (QueryNotExecuteException e) {
-            String errorMessage = "Problem with adding group";
+            String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;

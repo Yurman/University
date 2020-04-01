@@ -25,7 +25,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.DepartmentDto;
@@ -64,7 +63,7 @@ public class GroupControllerTest {
     @Test
     public void shouldReturnGroupView() throws Exception {
         List<GroupDto> groups = new ArrayList<>();
-        when(groupService.getAllGroupDto()).thenReturn(groups);
+        when(groupService.getAllGroups()).thenReturn(groups);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/groups");
 
         mockMvc.perform(request)
@@ -75,76 +74,78 @@ public class GroupControllerTest {
 
     @Test
     public void shouldReturnGroupViewWhenGroupWasDelete() throws Exception {
+        List<GroupDto> groups = new ArrayList<>();
+        when(groupService.getAllGroups()).thenReturn(groups);
         when(groupService.deleteGroup(5)).thenReturn(true);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete_group");
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("delete_group"))
+                .andExpect(model().size(2))
+                .andExpect(view().name("groups"))
                 .andExpect(model().attributeExists("message"));
-        ;
     }
 
     @Test
-    public void shouldShowMessageOnGroupViewWhenGroupWasNotDeleted() throws Exception {
-        when(groupService.deleteGroup(5)).thenThrow(new QueryNotExecuteException());
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete_group");
+    public void shouldShowMessageOnGroupViewWhenErrorWhileGroupDeleting() throws Exception {
+        List<GroupDto> groups = new ArrayList<>();
+        when(groupService.getAllGroups()).thenReturn(groups);
+        when(groupService.deleteGroup(5)).thenThrow(new EntityNotFoundException());
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-groups");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("delete_group"))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(view().name("groups"));
     }
 
     @Test
     public void shouldReturnGroupsInfoView() throws Exception {
         GroupDto group = new GroupDto();
-        when(groupService.getGroupDto(2)).thenReturn(group);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group_info");
+        when(groupService.getGroupById(2)).thenReturn(group);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group-info");
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(view().name("group_info"))
+                .andExpect(view().name("group-info"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
+                .andExpect(model().size(1))
                 .andExpect(model().attributeExists("group"));
     }
 
     @Test
     public void shouldReturnGroupsInfoViewWithErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group_info");
-        when(groupService.getGroupDto(3)).thenThrow(new EntityNotFoundException("Error occurred"));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/group-info");
+        when(groupService.getGroupById(3)).thenThrow(new EntityNotFoundException("Error occurred"));
 
         mockMvc.perform(request.param("id", "3"))
-                .andExpect(view().name("group_info"))
+                .andExpect(view().name("group-info"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
+                .andExpect(model().size(1))
                 .andExpect(model().attributeExists("message"));
     }
 
     @Test
-    public void shouldReturnUpdateGroupView() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit_group");
+    public void shouldReturnEditGroupView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit-group");
         List<DepartmentDto> departments = new ArrayList<>();
         GroupDto group = new GroupDto();
         when(departmentService.getAllDepartmentDto()).thenReturn(departments);
-        when(groupService.getGroupDto(2)).thenReturn(group);
+        when(groupService.getGroupById(2)).thenReturn(group);
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(view().name("edit_group"))
+                .andExpect(view().name("edit-group"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(4))
-                .andExpect(model().attributeExists("pageTitle"))
+                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("departments"))
                 .andExpect(model().attributeExists("group"));
     }
 
     @Test
-    public void shouldReturnUpdateGroupViewWithErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit_group");
-        when(groupService.getGroupDto(3)).thenThrow(new QueryNotExecuteException("Error occurred"));
+    public void shouldReturnEditGroupViewWithErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit-group");
+        when(groupService.getGroupById(3)).thenThrow(new EntityNotFoundException("Error occurred"));
 
         mockMvc.perform(request.param("id", "3"))
-                .andExpect(view().name("edit_group"))
+                .andExpect(view().name("edit-group"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("message"));
     }

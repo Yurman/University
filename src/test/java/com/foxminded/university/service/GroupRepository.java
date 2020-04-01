@@ -2,7 +2,9 @@ package com.foxminded.university.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.dto.GroupDto;
 
 public class GroupRepository {
 
@@ -34,5 +36,13 @@ public class GroupRepository {
         testGroup.setId(1);
         testGroup.setDepartment(DepartmentRepository.getTestDepartment());
         return testGroup;
+    }
+
+    public static GroupDto getGroupDto() {
+        GroupDto groupDto = new GroupDto();
+        groupDto.setId(1);
+        groupDto.setTitle("test");
+        groupDto.setYear(2);
+        return groupDto;
     }
 }

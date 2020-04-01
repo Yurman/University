@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.foxminded.university.dao.GroupDao;
-import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.dto.GroupDto;
 import com.foxminded.university.service.impl.GroupServiceImpl;
 
 class GroupServiceImplTest {
@@ -27,7 +27,7 @@ class GroupServiceImplTest {
     @Mock
     private GroupDao groupDaoMock;
 
-    private Group expectedGroup = GroupRepository.getDaoTestGroup();
+    private GroupDto expectedGroup = GroupRepository.getGroupDto();
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -38,7 +38,7 @@ class GroupServiceImplTest {
     public void shouldGetGroupById() {
         when(groupDaoMock.getById(1)).thenReturn(expectedGroup);
 
-        Group actualGroup = groupService.getGroupById(1);
+        GroupDto actualGroup = groupService.getGroupById(1);
         assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 
@@ -46,7 +46,7 @@ class GroupServiceImplTest {
     public void shouldUpdateGroup() {
         when(groupDaoMock.update(expectedGroup)).thenReturn(expectedGroup);
 
-        Group actualGroup = groupService.updateGroup(expectedGroup);
+        GroupDto actualGroup = groupService.updateGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 
@@ -61,11 +61,11 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldGetAllGroups() {
-        List<Group> expectedGroups = new ArrayList<>();
+        List<GroupDto> expectedGroups = new ArrayList<>();
         expectedGroups.add(expectedGroup);
         when(groupDaoMock.getAll()).thenReturn(expectedGroups);
 
-        List<Group> actualGroups = groupService.getAllGroups();
+        List<GroupDto> actualGroups = groupService.getAllGroups();
         assertEquals(expectedGroups, actualGroups);
     }
 
@@ -73,7 +73,7 @@ class GroupServiceImplTest {
     public void shouldaddGroup() {
         when(groupDaoMock.add(expectedGroup)).thenReturn(expectedGroup);
 
-        Group actualGroup = groupService.addGroup(expectedGroup);
+        GroupDto actualGroup = groupService.addGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 }

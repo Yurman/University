@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
@@ -23,7 +22,6 @@ public class StudentController {
     private static final String ATTRIBUTE_HTML_STUDENTS = "students";
     private static final String ATTRIBUTE_HTML_MESSAGE = "message";
     private static final String ATTRIBUTE_HTML_GROUPS = "groups";
-    private static final String ATTRIBUTE_HTML_PAGE_TITLE = "pageTitle";
 
     private StudentService studentService;
     private GroupService groupService;
@@ -43,15 +41,15 @@ public class StudentController {
     @RequestMapping("/students")
     public ModelAndView getStudents() {
         ModelAndView model = new ModelAndView("students");
-        model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
+        model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
         return model;
     }
 
-    @GetMapping(value = "/student_info")
+    @GetMapping(value = "/student-info")
     public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("student_info");
+        ModelAndView model = new ModelAndView("student-info");
         try {
-            model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDto(id));
+            model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentById(id));
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with finding student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -59,56 +57,50 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/delete_student")
+    @GetMapping(value = "/delete-student")
     public ModelAndView deleteStudent(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("delete_student");
-        String message = null;
+        ModelAndView model = new ModelAndView("students");
         try {
             studentService.deleteStudent(id);
-            message = "Successfully delete student";
-        } catch (QueryNotExecuteException e) {
-            message = "Problem with deleting student";
+            String message = "Successfully delete student";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
+            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
+        } catch (EntityNotFoundException e) {
+            String message = "Problem with deleting student";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         }
-        model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
         return model;
     }
 
-    @GetMapping(value = "/edit_student")
+    @GetMapping(value = "/edit-student")
     public ModelAndView editStudentView(@RequestParam(name = "id", required = false) Integer id) {
-        ModelAndView model = new ModelAndView("edit_student");
-        StudentDto studentDto = new StudentDto();
-        String pageTitle = null;
+        ModelAndView model = new ModelAndView("edit-student");
         try {
-            if (id != null) {
-                pageTitle = "Update Student";
-                studentDto = studentService.getStudentDto(id);
-            } else {
-                pageTitle = "Add Student";
-            }
-            model.addObject(ATTRIBUTE_HTML_PAGE_TITLE, pageTitle);
+            StudentDto studentDto = (id != null) ? studentService.getStudentById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
-        } catch (QueryNotExecuteException e) {
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroups());
+        } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
         return model;
     }
 
-    @PostMapping(value = "/edit_student")
+    @PostMapping(value = "/edit-student")
     public ModelAndView editStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
-        ModelAndView model = new ModelAndView("edit_student");
+        ModelAndView model = new ModelAndView("students");
         String message = null;
         try {
             if (studentDto.getId() != 0) {
-                studentService.updateStudent(studentService.convertDtoToStudent(studentDto));
+                studentService.updateStudent(studentDto);
                 message = "Succeccfully update student";
             } else {
-                studentService.addStudent(studentService.convertDtoToStudent(studentDto));
+                studentService.addStudent(studentDto);
                 message = "Succeccfully add new student";
             }
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-        } catch (QueryNotExecuteException e) {
+            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
+        } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }

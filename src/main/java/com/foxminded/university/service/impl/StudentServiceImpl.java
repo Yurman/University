@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
-import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
 
@@ -16,22 +16,24 @@ import com.foxminded.university.service.dto.StudentDto;
 public class StudentServiceImpl implements StudentService {
 
     private StudentDao studentDao;
-    private GroupService groupService;
+    private GroupDao groupDao;
 
     @Autowired
-    public StudentServiceImpl(StudentDao studentDao, GroupService groupService) {
+    public StudentServiceImpl(StudentDao studentDao, GroupDao groupDao) {
         this.studentDao = studentDao;
-        this.groupService = groupService;
+        this.groupDao = groupDao;
     }
 
     @Override
-    public Student addStudent(Student student) {
-        return studentDao.add(student);
+    public StudentDto addStudent(StudentDto studentDto) {
+        studentDao.add(convertDtoToStudent(studentDto));
+        return studentDto;
     }
 
     @Override
-    public Student updateStudent(Student student) {
-        return studentDao.update(student);
+    public StudentDto updateStudent(StudentDto studentDto) {
+        studentDao.update(convertDtoToStudent(studentDto));
+        return studentDto;
     }
 
     @Override
@@ -40,22 +42,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentById(int id) {
-        return studentDao.getById(id);
-    }
-
-    @Override
-    public List<Student> getAllStudents() {
-        return studentDao.getAll();
-    }
-
-    @Override
-    public StudentDto getStudentDto(int id) {
+    public StudentDto getStudentById(int id) {
         return convertToStudentDto(studentDao.getById(id));
     }
 
     @Override
-    public List<StudentDto> getAllStudentDto() {
+    public List<StudentDto> getAllStudents() {
         List<StudentDto> allStudentDto = new ArrayList<>();
         List<Student> students = studentDao.getAll();
         for (Student student : students) {
@@ -76,14 +68,13 @@ public class StudentServiceImpl implements StudentService {
         return studentDto;
     }
 
-    @Override
-    public Student convertDtoToStudent(StudentDto studentDto) {
-        Student student = new Student();
+    private Student convertDtoToStudent(StudentDto studentDto) {
+        Student student = (studentDto.getId() != 0) ? studentDao.getById(studentDto.getId()) : new Student();
         student.setId(studentDto.getId());
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
         if (studentDto.getGroupId() != 0) {
-            student.setGroup(groupService.getGroupById(studentDto.getGroupId()));
+            student.setGroup(groupDao.getById(studentDto.getGroupId()));
         }
         return student;
     }

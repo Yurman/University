@@ -25,13 +25,15 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group addGroup(Group group) {
-        return groupDao.add(group);
+    public GroupDto addGroup(GroupDto groupDto) {
+        groupDao.add(convertDtoToGroup(groupDto));
+        return groupDto;
     }
 
     @Override
-    public Group updateGroup(Group group) {
-        return groupDao.update(group);
+    public GroupDto updateGroup(GroupDto groupDto) {
+        groupDao.update(convertDtoToGroup(groupDto));
+        return groupDto;
     }
 
     @Override
@@ -40,28 +42,29 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group getGroupById(int id) {
-        return groupDao.getById(id);
-    }
-
-    @Override
-    public List<Group> getAllGroups() {
-        return groupDao.getAll();
-    }
-
-    @Override
-    public GroupDto getGroupDto(int id) {
+    public GroupDto getGroupById(int id) {
         return convertToGroupDto(groupDao.getById(id));
     }
 
     @Override
-    public List<GroupDto> getAllGroupDto() {
+    public List<GroupDto> getAllGroups() {
         List<GroupDto> allGroupDto = new ArrayList<>();
         List<Group> groups = groupDao.getAll();
         for (Group group : groups) {
             allGroupDto.add(convertToGroupDto(group));
         }
         return allGroupDto;
+    }
+
+    private Group convertDtoToGroup(GroupDto groupDto) {
+        Group group = (groupDto.getId() != 0) ? groupDao.getById(groupDto.getId()) : new Group();
+        group.setId(groupDto.getId());
+        group.setTitle(groupDto.getTitle());
+        group.setYear(groupDto.getYear());
+        if (groupDto.getDepartmentId() != 0) {
+            group.setDepartment(departmentService.getDepartmentById(groupDto.getDepartmentId()));
+        }
+        return group;
     }
 
     private GroupDto convertToGroupDto(Group group) {
@@ -76,15 +79,4 @@ public class GroupServiceImpl implements GroupService {
         return groupDto;
     }
 
-    @Override
-    public Group convertDtoToGroup(GroupDto groupDto) {
-        Group group = new Group();
-        group.setId(groupDto.getId());
-        group.setTitle(groupDto.getTitle());
-        group.setYear(groupDto.getYear());
-        if (groupDto.getDepartmentId() != 0) {
-            group.setDepartment(departmentService.getDepartmentById(groupDto.getDepartmentId()));
-        }
-        return group;
-    }
 }

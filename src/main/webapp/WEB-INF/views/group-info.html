@@ -4,68 +4,75 @@
 <meta charset="utf-8">
 <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>updateGroup</title>
+<title>GroupInfo</title>
 </head>
 <body>
     <div th:replace="navigation :: navigation"></div>
     <div class="container">
-        <h2 class="d-flex justify-content-center" th:text="${pageTitle}"></h2>
-        <th:block th:if="${message == null}"
+        <h2 class="d-flex justify-content-center">Group Info</h2>
+        <th:block th:if="${group != null}"
             class="d-flex justify-content-center">
             <div class="d-flex justify-content-center">
-                <form th:group="group" th:action="edit_group"
-                    method='post' name="Add new Group"
-                    class='card p-3 bg-light' style="width: 50%;">
+                <form action='edit-group' method='get' th:group="group"
+                    name="Group Info" class='card p-3 bg-light'
+                    style="width: 50%;">
                     <div class="form-group row">
                         <label for="id"
-                            class="col-sm-5 col-form-label col-form-label-lg"></label>
+                            class="col-sm-5 col-form-label col-form-label-lg">ID</label>
                         <div class="col-sm-7">
-                            <input type="hidden"
+                            <input type="text" readonly
                                 class="form-control-plaintext card p-3 bg-light"
-                                id="id" name="id" th:value="${group.id}">
+                                id="id" th:value="${group.id}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="title"
                             class="col-sm-5 col-form-label col-form-label-lg">Title</label>
                         <div class="col-sm-7">
-                            <input type="text"
+                            <input type="text" readonly
                                 class="form-control-plaintext card p-3 bg-light"
-                                name="title" th:value="${group.title}"
-                                required>
+                                id="title" th:value="${group.title}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="year"
                             class="col-sm-5 col-form-label col-form-label-lg">Year</label>
                         <div class="col-sm-7">
-                            <input type="number"
+                            <input type="text" readonly
                                 class="form-control-plaintext card p-3 bg-light"
-                                name="year" th:value="${group.year}"
-                                required>
+                                id="year" th:value="${group.year}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="department"
                             class="col-sm-5 col-form-label col-form-label-lg">Department</label>
                         <div class="col-sm-7">
-                            <select id="department" name="departmentId"
-                                class="form-control">
-                                <option th:value="${group.DepartmentId}"
-                                    th:text="${group.DepartmentTitle}"
-                                    selected></option>
-                                <option
-                                    th:each="department : ${departments}"
-                                    th:value="${department.id}"
-                                    th:text="${department.title}"></option>
-                                <option th:value="0" text=""></option>
-                            </select>
+                            <input type="text" readonly
+                                class="form-control-plaintext card p-3 bg-light"
+                                id="department"
+                                th:value="${group.DepartmentTitle}">
                         </div>
                     </div>
-                    <button type="submit" value="Save"
-                        class="btn btn-outline-info">Save</button>
+                    <div
+                        class="btn-group btn-group-lg d-flex justify-content-center">
+                        <div class="align-self-start">
+                            <form action='edit-group' method='get'>
+                                <input type="hidden" th:name="id"
+                                    th:value="${group.id}" />
+                                <button type="submit" value="Update"
+                                    class="btn btn-outline-info">Update</button>
+                            </form>
+                        </div>
+                        <div class="align-self-end">
+                            <form action='delete-group' method='get'>
+                                <input type="hidden" th:name="id"
+                                    th:value="${group.id}" />
+                                <button type="submit" value="Delete"
+                                    class="btn btn-outline-info">Delete</button>
+                            </form>
+                        </div>
+                    </div>
                 </form>
-
             </div>
         </th:block>
         <th:block th:if="${message != null}"

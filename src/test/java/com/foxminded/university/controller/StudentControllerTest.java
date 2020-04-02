@@ -61,12 +61,13 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void shouldReturnStudentView() throws Exception {
+    public void shouldReturnStudentsView() throws Exception {
         List<StudentDto> students = new ArrayList<>();
-        when(studentService.getAllStudents()).thenReturn(students);
+        when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students");
 
-        mockMvc.perform(request).andExpect(status().isOk())
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
                 .andExpect(view().name("students"))
                 .andExpect(model().attributeExists("students"));
     }
@@ -74,42 +75,39 @@ public class StudentControllerTest {
     @Test
     public void shouldReturnStudentsViewWhenStudentWasDelete() throws Exception {
         List<StudentDto> students = new ArrayList<>();
-        when(studentService.getAllStudents()).thenReturn(students);
+        when(studentService.getAllStudentDto()).thenReturn(students);
         when(studentService.deleteStudent(5)).thenReturn(true);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(view().name("students"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(3))
                 .andExpect(model().attributeExists("message"))
                 .andExpect(model().attributeExists("students"));
     }
 
     @Test
-    public void shouldShowMessageOnStudentsViewWhenErrorWhileDeletingStudent() throws Exception {
+    public void shouldShowMessageWhenErrorOccuredWhileDeletingStudent() throws Exception {
         List<StudentDto> students = new ArrayList<>();
         when(studentService.deleteStudent(5)).thenThrow(new EntityNotFoundException("Error occurred"));
-        when(studentService.getAllStudents()).thenReturn(students);
+        when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(view().name("students"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("message"));
     }
 
     @Test
     public void shouldReturnStudentInfoView() throws Exception {
         StudentDto student = new StudentDto();
-        when(studentService.getStudentById(2)).thenReturn(student);
+        when(studentService.getStudentDtoById(2)).thenReturn(student);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/student-info");
 
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(view().name("student-info"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
                 .andExpect(model().attributeExists("student"));
     }
 
@@ -120,9 +118,7 @@ public class StudentControllerTest {
 
         mockMvc.perform(request.param("id", "33"))
                 .andExpect(view().name("student-info"))
-                .andExpect(status().isOk())
-                .andExpect(model().size(2))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -130,13 +126,12 @@ public class StudentControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit-student");
         List<GroupDto> groups = new ArrayList<>();
         StudentDto student = new StudentDto();
-        when(groupService.getAllGroups()).thenReturn(groups);
-        when(studentService.getStudentById(2)).thenReturn(student);
+        when(groupService.getAllGroupDto()).thenReturn(groups);
+        when(studentService.getStudentDtoById(2)).thenReturn(student);
 
         mockMvc.perform(request.param("id", "2"))
                 .andExpect(view().name("edit-student"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(3))
                 .andExpect(model().attributeExists("groups"))
                 .andExpect(model().attributeExists("student"));
     }
@@ -149,8 +144,7 @@ public class StudentControllerTest {
         mockMvc.perform(request.param("id", "3"))
                 .andExpect(view().name("edit-student"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(2))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(model().attributeExists("groups"));
     }
 
 }

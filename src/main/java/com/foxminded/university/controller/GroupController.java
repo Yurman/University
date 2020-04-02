@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.GroupDto;
@@ -35,7 +36,12 @@ public class GroupController {
     @GetMapping("/groups")
     public ModelAndView getGroups() {
         ModelAndView model = new ModelAndView("groups");
-        model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroups());
+        try {
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+        } catch (QueryNotExecuteException e) {
+            String errorMessage = "Problem with finding groups";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        }
         return model;
     }
 
@@ -43,7 +49,7 @@ public class GroupController {
     public ModelAndView getGroupInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("group-info");
         try {
-            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupById(id));
+            model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDtoById(id));
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with finding group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -58,7 +64,7 @@ public class GroupController {
             groupService.deleteGroup(id);
             String message = "Successfully delete group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroups());
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with deleting group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -70,7 +76,7 @@ public class GroupController {
     public ModelAndView addGroup(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("edit-group");
         try {
-            GroupDto groupDto = (id != null) ? groupService.getGroupById(id) : new GroupDto();
+            GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
             model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
         } catch (EntityNotFoundException e) {
@@ -86,14 +92,14 @@ public class GroupController {
         String message = null;
         try {
             if (groupDto.getId() != 0) {
-                groupService.updateGroup(groupDto);
+                groupService.updateGroupDto(groupDto);
                 message = "Successfully update group";
             } else {
-                groupService.addGroup(groupDto);
+                groupService.addGroupDto(groupDto);
                 message = "Successfully add new group";
             }
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroups());
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

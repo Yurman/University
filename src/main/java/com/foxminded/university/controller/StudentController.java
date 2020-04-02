@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
@@ -33,15 +34,15 @@ public class StudentController {
 
     }
 
-    @ModelAttribute(value = "studentDto")
-    public StudentDto newStudentDto() {
-        return new StudentDto();
-    }
-
     @RequestMapping("/students")
     public ModelAndView getStudents() {
         ModelAndView model = new ModelAndView("students");
-        model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
+        try {
+            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
+        } catch (QueryNotExecuteException e) {
+            String errorMessage = "Problem with finding students";
+            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        }
         return model;
     }
 
@@ -49,7 +50,7 @@ public class StudentController {
     public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("student-info");
         try {
-            model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentById(id));
+            model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDtoById(id));
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with finding student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -64,7 +65,7 @@ public class StudentController {
             studentService.deleteStudent(id);
             String message = "Successfully delete student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
+            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
         } catch (EntityNotFoundException e) {
             String message = "Problem with deleting student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
@@ -76,9 +77,9 @@ public class StudentController {
     public ModelAndView editStudentView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("edit-student");
         try {
-            StudentDto studentDto = (id != null) ? studentService.getStudentById(id) : new StudentDto();
+            StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroups());
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
@@ -92,14 +93,14 @@ public class StudentController {
         String message = null;
         try {
             if (studentDto.getId() != 0) {
-                studentService.updateStudent(studentDto);
+                studentService.updateStudentDto(studentDto);
                 message = "Succeccfully update student";
             } else {
-                studentService.addStudent(studentDto);
+                studentService.addStudentDto(studentDto);
                 message = "Succeccfully add new student";
             }
             model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudents());
+            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
         } catch (EntityNotFoundException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

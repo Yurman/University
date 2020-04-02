@@ -25,13 +25,33 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto addStudent(StudentDto studentDto) {
+    public Student getStudentById(int id) {
+        return studentDao.getById(id);
+    }
+
+    @Override
+    public StudentDto getStudentDtoById(int id) {
+        return convertToStudentDto(studentDao.getById(id));
+    }
+
+    @Override
+    public Student addStudent(Student student) {
+        return studentDao.add(student);
+    }
+
+    @Override
+    public StudentDto addStudentDto(StudentDto studentDto) {
         studentDao.add(convertDtoToStudent(studentDto));
         return studentDto;
     }
 
     @Override
-    public StudentDto updateStudent(StudentDto studentDto) {
+    public Student updateStudent(Student student) {
+        return studentDao.update(student);
+    }
+
+    @Override
+    public StudentDto updateStudentDto(StudentDto studentDto) {
         studentDao.update(convertDtoToStudent(studentDto));
         return studentDto;
     }
@@ -42,12 +62,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto getStudentById(int id) {
-        return convertToStudentDto(studentDao.getById(id));
+    public List<Student> getAllStudents() {
+        return studentDao.getAll();
     }
 
     @Override
-    public List<StudentDto> getAllStudents() {
+    public List<StudentDto> getAllStudentDto() {
         List<StudentDto> allStudentDto = new ArrayList<>();
         List<Student> students = studentDao.getAll();
         for (Student student : students) {
@@ -78,4 +98,5 @@ public class StudentServiceImpl implements StudentService {
         }
         return student;
     }
+
 }

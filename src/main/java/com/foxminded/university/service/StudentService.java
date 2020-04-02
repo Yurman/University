@@ -2,18 +2,27 @@ package com.foxminded.university.service;
 
 import java.util.List;
 
+import com.foxminded.university.domain.Student;
 import com.foxminded.university.service.dto.StudentDto;
 
 public interface StudentService {
 
-    public StudentDto addStudent(StudentDto studentDto);
+    public Student getStudentById(int id);
 
-    public StudentDto updateStudent(StudentDto studentDto);
+    public StudentDto getStudentDtoById(int id);
+
+    public Student addStudent(Student student);
+
+    public StudentDto addStudentDto(StudentDto studentDto);
+
+    public Student updateStudent(Student student);
+
+    public StudentDto updateStudentDto(StudentDto studentDto);
 
     public boolean deleteStudent(int id);
 
-    public List<StudentDto> getAllStudents();
+    public List<Student> getAllStudents();
 
-    public StudentDto getStudentById(int id);
+    public List<StudentDto> getAllStudentDto();
 
 }

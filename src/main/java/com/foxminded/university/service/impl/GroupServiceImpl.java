@@ -90,7 +90,6 @@ public class GroupServiceImpl implements GroupService {
 
     private Group convertDtoToGroup(GroupDto groupDto) {
         Group group = (groupDto.getId() != 0) ? groupDao.getById(groupDto.getId()) : new Group();
-        group.setId(groupDto.getId());
         group.setTitle(groupDto.getTitle());
         group.setYear(groupDto.getYear());
         if (groupDto.getDepartmentId() != 0) {

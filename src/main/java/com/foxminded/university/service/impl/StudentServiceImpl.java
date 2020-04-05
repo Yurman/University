@@ -90,7 +90,6 @@ public class StudentServiceImpl implements StudentService {
 
     private Student convertDtoToStudent(StudentDto studentDto) {
         Student student = (studentDto.getId() != 0) ? studentDao.getById(studentDto.getId()) : new Student();
-        student.setId(studentDto.getId());
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
         if (studentDto.getGroupId() != 0) {

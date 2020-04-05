@@ -2,6 +2,7 @@ package com.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.GroupDto;
@@ -80,23 +82,20 @@ public class StudentControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
-                .andExpect(view().name("students"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("message"))
-                .andExpect(model().attributeExists("students"));
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
     }
 
     @Test
     public void shouldShowMessageWhenErrorOccuredWhileDeletingStudent() throws Exception {
         List<StudentDto> students = new ArrayList<>();
-        when(studentService.deleteStudent(5)).thenThrow(new EntityNotFoundException("Error occurred"));
+        when(studentService.deleteStudent(5)).thenThrow(new QueryNotExecuteException("Error occurred"));
         when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
-                .andExpect(view().name("students"))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("message"));
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
     }
 
     @Test
@@ -145,6 +144,28 @@ public class StudentControllerTest {
                 .andExpect(view().name("edit-student"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("groups"));
+    }
+
+    @Test
+    public void shouldReturnViewWhenStudentWasUpdated() throws Exception {
+        StudentDto studentDto = new StudentDto();
+        when(studentService.updateStudentDto(studentDto)).thenReturn(studentDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
+
+        mockMvc.perform(request.requestAttr("studentDto", studentDto))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldReturnViewWhenStudentWasAdded() throws Exception {
+        StudentDto studentDto = new StudentDto();
+        when(studentService.updateStudentDto(studentDto)).thenReturn(studentDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
+
+        mockMvc.perform(request.requestAttr("studentDto", studentDto))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
     }
 
 }

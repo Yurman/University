@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
@@ -47,11 +48,11 @@ public class StudentController {
     }
 
     @GetMapping(value = "/student-info")
-    public ModelAndView getStudentInfo(@RequestParam(value = "id") int id) {
+    public ModelAndView getStudentInfoView(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("student-info");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDtoById(id));
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with finding student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
@@ -59,28 +60,26 @@ public class StudentController {
     }
 
     @GetMapping(value = "/delete-student")
-    public ModelAndView deleteStudent(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("students");
+    public String deleteStudent(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
+        String message = null;
         try {
             studentService.deleteStudent(id);
-            String message = "Successfully delete student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
-        } catch (EntityNotFoundException e) {
-            String message = "Problem with deleting student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
+            message = "Successfully delete student";
+        } catch (QueryNotExecuteException e) {
+            message = "Problem with deleting student";
         }
-        return model;
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/students";
     }
 
     @GetMapping(value = "/edit-student")
-    public ModelAndView editStudentView(@RequestParam(name = "id", required = false) Integer id) {
+    public ModelAndView showEditStudentView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("edit-student");
         try {
             StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
             model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
         }
@@ -88,8 +87,8 @@ public class StudentController {
     }
 
     @PostMapping(value = "/edit-student")
-    public ModelAndView editStudent(@ModelAttribute("studentDto") StudentDto studentDto) {
-        ModelAndView model = new ModelAndView("students");
+    public String editStudent(@ModelAttribute("studentDto") StudentDto studentDto,
+            RedirectAttributes redirectAttributes) {
         String message = null;
         try {
             if (studentDto.getId() != 0) {
@@ -99,12 +98,10 @@ public class StudentController {
                 studentService.addStudentDto(studentDto);
                 message = "Succeccfully add new student";
             }
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, message);
-            model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
-        } catch (EntityNotFoundException e) {
-            String errorMessage = "Problem with editing student";
-            model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
+            message = "Problem with editing student";
         }
-        return model;
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/students";
     }
 }

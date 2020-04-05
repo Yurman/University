@@ -2,6 +2,7 @@ package com.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.DepartmentDto;
@@ -80,24 +82,20 @@ public class GroupControllerTest {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))
-                .andExpect(status().isOk())
-                .andExpect(model().size(2))
-                .andExpect(view().name("groups"))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(redirectedUrl("/groups"))
+                .andExpect(status().isFound());
     }
 
     @Test
     public void shouldShowMessageWhenErrorOccuredWhileGroupDeleting() throws Exception {
         List<GroupDto> groups = new ArrayList<>();
         when(groupService.getAllGroupDto()).thenReturn(groups);
-        when(groupService.deleteGroup(5)).thenThrow(new EntityNotFoundException());
+        when(groupService.deleteGroup(5)).thenThrow(new QueryNotExecuteException());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("groups"))
-                .andExpect(model().size(1))
-                .andExpect(model().attributeExists("message"));
+                .andExpect(redirectedUrl("/groups"))
+                .andExpect(status().isFound());
     }
 
     @Test
@@ -150,6 +148,29 @@ public class GroupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("edit-group"))
                 .andExpect(model().attributeExists("message"));
+    }
+
+    @Test
+    public void shouldReturnViewWhenGroupWasUpdated() throws Exception {
+        GroupDto groupDto = new GroupDto();
+        groupDto.setId(1);
+        when(groupService.updateGroupDto(groupDto)).thenReturn(groupDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-group");
+
+        mockMvc.perform(request.requestAttr("groupDto", groupDto))
+                .andExpect(redirectedUrl("/groups"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldReturnViewWhenGroupWasAdded() throws Exception {
+        GroupDto groupDto = new GroupDto();
+        when(groupService.addGroupDto(groupDto)).thenReturn(groupDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-group");
+
+        mockMvc.perform(request.requestAttr("groupDto", groupDto))
+                .andExpect(redirectedUrl("/groups"))
+                .andExpect(status().isFound());
     }
 
 }

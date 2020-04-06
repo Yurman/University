@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.GroupDto;
 
@@ -15,10 +16,12 @@ import com.foxminded.university.service.dto.GroupDto;
 public class GroupServiceImpl implements GroupService {
 
     private GroupDao groupDao;
+    private DepartmentService departmentService;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao) {
+    public GroupServiceImpl(GroupDao groupDao, DepartmentService departmentService) {
         this.groupDao = groupDao;
+        this.departmentService = departmentService;
     }
 
     @Override
@@ -27,8 +30,20 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public GroupDto addGroup(GroupDto groupDto) {
+        groupDao.add(convertDtoToGroup(groupDto));
+        return groupDto;
+    }
+
+    @Override
     public Group updateGroup(Group group) {
         return groupDao.update(group);
+    }
+
+    @Override
+    public GroupDto updateGroup(GroupDto groupDto) {
+        groupDao.update(convertDtoToGroup(groupDto));
+        return groupDto;
     }
 
     @Override
@@ -42,13 +57,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> getAllGroups() {
-        return groupDao.getAll();
+    public GroupDto getGroupDtoById(int id) {
+        return convertToGroupDto(groupDao.getById(id));
     }
 
     @Override
-    public GroupDto getGroupDto(int id) {
-        return convertToGroupDto(groupDao.getById(id));
+    public List<Group> getAllGroups() {
+        return groupDao.getAll();
     }
 
     @Override
@@ -68,7 +83,19 @@ public class GroupServiceImpl implements GroupService {
         groupDto.setYear(group.getYear());
         if (group.getDepartment() != null) {
             groupDto.setDepartmentTitle(group.getDepartment().getTitle());
+            groupDto.setDepartmentId(group.getDepartment().getId());
         }
         return groupDto;
     }
+
+    private Group convertDtoToGroup(GroupDto groupDto) {
+        Group group = (groupDto.getId() != 0) ? groupDao.getById(groupDto.getId()) : new Group();
+        group.setTitle(groupDto.getTitle());
+        group.setYear(groupDto.getYear());
+        if (groupDto.getDepartmentId() != 0) {
+            group.setDepartment(departmentService.getDepartmentById(groupDto.getDepartmentId()));
+        }
+        return group;
+    }
+
 }

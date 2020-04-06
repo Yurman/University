@@ -2,6 +2,7 @@ package com.foxminded.university.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.foxminded.university.domain.Group;
 
 public class GroupRepository {
@@ -32,6 +33,8 @@ public class GroupRepository {
     public static Group getDaoTestGroup() {
         Group testGroup = createFirstTestGroup();
         testGroup.setId(1);
+        testGroup.setTitle("test");
+        testGroup.setYear(2);
         testGroup.setDepartment(DepartmentRepository.getTestDepartment());
         return testGroup;
     }

@@ -5,6 +5,15 @@ public class GroupDto {
     private String title;
     private int year;
     private String departmentTitle;
+    private int departmentId;
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
 
     public int getId() {
         return id;

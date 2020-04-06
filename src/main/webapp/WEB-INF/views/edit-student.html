@@ -4,24 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport"
     content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>StudentInfo</title>
+<title>edit_student</title>
 </head>
 <body>
     <div th:replace="navigation :: navigation"></div>
     <div class="container">
-        <h2 class="d-flex justify-content-center">Student Info</h2>
+        <h2 class="d-flex justify-content-center" th:student="student"
+            th:text="*{student.id == 0 }? 'Add Student' : 'Update Student'"></h2>
         <th:block th:if="${student != null}"
             class="d-flex justify-content-center">
             <div class="d-flex justify-content-center">
                 <form th:student="student" name="Student Info"
+                    th:action="edit-student" method='post'
                     class='card p-3 bg-light' style="width: 50%;">
                     <div class="form-group row">
                         <label for="id"
-                            class="col-sm-5 col-form-label col-form-label-lg">ID</label>
+                            class="col-sm-5 col-form-label col-form-label-lg"></label>
                         <div class="col-sm-7">
-                            <input type="text" readonly
+                            <input type="hidden"
                                 class="form-control-plaintext card p-3 bg-light"
-                                id="id" th:value="${student.id}">
+                                id="id" th:value="${student.id}"
+                                name="id">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -29,10 +32,10 @@
                             class="col-sm-5 col-form-label col-form-label-lg">First
                             Name</label>
                         <div class="col-sm-7">
-                            <input type="text" readonly
+                            <input type="text"
                                 class="form-control-plaintext card p-3 bg-light"
-                                id="firstName"
-                                th:value="${student.firstName}">
+                                name="firstName" id="firstName"
+                                th:value="${student.firstName}" required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -40,26 +43,34 @@
                             class="col-sm-5 col-form-label col-form-label-lg">Last
                             Name</label>
                         <div class="col-sm-7">
-                            <input type="text" readonly
+                            <input type="text"
                                 class="form-control-plaintext card p-3 bg-light"
-                                id="lastName"
-                                th:value="${student.lastName}">
+                                name="lastName" id="lastName"
+                                th:value="${student.lastName}" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="group"
                             class="col-sm-5 col-form-label col-form-label-lg">Group</label>
                         <div class="col-sm-7">
-                            <input type="text" readonly
-                                class="form-control-plaintext card p-3 bg-light"
-                                id="group"
-                                th:value="${student.groupTitle}">
+                            <select id="group" name="groupId"
+                                class="form-control">
+                                <option th:value="${student.GroupId}"
+                                    th:text="${student.GroupTitle}"
+                                    selected></option>
+                                <option th:each="group : ${groups}"
+                                    th:value="${group.id}"
+                                    th:text="${group.title}"></option>
+                                <option th:value="0" text=""></option>
+                            </select>
                         </div>
                     </div>
+                    <button type="submit" value="Update"
+                        class="btn btn-outline-info">Save</button>
                 </form>
             </div>
         </th:block>
-        <th:block th:if="${error != null}"
+        <th:block th:if="${message != null}"
             class="d-flex justify-content-center">
             <div class="d-flex justify-content-center">
                 <div class="alert alert-dark alert-dismissible"
@@ -68,7 +79,7 @@
                         <button type="submit" class="close"
                             data-dismiss="alert">&times;</button>
                     </form>
-                    <strong class="text-center" th:text="${error}"></strong>
+                    <strong class="text-center" th:text="${message}"></strong>
                 </div>
             </div>
         </th:block>

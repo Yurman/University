@@ -2,6 +2,7 @@ package com.foxminded.university.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -20,13 +21,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.exception.QueryNotExecuteException;
+import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
+import com.foxminded.university.service.dto.GroupDto;
 import com.foxminded.university.service.dto.StudentDto;
 
 @ContextConfiguration(classes = { WebConfiguration.class })
@@ -43,6 +46,9 @@ public class StudentControllerTest {
     @Mock
     private StudentService studentService;
 
+    @Mock
+    private GroupService groupService;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -57,39 +63,109 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void shouldReturnStudentView() throws Exception {
+    public void shouldReturnStudentsView() throws Exception {
         List<StudentDto> students = new ArrayList<>();
         when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/students");
 
-        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("students"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("students"));
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(view().name("students"))
+                .andExpect(model().attributeExists("students"));
+    }
+
+    @Test
+    public void shouldReturnStudentsViewWhenStudentWasDelete() throws Exception {
+        List<StudentDto> students = new ArrayList<>();
+        when(studentService.getAllStudentDto()).thenReturn(students);
+        when(studentService.deleteStudent(5)).thenReturn(true);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
+
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldShowMessageWhenErrorOccuredWhileDeletingStudent() throws Exception {
+        List<StudentDto> students = new ArrayList<>();
+        when(studentService.deleteStudent(5)).thenThrow(new QueryNotExecuteException("Error occurred"));
+        when(studentService.getAllStudentDto()).thenReturn(students);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
+
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
     }
 
     @Test
     public void shouldReturnStudentInfoView() throws Exception {
         StudentDto student = new StudentDto();
-        when(studentService.getStudentDto(2)).thenReturn(student);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/studentInfo");
+        when(studentService.getStudentDtoById(2)).thenReturn(student);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/student-info");
 
         mockMvc.perform(request.param("id", "2"))
-                .andExpect(MockMvcResultMatchers.view().name("studentInfo"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(model().size(1))
+                .andExpect(view().name("student-info"))
+                .andExpect(status().isOk())
                 .andExpect(model().attributeExists("student"));
     }
 
     @Test
     public void shouldReturnStudentInfoViewWithErrorMessage() throws Exception {
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/studentInfo");
-        when(studentService.getStudentDto(33)).thenThrow(new EntityNotFoundException("Error occurred"));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/student-info");
+        when(studentService.getStudentById(33)).thenThrow(new EntityNotFoundException("Error occurred"));
 
         mockMvc.perform(request.param("id", "33"))
-                .andExpect(view().name("studentInfo"))
+                .andExpect(view().name("student-info"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnEditStudentView() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit-student");
+        List<GroupDto> groups = new ArrayList<>();
+        StudentDto student = new StudentDto();
+        when(groupService.getAllGroupDto()).thenReturn(groups);
+        when(studentService.getStudentDtoById(2)).thenReturn(student);
+
+        mockMvc.perform(request.param("id", "2"))
+                .andExpect(view().name("edit-student"))
                 .andExpect(status().isOk())
-                .andExpect(model().size(1))
-                .andExpect(model().attributeExists("error"));
+                .andExpect(model().attributeExists("groups"))
+                .andExpect(model().attributeExists("student"));
+    }
+
+    @Test
+    public void shouldReturnEditStudentViewWithErrorMessage() throws Exception {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/edit-student");
+        when(studentService.getStudentById(3)).thenThrow(new EntityNotFoundException("Error occurred"));
+
+        mockMvc.perform(request.param("id", "3"))
+                .andExpect(view().name("edit-student"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("groups"));
+    }
+
+    @Test
+    public void shouldReturnViewWhenStudentWasUpdated() throws Exception {
+        StudentDto studentDto = new StudentDto();
+        when(studentService.updateStudent(studentDto)).thenReturn(studentDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
+
+        mockMvc.perform(request.requestAttr("studentDto", studentDto))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldReturnViewWhenStudentWasAdded() throws Exception {
+        StudentDto studentDto = new StudentDto();
+        when(studentService.updateStudent(studentDto)).thenReturn(studentDto);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
+
+        mockMvc.perform(request.requestAttr("studentDto", studentDto))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
     }
 
 }

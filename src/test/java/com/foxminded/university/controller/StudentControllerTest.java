@@ -149,7 +149,7 @@ public class StudentControllerTest {
     @Test
     public void shouldReturnViewWhenStudentWasUpdated() throws Exception {
         StudentDto studentDto = new StudentDto();
-        when(studentService.updateStudentDto(studentDto)).thenReturn(studentDto);
+        when(studentService.updateStudent(studentDto)).thenReturn(studentDto);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
 
         mockMvc.perform(request.requestAttr("studentDto", studentDto))
@@ -160,7 +160,7 @@ public class StudentControllerTest {
     @Test
     public void shouldReturnViewWhenStudentWasAdded() throws Exception {
         StudentDto studentDto = new StudentDto();
-        when(studentService.updateStudentDto(studentDto)).thenReturn(studentDto);
+        when(studentService.updateStudent(studentDto)).thenReturn(studentDto);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-student");
 
         mockMvc.perform(request.requestAttr("studentDto", studentDto))

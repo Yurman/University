@@ -13,11 +13,11 @@ public interface StudentService {
 
     public Student addStudent(Student student);
 
-    public StudentDto addStudentDto(StudentDto studentDto);
+    public StudentDto addStudent(StudentDto studentDto);
 
     public Student updateStudent(Student student);
 
-    public StudentDto updateStudentDto(StudentDto studentDto);
+    public StudentDto updateStudent(StudentDto studentDto);
 
     public boolean deleteStudent(int id);
 

@@ -40,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto addStudentDto(StudentDto studentDto) {
+    public StudentDto addStudent(StudentDto studentDto) {
         studentDao.add(convertDtoToStudent(studentDto));
         return studentDto;
     }
@@ -51,7 +51,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto updateStudentDto(StudentDto studentDto) {
+    public StudentDto updateStudent(StudentDto studentDto) {
         studentDao.update(convertDtoToStudent(studentDto));
         return studentDto;
     }

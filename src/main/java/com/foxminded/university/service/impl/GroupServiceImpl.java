@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDto addGroupDto(GroupDto groupDto) {
+    public GroupDto addGroup(GroupDto groupDto) {
         groupDao.add(convertDtoToGroup(groupDto));
         return groupDto;
     }
@@ -41,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDto updateGroupDto(GroupDto groupDto) {
+    public GroupDto updateGroup(GroupDto groupDto) {
         groupDao.update(convertDtoToGroup(groupDto));
         return groupDto;
     }

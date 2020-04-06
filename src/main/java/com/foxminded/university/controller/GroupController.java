@@ -90,10 +90,10 @@ public class GroupController {
         String message = null;
         try {
             if (groupDto.getId() != 0) {
-                groupService.updateGroupDto(groupDto);
+                groupService.updateGroup(groupDto);
                 message = "Successfully update group";
             } else {
-                groupService.addGroupDto(groupDto);
+                groupService.addGroup(groupDto);
                 message = "Successfully add new group";
             }
         } catch (EntityNotFoundException | QueryNotExecuteException e) {

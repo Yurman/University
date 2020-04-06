@@ -92,10 +92,10 @@ public class StudentController {
         String message = null;
         try {
             if (studentDto.getId() != 0) {
-                studentService.updateStudentDto(studentDto);
+                studentService.updateStudent(studentDto);
                 message = "Succeccfully update student";
             } else {
-                studentService.addStudentDto(studentDto);
+                studentService.addStudent(studentDto);
                 message = "Succeccfully add new student";
             }
         } catch (EntityNotFoundException | QueryNotExecuteException e) {

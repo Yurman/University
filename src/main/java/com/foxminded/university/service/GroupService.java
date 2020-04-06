@@ -13,11 +13,11 @@ public interface GroupService {
 
     public Group addGroup(Group group);
 
-    public GroupDto addGroupDto(GroupDto groupDto);
+    public GroupDto addGroup(GroupDto groupDto);
 
     public Group updateGroup(Group group);
 
-    public GroupDto updateGroupDto(GroupDto groupDto);
+    public GroupDto updateGroup(GroupDto groupDto);
 
     public boolean deleteGroup(int id);
 

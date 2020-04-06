@@ -154,7 +154,7 @@ public class GroupControllerTest {
     public void shouldReturnViewWhenGroupWasUpdated() throws Exception {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(1);
-        when(groupService.updateGroupDto(groupDto)).thenReturn(groupDto);
+        when(groupService.updateGroup(groupDto)).thenReturn(groupDto);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-group");
 
         mockMvc.perform(request.requestAttr("groupDto", groupDto))
@@ -165,7 +165,7 @@ public class GroupControllerTest {
     @Test
     public void shouldReturnViewWhenGroupWasAdded() throws Exception {
         GroupDto groupDto = new GroupDto();
-        when(groupService.addGroupDto(groupDto)).thenReturn(groupDto);
+        when(groupService.addGroup(groupDto)).thenReturn(groupDto);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post("/edit-group");
 
         mockMvc.perform(request.requestAttr("groupDto", groupDto))

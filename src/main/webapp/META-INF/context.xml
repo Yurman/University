@@ -2,7 +2,7 @@
     <Resource name="jdbc/university" auth="Container"
         type="javax.sql.DataSource"
         driverClassName="org.postgresql.Driver"
-        url="jdbc:postgresql://localhost:5432/university" username="university_user"
-        password="password" maxTotal="20" maxIdle="10"
-        maxWaitMillis="10" />
+        url="jdbc:postgresql://localhost:5432/university"
+        username="university_user" password="password" maxTotal="20"
+        maxIdle="10" maxWaitMillis="10" />
 </Context>

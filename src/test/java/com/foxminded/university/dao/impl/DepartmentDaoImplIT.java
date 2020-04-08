@@ -13,14 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.config.DataConfiguration;
+import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 import com.foxminded.university.service.FlywayWrapper;
 
 public class DepartmentDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            DataConfiguration.class);
+            TestDataConfiguration.class);
     private DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Department testDepartment = DepartmentRepository.getTestDepartment();

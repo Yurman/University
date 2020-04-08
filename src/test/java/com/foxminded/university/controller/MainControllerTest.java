@@ -12,9 +12,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.config.WebConfiguration;
 
-@ContextConfiguration(classes = { WebConfiguration.class })
+@ContextConfiguration(classes = { WebConfiguration.class, TestDataConfiguration.class })
 @WebAppConfiguration()
 @ExtendWith(SpringExtension.class)
 

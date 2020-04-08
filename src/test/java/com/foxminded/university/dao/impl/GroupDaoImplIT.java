@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.foxminded.university.config.DataConfiguration;
+import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.FlywayWrapper;
@@ -18,7 +18,7 @@ import com.foxminded.university.service.GroupRepository;
 
 public class GroupDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            DataConfiguration.class);
+            TestDataConfiguration.class);
     private GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
     private Flyway flyway = FlywayWrapper.initializeFlyway();
     private Group testGroup = GroupRepository.getDaoTestGroup();

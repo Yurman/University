@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.config.WebConfiguration;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
@@ -32,7 +33,7 @@ import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.GroupDto;
 import com.foxminded.university.service.dto.StudentDto;
 
-@ContextConfiguration(classes = { WebConfiguration.class })
+@ContextConfiguration(classes = { WebConfiguration.class, TestDataConfiguration.class })
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 

@@ -15,7 +15,7 @@ import org.springframework.jndi.JndiTemplate;
 
 @Configuration
 @ComponentScan("com.foxminded.university")
-@PropertySource("classpath:jndi.properties")
+@PropertySource("classpath:application.properties")
 public class DataConfiguration {
 
     @Autowired

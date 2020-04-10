@@ -1,9 +1,14 @@
 package com.foxminded.university.domain;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public class Person {
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
-    private int age;
 
     public String getFirstName() {
         return firstName;
@@ -21,19 +26,10 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 11;
         int result = 19;
-        result = prime * result + age;
         result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
         result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
         return result;
@@ -48,8 +44,6 @@ public class Person {
         if (getClass() != obj.getClass())
             return false;
         Person other = (Person) obj;
-        if (age != other.age)
-            return false;
         if (firstName == null) {
             if (other.firstName != null) {
                 return false;
@@ -68,6 +62,6 @@ public class Person {
     @Override
     public String toString() {
         return "Person [" + (firstName != null ? "firstName=" + firstName + ", " : "")
-                + (lastName != null ? "lastName=" + lastName + ", " : "") + "age=" + age + "]";
+                + (lastName != null ? "lastName=" + lastName + ", " : "") + "]";
     }
 }

@@ -7,93 +7,86 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.HibernateSessionFactory;
-import com.foxminded.university.dao.StudentDao;
-import com.foxminded.university.domain.Student;
+import com.foxminded.university.domain.Department;
 import com.foxminded.university.exception.QueryNotExecuteException;
 
 @Repository
-public class HibernateStudentDaoImpl implements StudentDao {
+public class HibernateDepartmentDaoImpl implements DepartmentDao {
 
     private SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
-    private static final Logger logger = LoggerFactory.getLogger(HibernateStudentDaoImpl.class);
 
     @Override
-    public Student getById(int id) {
-        Student student = null;
+    public Department getById(int id) {
+        Department department = null;
         try (Session session = sessionFactory.openSession()) {
 
             Transaction transaction = session.beginTransaction();
-            student = session.get(Student.class, id);
+            department = session.get(Department.class, id);
             transaction.commit();
             session.close();
-        } catch (HibernateException exc) {
-            throw new QueryNotExecuteException();
+        } catch (HibernateException ex) {
+
         }
-        logger.trace("Result: [{}] ", student);
-        return student;
+        return department;
     }
 
     @SuppressWarnings("unchecked")
+
     @Override
-    public List<Student> getAll() {
-        List<Student> students = new ArrayList<>();
+    public List<Department> getAll() {
+        List<Department> departments = new ArrayList<>();
         try (Session session = sessionFactory.openSession()) {
 
             Transaction transaction = session.beginTransaction();
-            students = sessionFactory.openSession()
-                    .createQuery("From Student").list();
+            departments = sessionFactory.openSession()
+                    .createQuery("From Department").list();
             transaction.commit();
-        } catch (HibernateException exc) {
+        } catch (HibernateException e) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", students.size());
-        return students;
+        return departments;
     }
 
     @Override
-    public Student add(Student student) {
+    public Department add(Department department) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.save(student);
+            session.save(department);
             transaction.commit();
-        } catch (HibernateException exc) {
+        } catch (HibernateException e) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", student);
-        return student;
+        return department;
     }
 
     @Override
     public boolean delete(int id) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            Student student = session.get(Student.class, id);
-            session.delete(student);
+            Department department = session.get(Department.class, id);
+            session.delete(department);
             transaction.commit();
-        } catch (HibernateException exc) {
+        } catch (HibernateException e) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [true] ");
         return true;
     }
 
     @Override
-    public Student update(Student student) {
+    public Department update(Department department) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
-            session.update(student);
+            session.update(department);
             transaction.commit();
             session.close();
-        } catch (HibernateException exc) {
+        } catch (HibernateException e) {
             throw new QueryNotExecuteException();
         }
-        logger.trace("Result: [{}] ", student);
-        return student;
+        return department;
     }
 
 }

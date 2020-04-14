@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.impl;
+package com.foxminded.university.dao.impl.jdbc;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,12 +12,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.mapper.DepartmentMapper;
 import com.foxminded.university.domain.Department;
 
-//@Repository
+@Repository
 public class DepartmentDaoImpl implements DepartmentDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

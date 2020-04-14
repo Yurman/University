@@ -1,6 +1,8 @@
 package com.foxminded.university.config;
 
 import javax.naming.NamingException;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +12,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jndi.JndiTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("com.foxminded.university")
 @PropertySource("classpath:application.properties")
+@EnableTransactionManagement
 public class DataConfiguration {
 
     @Autowired
     private Environment environment;
 
     @Bean
-    DataSource dataSource() throws NamingException {
+    public DataSource dataSource() throws NamingException {
 
         return (DataSource) new JndiTemplate().lookup(environment.getProperty("ds.name.context"));
     }
+
+    @Bean
+    public EntityManagerFactory getEntityManagerFactory() {
+        return Persistence.createEntityManagerFactory("university");
+    }
+
 }

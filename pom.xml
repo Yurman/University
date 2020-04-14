@@ -57,6 +57,7 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

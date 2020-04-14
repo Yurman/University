@@ -12,12 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jndi.JndiTemplate;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("com.foxminded.university")
 @PropertySource("classpath:application.properties")
-@EnableTransactionManagement
 public class DataConfiguration {
 
     @Autowired

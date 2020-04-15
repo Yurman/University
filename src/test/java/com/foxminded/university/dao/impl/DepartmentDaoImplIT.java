@@ -14,6 +14,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.impl.jdbc.DepartmentDaoImpl;
+import com.foxminded.university.dao.impl.jdbc.FacultyDaoImpl;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
 import com.foxminded.university.service.FlywayWrapper;

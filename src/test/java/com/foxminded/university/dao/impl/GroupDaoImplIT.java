@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.impl.jdbc.DepartmentDaoImpl;
+import com.foxminded.university.dao.impl.jdbc.FacultyDaoImpl;
+import com.foxminded.university.dao.impl.jdbc.GroupDaoImpl;
 import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.FlywayWrapper;

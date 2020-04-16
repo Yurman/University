@@ -3,7 +3,7 @@ package com.foxminded.university.dao.impl.hibernate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Persistence;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -15,37 +15,42 @@ import com.foxminded.university.domain.Department;
 @Primary
 public class DepartmentDaoImpl implements DepartmentDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager entityManager = Persistence.createEntityManagerFactory("university").createEntityManager();
 
     @Override
     public Department getById(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        return entityManager.find(Department.class, id);
+
     }
 
     @Override
     public List<Department> getAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return entityManager.createQuery("select a from Department a", Department.class).getResultList();
     }
 
     @Override
-    public Department add(Department t) {
-        // TODO Auto-generated method stub
-        return null;
+    public Department add(Department department) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(department);
+        entityManager.getTransaction().commit();
+        return department;
     }
 
     @Override
     public boolean delete(int id) {
-        // TODO Auto-generated method stub
-        return false;
+        Department department = entityManager.find(Department.class, id);
+        entityManager.getTransaction().begin();
+        entityManager.remove(department);
+        entityManager.getTransaction().commit();
+        return true;
     }
 
     @Override
-    public Department update(Department t) {
-        // TODO Auto-generated method stub
-        return null;
+    public Department update(Department department) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(department);
+        entityManager.getTransaction().commit();
+        return department;
     }
 
 }

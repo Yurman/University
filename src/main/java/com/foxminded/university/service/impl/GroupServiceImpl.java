@@ -3,10 +3,11 @@ package com.foxminded.university.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;

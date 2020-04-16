@@ -3,7 +3,7 @@ package com.foxminded.university.dao.impl.hibernate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.Persistence;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -15,37 +15,41 @@ import com.foxminded.university.domain.Faculty;
 @Primary
 public class FacultyDaoImpl implements FacultyDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager entityManager = Persistence.createEntityManagerFactory("university").createEntityManager();
 
     @Override
     public Faculty getById(int id) {
-        // TODO Auto-generated method stub
-        return null;
+        return entityManager.find(Faculty.class, id);
     }
 
     @Override
     public List<Faculty> getAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return entityManager.createQuery("select a from Group a", Faculty.class).getResultList();
     }
 
     @Override
-    public Faculty add(Faculty t) {
-        // TODO Auto-generated method stub
-        return null;
+    public Faculty add(Faculty faculty) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(faculty);
+        entityManager.getTransaction().commit();
+        return faculty;
     }
 
     @Override
     public boolean delete(int id) {
-        // TODO Auto-generated method stub
-        return false;
+        Faculty faculty = entityManager.find(Faculty.class, id);
+        entityManager.getTransaction().begin();
+        entityManager.remove(faculty);
+        entityManager.getTransaction().commit();
+        return true;
     }
 
     @Override
-    public Faculty update(Faculty t) {
-        // TODO Auto-generated method stub
-        return null;
+    public Faculty update(Faculty faculty) {
+        entityManager.getTransaction().begin();
+        entityManager.persist(faculty);
+        entityManager.getTransaction().commit();
+        return faculty;
     }
 
 }

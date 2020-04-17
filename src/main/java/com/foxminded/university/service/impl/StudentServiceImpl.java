@@ -3,8 +3,6 @@ package com.foxminded.university.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
 
 @Service
-@Transactional
 public class StudentServiceImpl implements StudentService {
 
     private StudentDao studentDao;

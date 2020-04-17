@@ -3,8 +3,6 @@ package com.foxminded.university.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,43 +23,36 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    @Transactional
     public Department addDepartment(Department department) {
         return departmentDao.add(department);
     }
 
     @Override
-    @Transactional
     public Department updateDepartment(Department group) {
         return departmentDao.update(group);
     }
 
     @Override
-    @Transactional
     public boolean deleteDepartment(int id) {
         return departmentDao.delete(id);
     }
 
     @Override
-    @Transactional
     public Department getDepartmentById(int id) {
         return departmentDao.getById(id);
     }
 
     @Override
-    @Transactional
     public List<Department> getAllDepartments() {
         return departmentDao.getAll();
     }
 
     @Override
-    @Transactional
     public DepartmentDto getDepartmentDto(int id) {
         return convertToDepartmentDto(departmentDao.getById(id));
     }
 
     @Override
-    @Transactional
     public List<DepartmentDto> getAllDepartmentDto() {
         List<DepartmentDto> allDepartmentDto = new ArrayList<>();
         List<Department> departments = departmentDao.getAll();

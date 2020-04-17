@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.impl;
+package com.foxminded.university.dao.impl.hibernate;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.foxminded.university.config.TestDataConfiguration;
-import com.foxminded.university.dao.impl.jdbc.FacultyDaoImpl;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
 import com.foxminded.university.service.FlywayWrapper;

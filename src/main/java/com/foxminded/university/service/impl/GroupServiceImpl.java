@@ -3,8 +3,6 @@ package com.foxminded.university.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,57 +27,48 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    @Transactional
     public Group addGroup(Group group) {
         return groupDao.add(group);
     }
 
     @Override
-    @Transactional
     public GroupDto addGroup(GroupDto groupDto) {
         groupDao.add(convertDtoToGroup(groupDto));
         return groupDto;
     }
 
     @Override
-    @Transactional
     public Group updateGroup(Group group) {
         return groupDao.update(group);
     }
 
     @Override
-    @Transactional
     public GroupDto updateGroup(GroupDto groupDto) {
         groupDao.update(convertDtoToGroup(groupDto));
         return groupDto;
     }
 
     @Override
-    @Transactional
     public boolean deleteGroup(int id) {
         return groupDao.delete(id);
     }
 
     @Override
-    @Transactional
     public Group getGroupById(int id) {
         return groupDao.getById(id);
     }
 
     @Override
-    @Transactional
     public GroupDto getGroupDtoById(int id) {
         return convertToGroupDto(groupDao.getById(id));
     }
 
     @Override
-    @Transactional
     public List<Group> getAllGroups() {
         return groupDao.getAll();
     }
 
     @Override
-    @Transactional
     public List<GroupDto> getAllGroupDto() {
         List<GroupDto> allGroupDto = new ArrayList<>();
         List<Group> groups = groupDao.getAll();

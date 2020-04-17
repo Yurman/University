@@ -3,7 +3,8 @@ package com.foxminded.university.dao.impl.hibernate;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -15,40 +16,41 @@ import com.foxminded.university.domain.Faculty;
 @Primary
 public class FacultyDaoImpl implements FacultyDao {
 
-    private EntityManager entityManager = Persistence.createEntityManagerFactory("university").createEntityManager();
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
+    @Transactional
     public Faculty getById(int id) {
         return entityManager.find(Faculty.class, id);
     }
 
     @Override
+    @Transactional
     public List<Faculty> getAll() {
-        return entityManager.createQuery("select a from Group a", Faculty.class).getResultList();
+        return entityManager.createQuery("select a from Faculty a", Faculty.class).getResultList();
     }
 
     @Override
+    @Transactional
     public Faculty add(Faculty faculty) {
-        entityManager.getTransaction().begin();
         entityManager.persist(faculty);
-        entityManager.getTransaction().commit();
         return faculty;
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) {
         Faculty faculty = entityManager.find(Faculty.class, id);
-        entityManager.getTransaction().begin();
         entityManager.remove(faculty);
-        entityManager.getTransaction().commit();
         return true;
     }
 
     @Override
+    @Transactional
     public Faculty update(Faculty faculty) {
-        entityManager.getTransaction().begin();
+        faculty = entityManager.merge(faculty);
         entityManager.persist(faculty);
-        entityManager.getTransaction().commit();
         return faculty;
     }
 

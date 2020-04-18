@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Primary;
@@ -28,7 +32,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     @Transactional
     public List<Department> getAll() {
-        return entityManager.createQuery("select a from Department a", Department.class).getResultList();
+        CriteriaQuery<Department> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Department.class);
+        CriteriaQuery<Department> select = criteriaQuery.select(criteriaQuery.from(Department.class));
+        TypedQuery<Department> typedQuery = entityManager.createQuery(select);
+
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -41,8 +49,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        Department department = entityManager.find(Department.class, id);
-        entityManager.remove(department);
+        CriteriaDelete<Department> criteriaDelete = entityManager.getCriteriaBuilder()
+                .createCriteriaDelete(Department.class);
+        Root<Department> root = criteriaDelete.from(Department.class);
+        criteriaDelete.where(root.get("id").in(id));
+        entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }
 
@@ -50,7 +61,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Transactional
     public Department update(Department department) {
         department = entityManager.merge(department);
-        entityManager.persist(department);
+        entityManager.flush();
         return department;
     }
 

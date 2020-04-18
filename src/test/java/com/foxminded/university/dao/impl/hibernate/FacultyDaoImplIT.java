@@ -10,19 +10,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
-import com.foxminded.university.service.FlywayWrapper;
 
 public class FacultyDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            TestDataConfiguration.class);
-    private FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
-    private Flyway flyway = FlywayWrapper.initializeFlyway();
+
+    @Autowired
+    private FacultyDaoImpl facultyDao;
+    @Autowired
+    private Flyway flyway;
     private Faculty testFaculty = FacultyRepository.getTestFaculty();
     private Faculty otherFaculty = FacultyRepository.getTestFaculty();
 

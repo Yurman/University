@@ -8,19 +8,20 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.service.FlywayWrapper;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
             TestDataConfiguration.class);
     private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
-    private Flyway flyway = FlywayWrapper.initializeFlyway();
+    @Autowired
+    private Flyway flyway;
     private Student testStudent = StudentRepository.getDaoTestStudent();
     private Student otherStudent = StudentRepository.getDaoTestStudent();
     private Student studentWithoutGroup = new Student();

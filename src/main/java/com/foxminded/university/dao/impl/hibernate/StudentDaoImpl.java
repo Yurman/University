@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Primary;
@@ -29,7 +33,11 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     @Transactional
     public List<Student> getAll() {
-        return entityManager.createQuery("select a from Student a", Student.class).getResultList();
+        CriteriaQuery<Student> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Student.class);
+        CriteriaQuery<Student> select = criteriaQuery.select(criteriaQuery.from(Student.class));
+        TypedQuery<Student> typedQuery = entityManager.createQuery(select);
+
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -42,8 +50,10 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        Student student = entityManager.find(Student.class, id);
-        entityManager.remove(student);
+        CriteriaDelete<Student> criteriaDelete = entityManager.getCriteriaBuilder().createCriteriaDelete(Student.class);
+        Root<Student> root = criteriaDelete.from(Student.class);
+        criteriaDelete.where(root.get("id").in(id));
+        entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }
 
@@ -51,7 +61,7 @@ public class StudentDaoImpl implements StudentDao {
     @Transactional
     public Student update(Student student) {
         student = entityManager.merge(student);
-        entityManager.persist(student);
+        entityManager.flush();
         return student;
     }
 

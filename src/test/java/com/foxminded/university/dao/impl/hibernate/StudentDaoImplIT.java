@@ -8,19 +8,24 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.service.FlywayWrapper;
 import com.foxminded.university.service.StudentRepository;
 
 public class StudentDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            TestDataConfiguration.class);
-    private StudentDaoImpl studentDao = context.getBean(StudentDaoImpl.class);
-    private Flyway flyway = FlywayWrapper.initializeFlyway();
+
+    @Autowired
+    private StudentDaoImpl studentDao;
+    @Autowired
+    private FacultyDaoImpl facultyDao;
+    @Autowired
+    private DepartmentDaoImpl departmentDao;
+    @Autowired
+    private GroupDaoImpl groupDao;
+    @Autowired
+    private Flyway flyway;
     private Student testStudent = StudentRepository.getDaoTestStudent();
     private Student otherStudent = StudentRepository.getDaoTestStudent();
     private Student studentWithoutGroup = new Student();
@@ -30,13 +35,8 @@ public class StudentDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
         facultyDao.add(testStudent.getGroup().getDepartment().getFaculty());
-
-        DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
         departmentDao.add(testStudent.getGroup().getDepartment());
-
-        GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
         groupDao.add(testStudent.getGroup());
         studentDao.add(testStudent);
         otherStudent.setFirstName("Nick");

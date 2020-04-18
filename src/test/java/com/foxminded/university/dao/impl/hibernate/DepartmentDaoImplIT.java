@@ -10,19 +10,20 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.service.DepartmentRepository;
-import com.foxminded.university.service.FlywayWrapper;
 
 public class DepartmentDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            TestDataConfiguration.class);
-    private DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
-    private Flyway flyway = FlywayWrapper.initializeFlyway();
+
+    @Autowired
+    private DepartmentDaoImpl departmentDao;
+    @Autowired
+    private FacultyDaoImpl facultyDao;
+    @Autowired
+    private Flyway flyway;
     private Department testDepartment = DepartmentRepository.getTestDepartment();
     private Department otherDepartment = DepartmentRepository.getTestDepartment();
 
@@ -31,9 +32,7 @@ public class DepartmentDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
         facultyDao.add(testDepartment.getFaculty());
-
         departmentDao.add(testDepartment);
         otherDepartment.setTitle("Optics");
         departmentDao.add(otherDepartment);

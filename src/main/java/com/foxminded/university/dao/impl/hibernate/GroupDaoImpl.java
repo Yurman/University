@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaDelete;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.context.annotation.Primary;
@@ -28,7 +32,11 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     @Transactional
     public List<Group> getAll() {
-        return entityManager.createQuery("select a from Group a", Group.class).getResultList();
+        CriteriaQuery<Group> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Group.class);
+        CriteriaQuery<Group> select = criteriaQuery.select(criteriaQuery.from(Group.class));
+        TypedQuery<Group> typedQuery = entityManager.createQuery(select);
+
+        return typedQuery.getResultList();
     }
 
     @Override
@@ -41,8 +49,10 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        Group group = entityManager.find(Group.class, id);
-        entityManager.remove(group);
+        CriteriaDelete<Group> criteriaDelete = entityManager.getCriteriaBuilder().createCriteriaDelete(Group.class);
+        Root<Group> root = criteriaDelete.from(Group.class);
+        criteriaDelete.where(root.get("id").in(id));
+        entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }
 
@@ -50,7 +60,7 @@ public class GroupDaoImpl implements GroupDao {
     @Transactional
     public Group update(Group group) {
         group = entityManager.merge(group);
-        entityManager.persist(group);
+        entityManager.flush();
         return group;
     }
 

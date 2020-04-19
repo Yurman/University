@@ -42,6 +42,7 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     @Transactional
     public Group add(Group group) {
+        group = entityManager.merge(group);
         entityManager.persist(group);
         return group;
     }

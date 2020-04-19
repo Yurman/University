@@ -2,28 +2,36 @@ package com.foxminded.university.dao.impl.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.DepartmentDao;
+import com.foxminded.university.dao.FacultyDao;
+import com.foxminded.university.dao.GroupDao;
+import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
-import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.StudentRepository;
 
+@ContextConfiguration(classes = { TestDataConfiguration.class })
+@ExtendWith(SpringExtension.class)
 public class StudentDaoImplIT {
 
     @Autowired
-    private StudentDaoImpl studentDao;
+    private StudentDao studentDao;
     @Autowired
-    private FacultyDaoImpl facultyDao;
+    private FacultyDao facultyDao;
     @Autowired
-    private DepartmentDaoImpl departmentDao;
+    private DepartmentDao departmentDao;
     @Autowired
-    private GroupDaoImpl groupDao;
+    private GroupDao groupDao;
     @Autowired
     private Flyway flyway;
     private Student testStudent = StudentRepository.getDaoTestStudent();
@@ -41,9 +49,11 @@ public class StudentDaoImplIT {
         studentDao.add(testStudent);
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
+        otherStudent.setId(2);
         studentDao.add(otherStudent);
         studentWithoutGroup.setFirstName("Jack");
         studentWithoutGroup.setLastName("Daniels");
+        studentWithoutGroup.setId(3);
         studentDao.add(studentWithoutGroup);
     }
 
@@ -95,10 +105,8 @@ public class StudentDaoImplIT {
 
     @Test
     public void shouldDeleteStudent() throws Exception {
-        studentDao.delete(2);
-        assertThrows(EntityNotFoundException.class, () -> {
-            studentDao.getById(2);
-        });
+        studentDao.delete(1);
+        assertThat(studentDao.getAll()).hasSize(2).contains(otherStudent, studentWithoutGroup);
     }
 
     @AfterEach

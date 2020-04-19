@@ -2,26 +2,33 @@ package com.foxminded.university.dao.impl.hibernate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.DepartmentDao;
+import com.foxminded.university.dao.FacultyDao;
+import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;
-import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupRepository;
 
+@ContextConfiguration(classes = { TestDataConfiguration.class })
+@ExtendWith(SpringExtension.class)
 public class GroupDaoImplIT {
 
     @Autowired
-    private GroupDaoImpl groupDao;
+    private GroupDao groupDao;
     @Autowired
-    private FacultyDaoImpl facultyDao;
+    private FacultyDao facultyDao;
     @Autowired
-    DepartmentDaoImpl departmentDao;
+    DepartmentDao departmentDao;
     @Autowired
     private Flyway flyway;
     private Group testGroup = GroupRepository.getDaoTestGroup();
@@ -37,9 +44,11 @@ public class GroupDaoImplIT {
         departmentDao.add(testGroup.getDepartment());
         groupDao.add(testGroup);
         otherGroup.setTitle("Optics");
+        otherGroup.setId(2);
         groupDao.add(otherGroup);
         groupWithoutDepartment.setTitle("Departmentless");
         groupWithoutDepartment.setYear(2);
+        groupWithoutDepartment.setId(3);
         groupDao.add(groupWithoutDepartment);
 
     }
@@ -95,9 +104,7 @@ public class GroupDaoImplIT {
     @Test
     public void shouldDeleteGroupById() throws Exception {
         groupDao.delete(1);
-        assertThrows(EntityNotFoundException.class, () -> {
-            groupDao.getById(1);
-        });
+        assertThat(groupDao.getAll()).hasSize(2).contains(otherGroup, groupWithoutDepartment);
     }
 
     @AfterEach

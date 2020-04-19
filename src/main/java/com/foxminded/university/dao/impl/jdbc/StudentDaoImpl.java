@@ -24,7 +24,7 @@ import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 
-@Repository
+@Repository("studentDaoJdbc")
 public class StudentDaoImpl implements StudentDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

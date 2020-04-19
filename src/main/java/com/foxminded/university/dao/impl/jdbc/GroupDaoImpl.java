@@ -24,7 +24,7 @@ import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 
-@Repository
+@Repository("groupDaoJdbc")
 public class GroupDaoImpl implements GroupDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

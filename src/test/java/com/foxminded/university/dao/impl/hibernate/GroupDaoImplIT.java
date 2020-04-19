@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -16,7 +17,11 @@ import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.dao.GroupDao;
+import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.DepartmentRepository;
+import com.foxminded.university.service.FacultyRepository;
 import com.foxminded.university.service.GroupRepository;
 
 @ContextConfiguration(classes = { TestDataConfiguration.class })
@@ -24,15 +29,21 @@ import com.foxminded.university.service.GroupRepository;
 public class GroupDaoImplIT {
 
     @Autowired
-    private GroupDao groupDao;
-    @Autowired
+    @Qualifier("facultyDaoHibernate")
     private FacultyDao facultyDao;
+
     @Autowired
-    DepartmentDao departmentDao;
+    @Qualifier("departmentDaoHibernate")
+    private DepartmentDao departmentDao;
+
+    @Autowired
+    @Qualifier("groupDaoHibernate")
+    private GroupDao groupDao;
+
     @Autowired
     private Flyway flyway;
-    private Group testGroup = GroupRepository.getDaoTestGroup();
-    private Group otherGroup = GroupRepository.getDaoTestGroup();
+    private Group testGroup = GroupRepository.getTestGroup();
+    private Group otherGroup = GroupRepository.getTestGroup();
     private Group groupWithoutDepartment = new Group();
 
     @BeforeEach
@@ -40,15 +51,18 @@ public class GroupDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        facultyDao.add(testGroup.getDepartment().getFaculty());
-        departmentDao.add(testGroup.getDepartment());
+        Faculty faculty = FacultyRepository.getTestFaculty();
+        facultyDao.add(faculty);
+        Department department = DepartmentRepository.getTestDepartment();
+        department.setFaculty(faculty);
+        departmentDao.add(department);
+        testGroup.setDepartment(department);
         groupDao.add(testGroup);
         otherGroup.setTitle("Optics");
-        otherGroup.setId(2);
+        otherGroup.setDepartment(department);
         groupDao.add(otherGroup);
         groupWithoutDepartment.setTitle("Departmentless");
         groupWithoutDepartment.setYear(2);
-        groupWithoutDepartment.setId(3);
         groupDao.add(groupWithoutDepartment);
 
     }

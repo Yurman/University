@@ -11,7 +11,6 @@ public class StudentRepository {
         Student testStudent = new Student();
         testStudent.setFirstName("Petr");
         testStudent.setLastName("Ivanov");
-        testStudent.setId(1);
         testStudent.setGroup(GroupRepository.createFirstTestGroup());
         return testStudent;
     }
@@ -24,7 +23,7 @@ public class StudentRepository {
 
     public static Student getDaoTestStudent() {
         Student testStudent = getTestStudent();
-        testStudent.setGroup(GroupRepository.getDaoTestGroup());
+        testStudent.setGroup(GroupRepository.getTestGroup());
         return testStudent;
     }
 }

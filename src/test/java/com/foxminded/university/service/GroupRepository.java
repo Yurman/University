@@ -30,9 +30,8 @@ public class GroupRepository {
         return testGroups;
     }
 
-    public static Group getDaoTestGroup() {
+    public static Group getTestGroup() {
         Group testGroup = createFirstTestGroup();
-        testGroup.setId(1);
         testGroup.setTitle("test");
         testGroup.setYear(2);
         testGroup.setDepartment(DepartmentRepository.getTestDepartment());

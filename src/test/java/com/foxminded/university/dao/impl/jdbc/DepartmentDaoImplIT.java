@@ -19,7 +19,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.DepartmentRepository;
+import com.foxminded.university.service.FacultyRepository;
 
 @ContextConfiguration(classes = { TestDataConfiguration.class })
 @ExtendWith(SpringExtension.class)
@@ -38,10 +40,12 @@ public class DepartmentDaoImplIT {
         flyway.migrate();
 
         FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
-        facultyDao.add(testDepartment.getFaculty());
-
+        Faculty faculty = FacultyRepository.getTestFaculty();
+        facultyDao.add(faculty);
+        testDepartment.setFaculty(faculty);
         departmentDao.add(testDepartment);
         otherDepartment.setTitle("Optics");
+        otherDepartment.setFaculty(faculty);
         departmentDao.add(otherDepartment);
         otherDepartment.setId(2);
     }

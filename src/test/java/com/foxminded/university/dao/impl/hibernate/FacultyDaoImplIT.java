@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -23,7 +24,9 @@ import com.foxminded.university.service.FacultyRepository;
 public class FacultyDaoImplIT {
 
     @Autowired
+    @Qualifier("facultyDaoHibernate")
     private FacultyDao facultyDao;
+
     @Autowired
     private Flyway flyway;
     private Faculty testFaculty = FacultyRepository.getTestFaculty();
@@ -36,7 +39,6 @@ public class FacultyDaoImplIT {
 
         facultyDao.add(testFaculty);
         otherFaculty.setTitle("Physics");
-        otherFaculty.setId(2);
         facultyDao.add(otherFaculty);
     }
 

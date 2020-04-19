@@ -18,7 +18,7 @@ import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.mapper.DepartmentMapper;
 import com.foxminded.university.domain.Department;
 
-@Repository
+@Repository("departmentDaoJdbc")
 public class DepartmentDaoImpl implements DepartmentDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,7 +18,13 @@ import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.dao.StudentDao;
+import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Faculty;
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.service.DepartmentRepository;
+import com.foxminded.university.service.FacultyRepository;
+import com.foxminded.university.service.GroupRepository;
 import com.foxminded.university.service.StudentRepository;
 
 @ContextConfiguration(classes = { TestDataConfiguration.class })
@@ -25,13 +32,21 @@ import com.foxminded.university.service.StudentRepository;
 public class StudentDaoImplIT {
 
     @Autowired
+    @Qualifier("studentDaoHibernate")
     private StudentDao studentDao;
+
     @Autowired
+    @Qualifier("facultyDaoHibernate")
     private FacultyDao facultyDao;
+
     @Autowired
+    @Qualifier("departmentDaoHibernate")
     private DepartmentDao departmentDao;
+
     @Autowired
+    @Qualifier("groupDaoHibernate")
     private GroupDao groupDao;
+
     @Autowired
     private Flyway flyway;
     private Student testStudent = StudentRepository.getDaoTestStudent();
@@ -43,17 +58,22 @@ public class StudentDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        facultyDao.add(testStudent.getGroup().getDepartment().getFaculty());
-        departmentDao.add(testStudent.getGroup().getDepartment());
-        groupDao.add(testStudent.getGroup());
+        Faculty faculty = FacultyRepository.getTestFaculty();
+        facultyDao.add(faculty);
+        Department department = DepartmentRepository.getTestDepartment();
+        department.setFaculty(faculty);
+        departmentDao.add(department);
+        Group group = GroupRepository.getTestGroup();
+        group.setDepartment(department);
+        groupDao.add(group);
+        testStudent.setGroup(group);
         studentDao.add(testStudent);
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
-        otherStudent.setId(2);
+        otherStudent.setGroup(group);
         studentDao.add(otherStudent);
         studentWithoutGroup.setFirstName("Jack");
         studentWithoutGroup.setLastName("Daniels");
-        studentWithoutGroup.setId(3);
         studentDao.add(studentWithoutGroup);
     }
 

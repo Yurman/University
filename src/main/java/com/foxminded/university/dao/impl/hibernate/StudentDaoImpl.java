@@ -43,8 +43,8 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     @Transactional
     public Student add(Student student) {
-        student = entityManager.merge(student);
         entityManager.persist(student);
+        entityManager.flush();
         return student;
     }
 

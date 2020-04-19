@@ -42,7 +42,6 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     @Transactional
     public Department add(Department department) {
-        department = entityManager.merge(department);
         entityManager.persist(department);
         entityManager.flush();
         return department;

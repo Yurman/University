@@ -42,8 +42,8 @@ public class FacultyDaoImpl implements FacultyDao {
     @Override
     @Transactional
     public Faculty add(Faculty faculty) {
-        faculty = entityManager.merge(faculty);
         entityManager.persist(faculty);
+        entityManager.flush();
         return faculty;
     }
 

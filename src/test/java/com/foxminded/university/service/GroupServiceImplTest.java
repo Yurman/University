@@ -27,7 +27,7 @@ class GroupServiceImplTest {
     @Mock
     private GroupDao groupDaoMock;
 
-    private Group expectedGroup = GroupRepository.getDaoTestGroup();
+    private Group expectedGroup = GroupRepository.getTestGroup();
 
     @BeforeEach
     public void setUp() throws Exception {

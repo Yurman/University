@@ -15,8 +15,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Faculty;
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
+import com.foxminded.university.service.DepartmentRepository;
+import com.foxminded.university.service.FacultyRepository;
+import com.foxminded.university.service.GroupRepository;
 import com.foxminded.university.service.StudentRepository;
 
 @ContextConfiguration(classes = { TestDataConfiguration.class })
@@ -37,16 +43,21 @@ public class StudentDaoImplIT {
         flyway.migrate();
 
         FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
-        facultyDao.add(testStudent.getGroup().getDepartment().getFaculty());
-
         DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
-        departmentDao.add(testStudent.getGroup().getDepartment());
-
+        Faculty faculty = FacultyRepository.getTestFaculty();
+        facultyDao.add(faculty);
+        Department department = DepartmentRepository.getTestDepartment();
+        department.setFaculty(faculty);
+        departmentDao.add(department);
         GroupDaoImpl groupDao = context.getBean(GroupDaoImpl.class);
-        groupDao.add(testStudent.getGroup());
+        Group group = GroupRepository.getTestGroup();
+        group.setDepartment(department);
+        groupDao.add(group);
+        testStudent.setGroup(group);
         studentDao.add(testStudent);
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
+        otherStudent.setGroup(group);
         studentDao.add(otherStudent);
         studentWithoutGroup.setFirstName("Jack");
         studentWithoutGroup.setLastName("Daniels");

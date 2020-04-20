@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.domain.Faculty;
+import com.foxminded.university.domain.Faculty_;
 
 @Repository("facultyDaoHibernate")
 @Primary
@@ -50,9 +52,10 @@ public class FacultyDaoImpl implements FacultyDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        CriteriaDelete<Faculty> criteriaDelete = entityManager.getCriteriaBuilder().createCriteriaDelete(Faculty.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Faculty> criteriaDelete = criteriaBuilder.createCriteriaDelete(Faculty.class);
         Root<Faculty> root = criteriaDelete.from(Faculty.class);
-        criteriaDelete.where(root.get("id").in(id));
+        criteriaDelete.where(criteriaBuilder.equal(root.get(Faculty_.id), id));
         entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }

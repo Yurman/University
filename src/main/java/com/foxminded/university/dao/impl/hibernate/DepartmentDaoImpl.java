@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.domain.Department;
+import com.foxminded.university.domain.Department_;
 
 @Repository("departmentDaoHibernate")
 @Primary
@@ -50,10 +52,10 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        CriteriaDelete<Department> criteriaDelete = entityManager.getCriteriaBuilder()
-                .createCriteriaDelete(Department.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Department> criteriaDelete = criteriaBuilder.createCriteriaDelete(Department.class);
         Root<Department> root = criteriaDelete.from(Department.class);
-        criteriaDelete.where(root.get("id").in(id));
+        criteriaDelete.where(criteriaBuilder.equal(root.get(Department_.id), id));
         entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }

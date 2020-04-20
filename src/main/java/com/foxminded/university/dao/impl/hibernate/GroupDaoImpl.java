@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.domain.Group_;
 
 @Repository("groupDaoHibernate")
 @Primary
@@ -50,9 +52,10 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     @Transactional
     public boolean delete(int id) {
-        CriteriaDelete<Group> criteriaDelete = entityManager.getCriteriaBuilder().createCriteriaDelete(Group.class);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaDelete<Group> criteriaDelete = criteriaBuilder.createCriteriaDelete(Group.class);
         Root<Group> root = criteriaDelete.from(Group.class);
-        criteriaDelete.where(root.get("id").in(id));
+        criteriaDelete.where(criteriaBuilder.equal(root.get(Group_.id), id));
         entityManager.createQuery(criteriaDelete).executeUpdate();
         return true;
     }

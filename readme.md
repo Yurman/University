@@ -42,7 +42,3 @@ PostgreSQL
 ## Author
 
 * Opanasenko Yurii
-
-
-
-

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,11 +33,11 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     @Transactional
     public List<Group> getAll() {
-        CriteriaQuery<Group> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Group.class);
-        CriteriaQuery<Group> select = criteriaQuery.select(criteriaQuery.from(Group.class));
-        TypedQuery<Group> typedQuery = entityManager.createQuery(select);
-
-        return typedQuery.getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Group> criteriaQuery = criteriaBuilder.createQuery(Group.class);
+        Root<Group> root = criteriaQuery.from(Group.class);
+        CriteriaQuery<Group> select = criteriaQuery.select(root);
+        return entityManager.createQuery(select).getResultList();
     }
 
     @Override

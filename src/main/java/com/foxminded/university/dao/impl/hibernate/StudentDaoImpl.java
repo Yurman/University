@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -35,11 +34,11 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     @Transactional
     public List<Student> getAll() {
-        CriteriaQuery<Student> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Student.class);
-        CriteriaQuery<Student> select = criteriaQuery.select(criteriaQuery.from(Student.class));
-        TypedQuery<Student> typedQuery = entityManager.createQuery(select);
-
-        return typedQuery.getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Student> criteriaQuery = criteriaBuilder.createQuery(Student.class);
+        Root<Student> root = criteriaQuery.from(Student.class);
+        CriteriaQuery<Student> select = criteriaQuery.select(root);
+        return entityManager.createQuery(select).getResultList();
     }
 
     @Override

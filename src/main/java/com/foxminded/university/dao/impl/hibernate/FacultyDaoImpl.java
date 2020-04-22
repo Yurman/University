@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,11 +33,11 @@ public class FacultyDaoImpl implements FacultyDao {
     @Override
     @Transactional
     public List<Faculty> getAll() {
-        CriteriaQuery<Faculty> criteriaQuery = entityManager.getCriteriaBuilder().createQuery(Faculty.class);
-        CriteriaQuery<Faculty> select = criteriaQuery.select(criteriaQuery.from(Faculty.class));
-        TypedQuery<Faculty> typedQuery = entityManager.createQuery(select);
-
-        return typedQuery.getResultList();
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Faculty> criteriaQuery = criteriaBuilder.createQuery(Faculty.class);
+        Root<Faculty> root = criteriaQuery.from(Faculty.class);
+        CriteriaQuery<Faculty> select = criteriaQuery.select(root);
+        return entityManager.createQuery(select).getResultList();
     }
 
     @Override

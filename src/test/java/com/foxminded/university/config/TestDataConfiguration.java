@@ -1,7 +1,5 @@
 package com.foxminded.university.config;
 
-import java.util.Properties;
-
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
@@ -12,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-
-import com.foxminded.university.util.PropertyReader;
 
 @Configuration
 @ComponentScan("com.foxminded.university")
@@ -40,9 +36,9 @@ public class TestDataConfiguration {
 
     @Bean
     public Flyway initializeFlyway() {
-        Properties prop = PropertyReader.readProperties("application.properties");
-        return Flyway.configure().dataSource(prop.getProperty("flyway.url"), prop.getProperty("flyway.user"),
-                prop.getProperty("flyway.password")).load();
+        return Flyway.configure()
+                .dataSource(environment.getProperty("flyway.url"), environment.getProperty("flyway.user"),
+                        environment.getProperty("flyway.password")).load();
     }
 
 }

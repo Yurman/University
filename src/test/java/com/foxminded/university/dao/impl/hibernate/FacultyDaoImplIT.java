@@ -1,6 +1,4 @@
-package com.foxminded.university.dao.impl;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+package com.foxminded.university.dao.impl.hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +8,27 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.FacultyRepository;
-import com.foxminded.university.service.FlywayWrapper;
 
+@ContextConfiguration(classes = { TestDataConfiguration.class })
+@ExtendWith(SpringExtension.class)
 public class FacultyDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            TestDataConfiguration.class);
-    private FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
-    private Flyway flyway = FlywayWrapper.initializeFlyway();
+
+    @Autowired
+    @Qualifier("facultyDaoHibernate")
+    private FacultyDao facultyDao;
+
+    @Autowired
+    private Flyway flyway;
     private Faculty testFaculty = FacultyRepository.getTestFaculty();
     private Faculty otherFaculty = FacultyRepository.getTestFaculty();
 
@@ -34,7 +40,6 @@ public class FacultyDaoImplIT {
         facultyDao.add(testFaculty);
         otherFaculty.setTitle("Physics");
         facultyDao.add(otherFaculty);
-        otherFaculty.setId(2);
     }
 
     @Test
@@ -62,13 +67,13 @@ public class FacultyDaoImplIT {
     @Test
     public void shouldDeleteFacultyById() throws Exception {
         facultyDao.delete(1);
-        assertThrows(EmptyResultDataAccessException.class, () -> {
-            facultyDao.getById(1);
-        });
+        List<Faculty> expected = new ArrayList<>();
+        expected.add(otherFaculty);
+        Assertions.assertEquals(expected, facultyDao.getAll());
     }
 
     @AfterEach
     public void tearDown() throws Exception {
-        flyway.clean();
+
     }
 }

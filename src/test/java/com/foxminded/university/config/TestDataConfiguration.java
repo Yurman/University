@@ -2,6 +2,7 @@ package com.foxminded.university.config;
 
 import javax.sql.DataSource;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,6 +32,13 @@ public class TestDataConfiguration {
         dataSource.setPassword(environment.getProperty(PASSWORD));
         dataSource.setDriverClassName(environment.getProperty(DRIVER));
         return dataSource;
+    }
+
+    @Bean
+    public Flyway initializeFlyway() {
+        return Flyway.configure()
+                .dataSource(environment.getProperty("flyway.url"), environment.getProperty("flyway.user"),
+                        environment.getProperty("flyway.password")).load();
     }
 
 }

@@ -2,6 +2,7 @@ package com.foxminded.university.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.foxminded.university.domain.Student;
 
 public class StudentRepository {
@@ -19,10 +20,10 @@ public class StudentRepository {
         studentsGroup.add(getTestStudent());
         return studentsGroup;
     }
-    
+
     public static Student getDaoTestStudent() {
         Student testStudent = getTestStudent();
-        testStudent.setGroup(GroupRepository.getDaoTestGroup());
+        testStudent.setGroup(GroupRepository.getTestGroup());
         return testStudent;
     }
 }

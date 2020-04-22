@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university.dao.GroupDao;
@@ -19,7 +20,8 @@ public class GroupServiceImpl implements GroupService {
     private DepartmentService departmentService;
 
     @Autowired
-    public GroupServiceImpl(GroupDao groupDao, DepartmentService departmentService) {
+    public GroupServiceImpl(@Qualifier("groupDaoHibernate") GroupDao groupDao,
+            DepartmentService departmentService) {
         this.groupDao = groupDao;
         this.departmentService = departmentService;
     }

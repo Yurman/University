@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.impl;
+package com.foxminded.university.dao.impl.jdbc;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +24,7 @@ import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 
-@Repository
+@Repository("groupDaoJdbc")
 public class GroupDaoImpl implements GroupDao {
     private JdbcTemplate jdbcTemplate;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

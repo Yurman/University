@@ -37,11 +37,8 @@ PostgreSQL
 - Branch `task-14` Basic UI was added.
 - Branch `task-15` Possibility to add, edit and remove entities was added.
 - Branch `task-16` Data Source server configuration was added.
+- Branch `task-17` DAO layer was rewrote using Hibernate.
 
 ## Author
 
 * Opanasenko Yurii
-
-
-
-

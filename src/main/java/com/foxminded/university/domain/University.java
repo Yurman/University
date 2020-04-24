@@ -23,10 +23,6 @@ public class University {
         this.schedule = schedule;
     }
 
-    public static void main(String[] args) {
-
-    }
-
     @Override
     public int hashCode() {
         final int prime = 123;

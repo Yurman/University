@@ -17,6 +17,7 @@ public class WebInitializer extends
 
     @Override
     protected String[] getServletMappings() {
-        return new String[] { "/" };
+        return new String[] { "/"
+        };
     }
 }

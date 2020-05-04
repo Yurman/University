@@ -4,14 +4,15 @@ import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
-@Configuration
+@EnableAutoConfiguration
 @ComponentScan("com.foxminded.university")
 @PropertySource("classpath:application.properties")
 public class TestDataConfiguration {
@@ -19,10 +20,10 @@ public class TestDataConfiguration {
     @Autowired
     private Environment environment;
 
-    private final String URL = "db.url";
-    private final String USER = "db.user";
-    private final String DRIVER = "db.driver";
-    private final String PASSWORD = "db.password";
+    private final String URL = "spring.datasource.url";
+    private final String USER = "spring.datasource.user";
+    private final String DRIVER = "spring.datasource.driver";
+    private final String PASSWORD = "spring.datasource.password";
 
     @Bean
     public DataSource dataSource() {
@@ -35,10 +36,12 @@ public class TestDataConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(value = org.flywaydb.core.Flyway.class)
     public Flyway initializeFlyway() {
         return Flyway.configure()
-                .dataSource(environment.getProperty("flyway.url"), environment.getProperty("flyway.user"),
-                        environment.getProperty("flyway.password")).load();
+                .dataSource(environment.getProperty("spring.flyway.url"), environment.getProperty("spring.flyway.user"),
+                        environment.getProperty("spring.flyway.password"))
+                .load();
     }
 
 }

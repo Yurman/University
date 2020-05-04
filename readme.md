@@ -15,11 +15,11 @@ Run pgAdmin to manage your database.
 2. Use sql script `test_university_db_Init.sql` from `src\test\resources` to create schema and user for integration tests.
 3. Execute `mvn package` command. While executing, Flyway migrations will be performed.
 4. Use `insert_university_data.sql` to insert data into the database.
-5. To run application on your local server you need to configure data source. Please, follow the instruction for PostgreSQL: [JNDI Datasource How-To](https://tomcat.apache.org/tomcat-8.5-doc/jndi-datasource-examples-howto.html)
+5. To run application, you need to run the following command in a terminal window (in the complete) directory:
+`mvn spring-boot:run`
 
 ## Built With
 Maven
-Tomcat
 PostgreSQL
 ## Contributing
 - Fork it.
@@ -38,6 +38,7 @@ PostgreSQL
 - Branch `task-15` Possibility to add, edit and remove entities was added.
 - Branch `task-16` Data Source server configuration was added.
 - Branch `task-17` DAO layer was rewrote using Hibernate.
+- Branch `task-18` Spring Boot support was added.
 
 ## Author
 

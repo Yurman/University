@@ -34,9 +34,9 @@ public class GroupController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/groups")
+    @GetMapping("/group-templates/groups")
     public ModelAndView getGroups() {
-        ModelAndView model = new ModelAndView("groups");
+        ModelAndView model = new ModelAndView("group-templates/groups");
         try {
             model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (QueryNotExecuteException e) {
@@ -46,9 +46,9 @@ public class GroupController {
         return model;
     }
 
-    @GetMapping(value = "/group-info")
+    @GetMapping(value = "/group-templates/group-info")
     public ModelAndView getGroupInfoView(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("group-info");
+        ModelAndView model = new ModelAndView("group-templates/group-info");
         try {
             model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDtoById(id));
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
@@ -58,7 +58,7 @@ public class GroupController {
         return model;
     }
 
-    @GetMapping(value = "/delete-group")
+    @GetMapping(value = "/group-templates/delete-group")
     public String deleteGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -68,12 +68,12 @@ public class GroupController {
             message = "Problem with deleting group";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/groups";
+        return "redirect:/group-templates/groups";
     }
 
-    @GetMapping(value = "/edit-group")
+    @GetMapping(value = "/group-templates/edit-group")
     public ModelAndView showEditGroupView(@RequestParam(name = "id", required = false) Integer id) {
-        ModelAndView model = new ModelAndView("edit-group");
+        ModelAndView model = new ModelAndView("group-templates/edit-group");
         try {
             GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
@@ -85,7 +85,7 @@ public class GroupController {
         return model;
     }
 
-    @PostMapping(value = "/edit-group")
+    @PostMapping(value = "/group-templates/edit-group")
     public String editGroup(@ModelAttribute("groupDto") GroupDto groupDto, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -100,7 +100,7 @@ public class GroupController {
             message = "Problem with editing group";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/groups";
+        return "redirect:/group-templates/groups";
     }
 
 }

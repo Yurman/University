@@ -35,9 +35,9 @@ public class StudentController {
 
     }
 
-    @RequestMapping("/students")
+    @RequestMapping("/student-templates/students")
     public ModelAndView getStudents() {
-        ModelAndView model = new ModelAndView("students");
+        ModelAndView model = new ModelAndView("student-templates/students");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
         } catch (QueryNotExecuteException e) {
@@ -47,9 +47,9 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/student-info")
+    @GetMapping(value = "/student-templates/student-info")
     public ModelAndView getStudentInfoView(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("student-info");
+        ModelAndView model = new ModelAndView("student-templates/student-info");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDtoById(id));
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
@@ -59,7 +59,7 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/delete-student")
+    @GetMapping(value = "/student-templates/delete-student")
     public String deleteStudent(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -69,12 +69,12 @@ public class StudentController {
             message = "Problem with deleting student";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/students";
+        return "redirect:/student-templates/students";
     }
 
-    @GetMapping(value = "/edit-student")
+    @GetMapping(value = "/student-templates/edit-student")
     public ModelAndView showEditStudentView(@RequestParam(name = "id", required = false) Integer id) {
-        ModelAndView model = new ModelAndView("edit-student");
+        ModelAndView model = new ModelAndView("student-templates/edit-student");
         try {
             StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
@@ -86,7 +86,7 @@ public class StudentController {
         return model;
     }
 
-    @PostMapping(value = "/edit-student")
+    @PostMapping(value = "/student-templates/edit-student")
     public String editStudent(@ModelAttribute("studentDto") StudentDto studentDto,
             RedirectAttributes redirectAttributes) {
         String message = null;
@@ -102,6 +102,6 @@ public class StudentController {
             message = "Problem with editing student";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/students";
+        return "redirect:/student-templates/students";
     }
 }

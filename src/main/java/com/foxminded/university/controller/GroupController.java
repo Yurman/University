@@ -34,7 +34,7 @@ public class GroupController {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/group-templates/groups")
+    @GetMapping("/groups")
     public ModelAndView getGroups() {
         ModelAndView model = new ModelAndView("group-templates/groups");
         try {
@@ -46,7 +46,7 @@ public class GroupController {
         return model;
     }
 
-    @GetMapping(value = "/group-templates/group-info")
+    @GetMapping(value = "/group-info")
     public ModelAndView getGroupInfoView(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("group-templates/group-info");
         try {
@@ -58,7 +58,7 @@ public class GroupController {
         return model;
     }
 
-    @GetMapping(value = "/group-templates/delete-group")
+    @GetMapping(value = "/delete-group")
     public String deleteGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -68,10 +68,10 @@ public class GroupController {
             message = "Problem with deleting group";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/group-templates/groups";
+        return "redirect:/groups";
     }
 
-    @GetMapping(value = "/group-templates/edit-group")
+    @GetMapping(value = "/edit-group")
     public ModelAndView showEditGroupView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("group-templates/edit-group");
         try {
@@ -85,7 +85,7 @@ public class GroupController {
         return model;
     }
 
-    @PostMapping(value = "/group-templates/edit-group")
+    @PostMapping(value = "/edit-group")
     public String editGroup(@ModelAttribute("groupDto") GroupDto groupDto, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -100,7 +100,7 @@ public class GroupController {
             message = "Problem with editing group";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/group-templates/groups";
+        return "redirect:/groups";
     }
 
 }

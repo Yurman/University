@@ -10,25 +10,29 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.foxminded.university.config.TestDataConfiguration;
+import com.foxminded.university.dao.DepartmentDao;
+import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.DepartmentRepository;
 import com.foxminded.university.service.FacultyRepository;
 
-@ContextConfiguration(classes = { TestDataConfiguration.class })
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class DepartmentDaoImplIT {
-    private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-            TestDataConfiguration.class);
-    private DepartmentDaoImpl departmentDao = context.getBean(DepartmentDaoImpl.class);
+
+    @Autowired
+    @Qualifier("facultyDaoJdbc")
+    private FacultyDao facultyDao;
+
+    @Autowired
+    @Qualifier("departmentDaoJdbc")
+    private DepartmentDao departmentDao;
+
     @Autowired
     private Flyway flyway;
     private Department testDepartment = DepartmentRepository.getTestDepartment();
@@ -39,7 +43,6 @@ public class DepartmentDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        FacultyDaoImpl facultyDao = context.getBean(FacultyDaoImpl.class);
         Faculty faculty = FacultyRepository.getTestFaculty();
         facultyDao.add(faculty);
         testDepartment.setFaculty(faculty);

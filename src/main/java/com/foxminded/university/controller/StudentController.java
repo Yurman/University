@@ -35,7 +35,7 @@ public class StudentController {
 
     }
 
-    @RequestMapping("/student-templates/students")
+    @RequestMapping("/students")
     public ModelAndView getStudents() {
         ModelAndView model = new ModelAndView("student-templates/students");
         try {
@@ -47,7 +47,7 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/student-templates/student-info")
+    @GetMapping(value = "/student-info")
     public ModelAndView getStudentInfoView(@RequestParam(value = "id") int id) {
         ModelAndView model = new ModelAndView("student-templates/student-info");
         try {
@@ -59,7 +59,7 @@ public class StudentController {
         return model;
     }
 
-    @GetMapping(value = "/student-templates/delete-student")
+    @GetMapping(value = "/delete-student")
     public String deleteStudent(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
@@ -69,10 +69,10 @@ public class StudentController {
             message = "Problem with deleting student";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/student-templates/students";
+        return "redirect:/students";
     }
 
-    @GetMapping(value = "/student-templates/edit-student")
+    @GetMapping(value = "/edit-student")
     public ModelAndView showEditStudentView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("student-templates/edit-student");
         try {
@@ -86,7 +86,7 @@ public class StudentController {
         return model;
     }
 
-    @PostMapping(value = "/student-templates/edit-student")
+    @PostMapping(value = "/edit-student")
     public String editStudent(@ModelAttribute("studentDto") StudentDto studentDto,
             RedirectAttributes redirectAttributes) {
         String message = null;
@@ -102,6 +102,6 @@ public class StudentController {
             message = "Problem with editing student";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
-        return "redirect:/student-templates/students";
+        return "redirect:/students";
     }
 }

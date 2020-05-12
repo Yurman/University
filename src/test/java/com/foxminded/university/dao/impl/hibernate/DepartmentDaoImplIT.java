@@ -8,13 +8,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.domain.Department;
@@ -22,8 +19,7 @@ import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.service.DepartmentRepository;
 import com.foxminded.university.service.FacultyRepository;
 
-@ContextConfiguration(classes = { TestDataConfiguration.class })
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class DepartmentDaoImplIT {
 
     @Autowired

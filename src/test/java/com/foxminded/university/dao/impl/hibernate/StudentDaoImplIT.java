@@ -7,13 +7,10 @@ import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.foxminded.university.config.TestDataConfiguration;
 import com.foxminded.university.dao.DepartmentDao;
 import com.foxminded.university.dao.FacultyDao;
 import com.foxminded.university.dao.GroupDao;
@@ -27,8 +24,7 @@ import com.foxminded.university.service.FacultyRepository;
 import com.foxminded.university.service.GroupRepository;
 import com.foxminded.university.service.StudentRepository;
 
-@ContextConfiguration(classes = { TestDataConfiguration.class })
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class StudentDaoImplIT {
 
     @Autowired
@@ -97,7 +93,7 @@ public class StudentDaoImplIT {
         studentDao.delete(1);
         studentDao.delete(2);
         studentDao.delete(3);
-        assertThat(studentDao.getAll().isEmpty());
+        assertThat(studentDao.getAll()).isEmpty();
     }
 
     @Test

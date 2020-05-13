@@ -36,7 +36,7 @@ public class GroupController {
 
     @GetMapping("/groups")
     public ModelAndView getGroups() {
-        ModelAndView model = new ModelAndView("groups");
+        ModelAndView model = new ModelAndView("group-templates/groups");
         try {
             model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
         } catch (QueryNotExecuteException e) {
@@ -48,7 +48,7 @@ public class GroupController {
 
     @GetMapping(value = "/group-info")
     public ModelAndView getGroupInfoView(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("group-info");
+        ModelAndView model = new ModelAndView("group-templates/group-info");
         try {
             model.addObject(ATTRIBUTE_HTML_GROUP, groupService.getGroupDtoById(id));
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
@@ -73,7 +73,7 @@ public class GroupController {
 
     @GetMapping(value = "/edit-group")
     public ModelAndView showEditGroupView(@RequestParam(name = "id", required = false) Integer id) {
-        ModelAndView model = new ModelAndView("edit-group");
+        ModelAndView model = new ModelAndView("group-templates/edit-group");
         try {
             GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);

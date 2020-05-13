@@ -37,7 +37,7 @@ public class StudentController {
 
     @RequestMapping("/students")
     public ModelAndView getStudents() {
-        ModelAndView model = new ModelAndView("students");
+        ModelAndView model = new ModelAndView("student-templates/students");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENTS, studentService.getAllStudentDto());
         } catch (QueryNotExecuteException e) {
@@ -49,7 +49,7 @@ public class StudentController {
 
     @GetMapping(value = "/student-info")
     public ModelAndView getStudentInfoView(@RequestParam(value = "id") int id) {
-        ModelAndView model = new ModelAndView("student-info");
+        ModelAndView model = new ModelAndView("student-templates/student-info");
         try {
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentService.getStudentDtoById(id));
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
@@ -74,7 +74,7 @@ public class StudentController {
 
     @GetMapping(value = "/edit-student")
     public ModelAndView showEditStudentView(@RequestParam(name = "id", required = false) Integer id) {
-        ModelAndView model = new ModelAndView("edit-student");
+        ModelAndView model = new ModelAndView("student-templates/edit-student");
         try {
             StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);

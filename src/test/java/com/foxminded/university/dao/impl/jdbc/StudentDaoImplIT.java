@@ -96,7 +96,7 @@ public class StudentDaoImplIT {
         studentDao.delete(1);
         studentDao.delete(2);
         studentDao.delete(3);
-        assertThat(studentDao.getAll().isEmpty());
+        assertThat(studentDao.getAll()).isEmpty();
     }
 
     @Test

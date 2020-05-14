@@ -1,4 +1,4 @@
-package com.foxminded.university.dao.impl.hibernate;
+package com.foxminded.university.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -8,38 +8,31 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.foxminded.university.dao.DepartmentDao;
-import com.foxminded.university.dao.FacultyDao;
-import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Department;
 import com.foxminded.university.domain.Faculty;
 import com.foxminded.university.domain.Group;
-import com.foxminded.university.service.DepartmentRepository;
-import com.foxminded.university.service.FacultyRepository;
-import com.foxminded.university.service.GroupRepository;
+import com.foxminded.university.service.DepartmentInit;
+import com.foxminded.university.service.FacultyInit;
+import com.foxminded.university.service.GroupInit;
 
 @SpringBootTest
-public class GroupDaoImplIT {
+public class GroupRepositoryIT {
 
     @Autowired
-    @Qualifier("facultyDaoHibernate")
-    private FacultyDao facultyDao;
+    private FacultyRepository facultyDao;
 
     @Autowired
-    @Qualifier("departmentDaoHibernate")
-    private DepartmentDao departmentDao;
+    private DepartmentRepository departmentDao;
 
     @Autowired
-    @Qualifier("groupDaoHibernate")
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
 
     @Autowired
     private Flyway flyway;
-    private Group testGroup = GroupRepository.getTestGroup();
-    private Group otherGroup = GroupRepository.getTestGroup();
+    private Group testGroup = GroupInit.getTestGroup();
+    private Group otherGroup = GroupInit.getTestGroup();
     private Group groupWithoutDepartment = new Group();
 
     @BeforeEach
@@ -47,74 +40,75 @@ public class GroupDaoImplIT {
         flyway.clean();
         flyway.migrate();
 
-        Faculty faculty = FacultyRepository.getTestFaculty();
-        facultyDao.add(faculty);
-        Department department = DepartmentRepository.getTestDepartment();
+        Faculty faculty = FacultyInit.getTestFaculty();
+        facultyDao.save(faculty);
+        Department department = DepartmentInit.getTestDepartment();
         department.setFaculty(faculty);
-        departmentDao.add(department);
+        departmentDao.save(department);
+
         testGroup.setDepartment(department);
-        groupDao.add(testGroup);
+        groupDao.save(testGroup);
         otherGroup.setTitle("Optics");
         otherGroup.setDepartment(department);
-        groupDao.add(otherGroup);
+        groupDao.save(otherGroup);
         groupWithoutDepartment.setTitle("Departmentless");
         groupWithoutDepartment.setYear(2);
-        groupDao.add(groupWithoutDepartment);
+        groupDao.save(groupWithoutDepartment);
 
     }
 
     @Test
     public void shouldGetGroupById() throws Exception {
-        assertEquals(testGroup, groupDao.getById(1));
+        assertEquals(testGroup, groupDao.findById(1));
     }
 
     @Test
     public void shouldGetGroupWithoutDepartmentById() throws Exception {
-        assertEquals(groupWithoutDepartment, groupDao.getById(3));
+        assertEquals(groupWithoutDepartment, groupDao.findById(3));
     }
 
     @Test
     public void shouldGetAllGroups() throws Exception {
-        assertThat(groupDao.getAll()).hasSize(3).contains(testGroup, otherGroup, groupWithoutDepartment);
+        assertThat(groupDao.findAll()).hasSize(3).contains(testGroup, otherGroup, groupWithoutDepartment);
     }
 
     @Test
     public void shouldGetAllGroupsFromEmptyDB() throws Exception {
-        groupDao.delete(1);
-        groupDao.delete(2);
-        groupDao.delete(3);
-        assertThat(groupDao.getAll().isEmpty());
+        groupDao.deleteById(1);
+        groupDao.deleteById(2);
+        groupDao.deleteById(3);
+        assertThat(groupDao.findAll().isEmpty());
     }
 
     @Test
     public void shouldUpdteGroup() throws Exception {
         testGroup.setTitle("Math");
-        groupDao.update(testGroup);
+        groupDao.save(testGroup);
 
-        assertEquals(testGroup, groupDao.getById(1));
+        assertEquals(testGroup, groupDao.findById(1));
     }
 
     @Test
     public void shouldUpdteGroupWithoutDepartment() throws Exception {
         groupWithoutDepartment.setTitle("Updated");
         groupWithoutDepartment.setDepartment(testGroup.getDepartment());
-        groupDao.update(groupWithoutDepartment);
+        groupDao.save(groupWithoutDepartment);
 
-        assertEquals(groupWithoutDepartment, groupDao.getById(3));
+        assertEquals(groupWithoutDepartment, groupDao.findById(3));
     }
 
     @Test
     public void shouldUpdteGroupDeletingDepartment() throws Exception {
         testGroup.setDepartment(null);
-        groupDao.update(testGroup);
+        groupDao.save(testGroup);
 
-        assertEquals(testGroup, groupDao.getById(1));
+        assertEquals(testGroup, groupDao.findById(1));
     }
 
     @Test
     public void shouldDeleteGroupById() throws Exception {
-        groupDao.delete(1);
-        assertThat(groupDao.getAll()).hasSize(2).contains(otherGroup, groupWithoutDepartment);
+        groupDao.deleteById(1);
+        assertThat(groupDao.findById(1)).isNull();
     }
 
     @AfterEach

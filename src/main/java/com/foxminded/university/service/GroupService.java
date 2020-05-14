@@ -19,7 +19,7 @@ public interface GroupService {
 
     public GroupDto updateGroup(GroupDto groupDto);
 
-    public boolean deleteGroup(int id);
+    public void deleteGroup(int id);
 
     public List<Group> getAllGroups();
 

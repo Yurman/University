@@ -4,74 +4,72 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.foxminded.university.dao.GroupDao;
-import com.foxminded.university.dao.StudentDao;
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.repository.GroupRepository;
+import com.foxminded.university.repository.StudentRepository;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.StudentDto;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private StudentDao studentDao;
-    private GroupDao groupDao;
+    private StudentRepository studentDao;
+    private GroupRepository groupDao;
 
     @Autowired
-    public StudentServiceImpl(@Qualifier("studentDaoHibernate") StudentDao studentDao,
-            @Qualifier("groupDaoHibernate") GroupDao groupDao) {
+    public StudentServiceImpl(StudentRepository studentDao, GroupRepository groupDao) {
         this.studentDao = studentDao;
         this.groupDao = groupDao;
     }
 
     @Override
     public Student getStudentById(int id) {
-        return studentDao.getById(id);
+        return studentDao.findById(id);
     }
 
     @Override
     public StudentDto getStudentDtoById(int id) {
-        return convertToStudentDto(studentDao.getById(id));
+        return convertToStudentDto(studentDao.findById(id));
     }
 
     @Override
     public Student addStudent(Student student) {
-        return studentDao.add(student);
+        return studentDao.save(student);
     }
 
     @Override
     public StudentDto addStudent(StudentDto studentDto) {
-        studentDao.add(convertDtoToStudent(studentDto));
+        studentDao.save(convertDtoToStudent(studentDto));
         return studentDto;
     }
 
     @Override
     public Student updateStudent(Student student) {
-        return studentDao.update(student);
+        return studentDao.save(student);
     }
 
     @Override
     public StudentDto updateStudent(StudentDto studentDto) {
-        studentDao.update(convertDtoToStudent(studentDto));
+        studentDao.save(convertDtoToStudent(studentDto));
         return studentDto;
     }
 
     @Override
-    public boolean deleteStudent(int id) {
-        return studentDao.delete(id);
+    public void deleteStudent(int id) {
+        studentDao.deleteById(id);
     }
 
     @Override
     public List<Student> getAllStudents() {
-        return studentDao.getAll();
+        return studentDao.findAll();
     }
 
     @Override
     public List<StudentDto> getAllStudentDto() {
         List<StudentDto> allStudentDto = new ArrayList<>();
-        List<Student> students = studentDao.getAll();
+        List<Student> students = studentDao.findAll();
         for (Student student : students) {
             allStudentDto.add(convertToStudentDto(student));
         }
@@ -91,11 +89,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private Student convertDtoToStudent(StudentDto studentDto) {
-        Student student = (studentDto.getId() != 0) ? studentDao.getById(studentDto.getId()) : new Student();
+        Student student = (studentDto.getId() != 0) ? studentDao.findById(studentDto.getId()) : new Student();
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
         if (studentDto.getGroupId() != 0) {
-            student.setGroup(groupDao.getById(studentDto.getGroupId()));
+            student.setGroup(groupDao.findById(studentDto.getGroupId()));
         }
         return student;
     }

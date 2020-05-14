@@ -19,7 +19,7 @@ public interface StudentService {
 
     public StudentDto updateStudent(StudentDto studentDto);
 
-    public boolean deleteStudent(int id);
+    public void deleteStudent(int id);
 
     public List<Student> getAllStudents();
 

@@ -5,13 +5,13 @@ import java.util.List;
 
 import com.foxminded.university.domain.Student;
 
-public class StudentRepository {
+public class StudentInit {
 
     public static Student getTestStudent() {
         Student testStudent = new Student();
         testStudent.setFirstName("Petr");
         testStudent.setLastName("Ivanov");
-        testStudent.setGroup(GroupRepository.createFirstTestGroup());
+        testStudent.setGroup(GroupInit.createFirstTestGroup());
         return testStudent;
     }
 
@@ -23,7 +23,7 @@ public class StudentRepository {
 
     public static Student getDaoTestStudent() {
         Student testStudent = getTestStudent();
-        testStudent.setGroup(GroupRepository.getTestGroup());
+        testStudent.setGroup(GroupInit.getTestGroup());
         return testStudent;
     }
 }

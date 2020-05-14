@@ -2,7 +2,6 @@ package com.foxminded.university.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -13,10 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.foxminded.university.dao.GroupDao;
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.repository.GroupRepository;
 import com.foxminded.university.service.impl.GroupServiceImpl;
 
 class GroupServiceImplTest {
@@ -25,9 +23,9 @@ class GroupServiceImplTest {
     private GroupServiceImpl groupService;
 
     @Mock
-    private GroupDao groupDaoMock;
+    private GroupRepository groupDaoMock;
 
-    private Group expectedGroup = GroupRepository.getTestGroup();
+    private Group expectedGroup = GroupInit.getTestGroup();
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -36,7 +34,7 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldGetGroupById() {
-        when(groupDaoMock.getById(1)).thenReturn(expectedGroup);
+        when(groupDaoMock.findById(1)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.getGroupById(1);
         assertThat(actualGroup).isEqualTo(expectedGroup);
@@ -44,26 +42,17 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldUpdateGroup() {
-        when(groupDaoMock.update(expectedGroup)).thenReturn(expectedGroup);
+        when(groupDaoMock.save(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.updateGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);
     }
 
     @Test
-    public void shouldDeleteGroup() {
-        when(groupDaoMock.delete(1)).thenThrow(EmptyResultDataAccessException.class);
-
-        assertThrows(EmptyResultDataAccessException.class, () -> {
-            groupService.deleteGroup(1);
-        });
-    }
-
-    @Test
     public void shouldGetAllGroups() {
         List<Group> expectedGroups = new ArrayList<>();
         expectedGroups.add(expectedGroup);
-        when(groupDaoMock.getAll()).thenReturn(expectedGroups);
+        when(groupDaoMock.findAll()).thenReturn(expectedGroups);
 
         List<Group> actualGroups = groupService.getAllGroups();
         assertEquals(expectedGroups, actualGroups);
@@ -71,7 +60,7 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldaddGroup() {
-        when(groupDaoMock.add(expectedGroup)).thenReturn(expectedGroup);
+        when(groupDaoMock.save(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.addGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);

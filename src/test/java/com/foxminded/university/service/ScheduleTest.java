@@ -13,13 +13,13 @@ import com.foxminded.university.domain.ScheduleItem;
 import com.foxminded.university.domain.Student;
 
 public class ScheduleTest {
-    private static Schedule testSchedule = ScheduleRepository.getTestSchedule();
-    private static Professor professor = ProfessorRepository.getTestProfessor();
-    private static Group firstGroup = GroupRepository.getFirstTestGroup();
-    private static Student student = StudentRepository.getTestStudent();
-    private static ScheduleItem firstItem = ScheduleRepository.getFirstItem();
-    private static ScheduleItem secondItem = ScheduleRepository.getSecondItem();
-    private static ScheduleItem thirdItem = ScheduleRepository.getThirdItem();
+    private static Schedule testSchedule = ScheduleInit.getTestSchedule();
+    private static Professor professor = ProfessorInit.getTestProfessor();
+    private static Group firstGroup = GroupInit.getFirstTestGroup();
+    private static Student student = StudentInit.getTestStudent();
+    private static ScheduleItem firstItem = ScheduleInit.getFirstItem();
+    private static ScheduleItem secondItem = ScheduleInit.getSecondItem();
+    private static ScheduleItem thirdItem = ScheduleInit.getThirdItem();
 
     @Test
     public final void shouldReturnScheduleForProfessorWhenCorrectDate() {

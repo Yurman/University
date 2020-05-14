@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.DepartmentDto;
@@ -69,7 +68,6 @@ public class GroupControllerTest {
     public void shouldReturnViewWhenGroupWasDelete() throws Exception {
         List<GroupDto> groups = new ArrayList<>();
         when(groupService.getAllGroupDto()).thenReturn(groups);
-        when(groupService.deleteGroup(5)).thenReturn(true);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))
@@ -81,7 +79,6 @@ public class GroupControllerTest {
     public void shouldShowMessageWhenErrorOccuredWhileGroupDeleting() throws Exception {
         List<GroupDto> groups = new ArrayList<>();
         when(groupService.getAllGroupDto()).thenReturn(groups);
-        when(groupService.deleteGroup(5)).thenThrow(new QueryNotExecuteException());
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))

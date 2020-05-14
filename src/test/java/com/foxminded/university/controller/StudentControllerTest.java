@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.foxminded.university.exception.EntityNotFoundException;
-import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
 import com.foxminded.university.service.dto.GroupDto;
@@ -69,7 +68,6 @@ public class StudentControllerTest {
     public void shouldReturnStudentsViewWhenStudentWasDelete() throws Exception {
         List<StudentDto> students = new ArrayList<>();
         when(studentService.getAllStudentDto()).thenReturn(students);
-        when(studentService.deleteStudent(5)).thenReturn(true);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
@@ -80,7 +78,6 @@ public class StudentControllerTest {
     @Test
     public void shouldShowMessageWhenErrorOccuredWhileDeletingStudent() throws Exception {
         List<StudentDto> students = new ArrayList<>();
-        when(studentService.deleteStudent(5)).thenThrow(new QueryNotExecuteException("Error occurred"));
         when(studentService.getAllStudentDto()).thenReturn(students);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 

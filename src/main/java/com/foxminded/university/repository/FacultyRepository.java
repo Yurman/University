@@ -12,7 +12,6 @@ public interface FacultyRepository extends JpaRepository<Faculty, Integer> {
 
     public List<Faculty> findAll();
 
-    @SuppressWarnings("unchecked")
     public Faculty save(Faculty faculty);
 
     public void deleteById(int id);

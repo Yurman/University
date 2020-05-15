@@ -12,7 +12,6 @@ public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     public List<Group> findAll();
 
-    @SuppressWarnings("unchecked")
     public Group save(Group group);
 
     public void deleteById(int id);

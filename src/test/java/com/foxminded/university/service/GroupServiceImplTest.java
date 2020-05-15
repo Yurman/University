@@ -23,7 +23,7 @@ class GroupServiceImplTest {
     private GroupServiceImpl groupService;
 
     @Mock
-    private GroupRepository groupDaoMock;
+    private GroupRepository groupRepositoryMock;
 
     private Group expectedGroup = GroupInit.getTestGroup();
 
@@ -34,7 +34,7 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldGetGroupById() {
-        when(groupDaoMock.findById(1)).thenReturn(expectedGroup);
+        when(groupRepositoryMock.findById(1)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.getGroupById(1);
         assertThat(actualGroup).isEqualTo(expectedGroup);
@@ -42,7 +42,7 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldUpdateGroup() {
-        when(groupDaoMock.save(expectedGroup)).thenReturn(expectedGroup);
+        when(groupRepositoryMock.save(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.updateGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);
@@ -52,7 +52,7 @@ class GroupServiceImplTest {
     public void shouldGetAllGroups() {
         List<Group> expectedGroups = new ArrayList<>();
         expectedGroups.add(expectedGroup);
-        when(groupDaoMock.findAll()).thenReturn(expectedGroups);
+        when(groupRepositoryMock.findAll()).thenReturn(expectedGroups);
 
         List<Group> actualGroups = groupService.getAllGroups();
         assertEquals(expectedGroups, actualGroups);
@@ -60,7 +60,7 @@ class GroupServiceImplTest {
 
     @Test
     public void shouldaddGroup() {
-        when(groupDaoMock.save(expectedGroup)).thenReturn(expectedGroup);
+        when(groupRepositoryMock.save(expectedGroup)).thenReturn(expectedGroup);
 
         Group actualGroup = groupService.addGroup(expectedGroup);
         assertThat(actualGroup).isEqualTo(expectedGroup);

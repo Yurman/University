@@ -12,7 +12,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     public List<Student> findAll();
 
-    @SuppressWarnings("unchecked")
     public Student save(Student student);
 
     public void deleteById(int id);

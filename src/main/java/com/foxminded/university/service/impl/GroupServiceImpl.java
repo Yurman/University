@@ -7,70 +7,70 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.repository.DepartmentRepository;
 import com.foxminded.university.repository.GroupRepository;
-import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.dto.GroupDto;
 
 @Service
 public class GroupServiceImpl implements GroupService {
 
-    private GroupRepository groupDao;
-    private DepartmentService departmentService;
+    private GroupRepository groupRepository;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    public GroupServiceImpl(GroupRepository groupDao,
-            DepartmentService departmentService) {
-        this.groupDao = groupDao;
-        this.departmentService = departmentService;
+    public GroupServiceImpl(GroupRepository groupRepository,
+            DepartmentRepository departmentRepository) {
+        this.groupRepository = groupRepository;
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
     public Group addGroup(Group group) {
-        return groupDao.save(group);
+        return groupRepository.save(group);
     }
 
     @Override
     public GroupDto addGroup(GroupDto groupDto) {
-        groupDao.save(convertDtoToGroup(groupDto));
+        groupRepository.save(convertDtoToGroup(groupDto));
         return groupDto;
     }
 
     @Override
     public Group updateGroup(Group group) {
-        return groupDao.save(group);
+        return groupRepository.save(group);
     }
 
     @Override
     public GroupDto updateGroup(GroupDto groupDto) {
-        groupDao.save(convertDtoToGroup(groupDto));
+        groupRepository.save(convertDtoToGroup(groupDto));
         return groupDto;
     }
 
     @Override
     public void deleteGroup(int id) {
-        groupDao.deleteById(id);
+        groupRepository.deleteById(id);
     }
 
     @Override
     public Group getGroupById(int id) {
-        return groupDao.findById(id);
+        return groupRepository.findById(id);
     }
 
     @Override
     public GroupDto getGroupDtoById(int id) {
-        return convertToGroupDto(groupDao.findById(id));
+        return convertToGroupDto(groupRepository.findById(id));
     }
 
     @Override
     public List<Group> getAllGroups() {
-        return groupDao.findAll();
+        return groupRepository.findAll();
     }
 
     @Override
     public List<GroupDto> getAllGroupDto() {
         List<GroupDto> allGroupDto = new ArrayList<>();
-        List<Group> groups = groupDao.findAll();
+        List<Group> groups = groupRepository.findAll();
         for (Group group : groups) {
             allGroupDto.add(convertToGroupDto(group));
         }
@@ -90,11 +90,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private Group convertDtoToGroup(GroupDto groupDto) {
-        Group group = (groupDto.getId() != 0) ? groupDao.findById(groupDto.getId()) : new Group();
+        Group group = (groupDto.getId() != 0) ? groupRepository.findById(groupDto.getId()) : new Group();
         group.setTitle(groupDto.getTitle());
         group.setYear(groupDto.getYear());
         if (groupDto.getDepartmentId() != 0) {
-            group.setDepartment(departmentService.getDepartmentById(groupDto.getDepartmentId()));
+            group.setDepartment(departmentRepository.findById(groupDto.getDepartmentId()));
         }
         return group;
     }

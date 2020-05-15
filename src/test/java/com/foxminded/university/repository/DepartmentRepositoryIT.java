@@ -22,10 +22,10 @@ import com.foxminded.university.service.FacultyInit;
 public class DepartmentRepositoryIT {
 
     @Autowired
-    private FacultyRepository facultyDao;
+    private FacultyRepository facultyRepository;
 
     @Autowired
-    private DepartmentRepository departmentDao;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
     private Flyway flyway;
@@ -38,18 +38,18 @@ public class DepartmentRepositoryIT {
         flyway.migrate();
 
         Faculty faculty = FacultyInit.getTestFaculty();
-        facultyDao.save(faculty);
+        facultyRepository.save(faculty);
         testDepartment.setFaculty(faculty);
-        departmentDao.save(testDepartment);
+        departmentRepository.save(testDepartment);
         otherDepartment.setTitle("Optics");
         otherDepartment.setFaculty(faculty);
-        departmentDao.save(otherDepartment);
+        departmentRepository.save(otherDepartment);
         otherDepartment.setId(2);
     }
 
     @Test
     public void shouldGetDepartmentById() throws Exception {
-        Assertions.assertEquals(testDepartment, departmentDao.findById(1));
+        Assertions.assertEquals(testDepartment, departmentRepository.findById(1));
     }
 
     @Test
@@ -58,21 +58,21 @@ public class DepartmentRepositoryIT {
         expected.add(testDepartment);
         expected.add(otherDepartment);
 
-        Assertions.assertEquals(expected, departmentDao.findAll());
+        Assertions.assertEquals(expected, departmentRepository.findAll());
     }
 
     @Test
     public void shouldUpdteDepartment() throws Exception {
         testDepartment.setTitle("Math");
-        departmentDao.save(testDepartment);
+        departmentRepository.save(testDepartment);
 
-        Assertions.assertEquals(testDepartment, departmentDao.findById(1));
+        Assertions.assertEquals(testDepartment, departmentRepository.findById(1));
     }
 
     @Test
     public void shouldDeleteDepartmentById() throws Exception {
-        departmentDao.deleteById(1);
-        assertThat(departmentDao.findById(1)).isNull();
+        departmentRepository.deleteById(1);
+        assertThat(departmentRepository.findById(1)).isNull();
     }
 
     @AfterEach

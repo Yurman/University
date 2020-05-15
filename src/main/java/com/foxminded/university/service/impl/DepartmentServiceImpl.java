@@ -14,47 +14,47 @@ import com.foxminded.university.service.dto.DepartmentDto;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
-    private DepartmentRepository departmentDao;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    public DepartmentServiceImpl(DepartmentRepository departmentDao) {
-        this.departmentDao = departmentDao;
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
     }
 
     @Override
     public Department addDepartment(Department department) {
-        return departmentDao.save(department);
+        return departmentRepository.save(department);
     }
 
     @Override
     public Department updateDepartment(Department group) {
-        return departmentDao.save(group);
+        return departmentRepository.save(group);
     }
 
     @Override
     public void deleteDepartment(int id) {
-        departmentDao.deleteById(id);
+        departmentRepository.deleteById(id);
     }
 
     @Override
     public Department getDepartmentById(int id) {
-        return departmentDao.findById(id);
+        return departmentRepository.findById(id);
     }
 
     @Override
     public List<Department> getAllDepartments() {
-        return departmentDao.findAll();
+        return departmentRepository.findAll();
     }
 
     @Override
     public DepartmentDto getDepartmentDto(int id) {
-        return convertToDepartmentDto(departmentDao.findById(id));
+        return convertToDepartmentDto(departmentRepository.findById(id));
     }
 
     @Override
     public List<DepartmentDto> getAllDepartmentDto() {
         List<DepartmentDto> allDepartmentDto = new ArrayList<>();
-        List<Department> departments = departmentDao.findAll();
+        List<Department> departments = departmentRepository.findAll();
         for (Department department : departments) {
             allDepartmentDto.add(convertToDepartmentDto(department));
         }

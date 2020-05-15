@@ -23,7 +23,7 @@ class StudentServiceImplTest {
     private StudentServiceImpl studentService;
 
     @Mock
-    private StudentRepository studentDaoMock;
+    private StudentRepository studentRepositoryMock;
 
     private Student expectedStudent = StudentInit.getDaoTestStudent();
 
@@ -34,7 +34,7 @@ class StudentServiceImplTest {
 
     @Test
     public void shouldGetStudentById() {
-        when(studentDaoMock.findById(1)).thenReturn(expectedStudent);
+        when(studentRepositoryMock.findById(1)).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.getStudentById(1);
         assertThat(actualStudent).isEqualTo(expectedStudent);
@@ -42,7 +42,7 @@ class StudentServiceImplTest {
 
     @Test
     public void shouldUpdateStudent() {
-        when(studentDaoMock.save(expectedStudent)).thenReturn(expectedStudent);
+        when(studentRepositoryMock.save(expectedStudent)).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.updateStudent(expectedStudent);
         assertThat(actualStudent).isEqualTo(expectedStudent);
@@ -52,7 +52,7 @@ class StudentServiceImplTest {
     public void shouldGetAllStudents() {
         List<Student> expectedStudents = new ArrayList<>();
         expectedStudents.add(expectedStudent);
-        when(studentDaoMock.findAll()).thenReturn(expectedStudents);
+        when(studentRepositoryMock.findAll()).thenReturn(expectedStudents);
 
         List<Student> actualStudents = studentService.getAllStudents();
         assertEquals(expectedStudents, actualStudents);
@@ -60,7 +60,7 @@ class StudentServiceImplTest {
 
     @Test
     public void shouldAddStudent() {
-        when(studentDaoMock.save(expectedStudent)).thenReturn(expectedStudent);
+        when(studentRepositoryMock.save(expectedStudent)).thenReturn(expectedStudent);
 
         Student actualStudent = studentService.addStudent(expectedStudent);
         assertEquals(actualStudent, expectedStudent);

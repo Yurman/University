@@ -15,61 +15,61 @@ import com.foxminded.university.service.dto.StudentDto;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private StudentRepository studentDao;
-    private GroupRepository groupDao;
+    private StudentRepository studentRepository;
+    private GroupRepository groupRepository;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentDao, GroupRepository groupDao) {
-        this.studentDao = studentDao;
-        this.groupDao = groupDao;
+    public StudentServiceImpl(StudentRepository studentRepository, GroupRepository groupRepository) {
+        this.studentRepository = studentRepository;
+        this.groupRepository = groupRepository;
     }
 
     @Override
     public Student getStudentById(int id) {
-        return studentDao.findById(id);
+        return studentRepository.findById(id);
     }
 
     @Override
     public StudentDto getStudentDtoById(int id) {
-        return convertToStudentDto(studentDao.findById(id));
+        return convertToStudentDto(studentRepository.findById(id));
     }
 
     @Override
     public Student addStudent(Student student) {
-        return studentDao.save(student);
+        return studentRepository.save(student);
     }
 
     @Override
     public StudentDto addStudent(StudentDto studentDto) {
-        studentDao.save(convertDtoToStudent(studentDto));
+        studentRepository.save(convertDtoToStudent(studentDto));
         return studentDto;
     }
 
     @Override
     public Student updateStudent(Student student) {
-        return studentDao.save(student);
+        return studentRepository.save(student);
     }
 
     @Override
     public StudentDto updateStudent(StudentDto studentDto) {
-        studentDao.save(convertDtoToStudent(studentDto));
+        studentRepository.save(convertDtoToStudent(studentDto));
         return studentDto;
     }
 
     @Override
     public void deleteStudent(int id) {
-        studentDao.deleteById(id);
+        studentRepository.deleteById(id);
     }
 
     @Override
     public List<Student> getAllStudents() {
-        return studentDao.findAll();
+        return studentRepository.findAll();
     }
 
     @Override
     public List<StudentDto> getAllStudentDto() {
         List<StudentDto> allStudentDto = new ArrayList<>();
-        List<Student> students = studentDao.findAll();
+        List<Student> students = studentRepository.findAll();
         for (Student student : students) {
             allStudentDto.add(convertToStudentDto(student));
         }
@@ -89,11 +89,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     private Student convertDtoToStudent(StudentDto studentDto) {
-        Student student = (studentDto.getId() != 0) ? studentDao.findById(studentDto.getId()) : new Student();
+        Student student = (studentDto.getId() != 0) ? studentRepository.findById(studentDto.getId()) : new Student();
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
         if (studentDto.getGroupId() != 0) {
-            student.setGroup(groupDao.findById(studentDto.getGroupId()));
+            student.setGroup(groupRepository.findById(studentDto.getGroupId()));
         }
         return student;
     }

@@ -21,13 +21,13 @@ import com.foxminded.university.service.GroupInit;
 public class GroupRepositoryIT {
 
     @Autowired
-    private FacultyRepository facultyDao;
+    private FacultyRepository facultyRepository;
 
     @Autowired
-    private DepartmentRepository departmentDao;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
     private Flyway flyway;
@@ -41,74 +41,74 @@ public class GroupRepositoryIT {
         flyway.migrate();
 
         Faculty faculty = FacultyInit.getTestFaculty();
-        facultyDao.save(faculty);
+        facultyRepository.save(faculty);
         Department department = DepartmentInit.getTestDepartment();
         department.setFaculty(faculty);
-        departmentDao.save(department);
+        departmentRepository.save(department);
 
         testGroup.setDepartment(department);
-        groupDao.save(testGroup);
+        groupRepository.save(testGroup);
         otherGroup.setTitle("Optics");
         otherGroup.setDepartment(department);
-        groupDao.save(otherGroup);
+        groupRepository.save(otherGroup);
         groupWithoutDepartment.setTitle("Departmentless");
         groupWithoutDepartment.setYear(2);
-        groupDao.save(groupWithoutDepartment);
+        groupRepository.save(groupWithoutDepartment);
 
     }
 
     @Test
     public void shouldGetGroupById() throws Exception {
-        assertEquals(testGroup, groupDao.findById(1));
+        assertEquals(testGroup, groupRepository.findById(1));
     }
 
     @Test
     public void shouldGetGroupWithoutDepartmentById() throws Exception {
-        assertEquals(groupWithoutDepartment, groupDao.findById(3));
+        assertEquals(groupWithoutDepartment, groupRepository.findById(3));
     }
 
     @Test
     public void shouldGetAllGroups() throws Exception {
-        assertThat(groupDao.findAll()).hasSize(3).contains(testGroup, otherGroup, groupWithoutDepartment);
+        assertThat(groupRepository.findAll()).hasSize(3).contains(testGroup, otherGroup, groupWithoutDepartment);
     }
 
     @Test
     public void shouldGetAllGroupsFromEmptyDB() throws Exception {
-        groupDao.deleteById(1);
-        groupDao.deleteById(2);
-        groupDao.deleteById(3);
-        assertThat(groupDao.findAll().isEmpty());
+        groupRepository.deleteById(1);
+        groupRepository.deleteById(2);
+        groupRepository.deleteById(3);
+        assertThat(groupRepository.findAll()).isEmpty();
     }
 
     @Test
     public void shouldUpdteGroup() throws Exception {
         testGroup.setTitle("Math");
-        groupDao.save(testGroup);
+        groupRepository.save(testGroup);
 
-        assertEquals(testGroup, groupDao.findById(1));
+        assertEquals(testGroup, groupRepository.findById(1));
     }
 
     @Test
     public void shouldUpdteGroupWithoutDepartment() throws Exception {
         groupWithoutDepartment.setTitle("Updated");
         groupWithoutDepartment.setDepartment(testGroup.getDepartment());
-        groupDao.save(groupWithoutDepartment);
+        groupRepository.save(groupWithoutDepartment);
 
-        assertEquals(groupWithoutDepartment, groupDao.findById(3));
+        assertEquals(groupWithoutDepartment, groupRepository.findById(3));
     }
 
     @Test
     public void shouldUpdteGroupDeletingDepartment() throws Exception {
         testGroup.setDepartment(null);
-        groupDao.save(testGroup);
+        groupRepository.save(testGroup);
 
-        assertEquals(testGroup, groupDao.findById(1));
+        assertEquals(testGroup, groupRepository.findById(1));
     }
 
     @Test
     public void shouldDeleteGroupById() throws Exception {
-        groupDao.deleteById(1);
-        assertThat(groupDao.findById(1)).isNull();
+        groupRepository.deleteById(1);
+        assertThat(groupRepository.findById(1)).isNull();
     }
 
     @AfterEach

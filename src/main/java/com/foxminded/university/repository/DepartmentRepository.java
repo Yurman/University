@@ -12,7 +12,6 @@ public interface DepartmentRepository extends JpaRepository<Department, Integer>
 
     public List<Department> findAll();
 
-    @SuppressWarnings("unchecked")
     public Department save(Department department);
 
     public void deleteById(int id);

@@ -23,16 +23,16 @@ import com.foxminded.university.service.StudentInit;
 public class StudentRepositoryIT {
 
     @Autowired
-    private StudentRepository studentDao;
+    private StudentRepository studentRepository;
 
     @Autowired
-    private FacultyRepository facultyDao;
+    private FacultyRepository facultyRepository;
 
     @Autowired
-    private DepartmentRepository departmentDao;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    private GroupRepository groupDao;
+    private GroupRepository groupRepository;
 
     @Autowired
     private Flyway flyway;
@@ -46,53 +46,53 @@ public class StudentRepositoryIT {
         flyway.migrate();
 
         Faculty faculty = FacultyInit.getTestFaculty();
-        facultyDao.save(faculty);
+        facultyRepository.save(faculty);
         Department department = DepartmentInit.getTestDepartment();
         department.setFaculty(faculty);
-        departmentDao.save(department);
+        departmentRepository.save(department);
 
         Group group = GroupInit.getTestGroup();
         group.setDepartment(department);
-        groupDao.save(group);
+        groupRepository.save(group);
         testStudent.setGroup(group);
-        studentDao.save(testStudent);
+        studentRepository.save(testStudent);
         otherStudent.setFirstName("Nick");
         otherStudent.setLastName("Tester");
         otherStudent.setGroup(group);
-        studentDao.save(otherStudent);
+        studentRepository.save(otherStudent);
         studentWithoutGroup.setFirstName("Jack");
         studentWithoutGroup.setLastName("Daniels");
-        studentDao.save(studentWithoutGroup);
+        studentRepository.save(studentWithoutGroup);
     }
 
     @Test
     public void shouldGetStudentById() throws Exception {
-        assertEquals(testStudent, studentDao.findById(1));
+        assertEquals(testStudent, studentRepository.findById(1));
     }
 
     @Test
     public void shouldGetStudentWithoutGroupById() throws Exception {
-        assertEquals(studentWithoutGroup, studentDao.findById(3));
+        assertEquals(studentWithoutGroup, studentRepository.findById(3));
     }
 
     @Test
     public void shouldGetAllStudents() throws Exception {
-        assertThat(studentDao.findAll()).hasSize(3).contains(testStudent, otherStudent, studentWithoutGroup);
+        assertThat(studentRepository.findAll()).hasSize(3).contains(testStudent, otherStudent, studentWithoutGroup);
     }
 
     @Test
     public void shouldGetAllStudentsFromEmptyDB() throws Exception {
-        studentDao.deleteById(1);
-        studentDao.deleteById(2);
-        studentDao.deleteById(3);
-        assertThat(studentDao.findAll()).isEmpty();
+        studentRepository.deleteById(1);
+        studentRepository.deleteById(2);
+        studentRepository.deleteById(3);
+        assertThat(studentRepository.findAll()).isEmpty();
     }
 
     @Test
     public void shouldUpdateStudent() throws Exception {
         testStudent.setFirstName("Nicolas");
-        studentDao.save(testStudent);
-        assertEquals(testStudent, studentDao.findById(1));
+        studentRepository.save(testStudent);
+        assertEquals(testStudent, studentRepository.findById(1));
     }
 
     @Test
@@ -100,21 +100,21 @@ public class StudentRepositoryIT {
         studentWithoutGroup.setFirstName("Jonny");
         studentWithoutGroup.setLastName("Walker");
         studentWithoutGroup.setGroup(testStudent.getGroup());
-        studentDao.save(studentWithoutGroup);
-        assertEquals(studentWithoutGroup, studentDao.findById(3));
+        studentRepository.save(studentWithoutGroup);
+        assertEquals(studentWithoutGroup, studentRepository.findById(3));
     }
 
     @Test
     public void shouldUpdateStudentDeletingGroup() throws Exception {
         testStudent.setGroup(null);
-        studentDao.save(testStudent);
-        assertEquals(testStudent, studentDao.findById(1));
+        studentRepository.save(testStudent);
+        assertEquals(testStudent, studentRepository.findById(1));
     }
 
     @Test
     public void shouldDeleteStudent() throws Exception {
-        studentDao.deleteById(2);
-        assertThat(studentDao.findById(2)).isNull();
+        studentRepository.deleteById(2);
+        assertThat(studentRepository.findById(2)).isNull();
     }
 
     @AfterEach

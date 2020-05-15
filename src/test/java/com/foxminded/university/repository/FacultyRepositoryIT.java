@@ -20,7 +20,7 @@ import com.foxminded.university.service.FacultyInit;
 public class FacultyRepositoryIT {
 
     @Autowired
-    private FacultyRepository facultyDao;
+    private FacultyRepository facultyRepository;
 
     @Autowired
     private Flyway flyway;
@@ -32,15 +32,15 @@ public class FacultyRepositoryIT {
         flyway.clean();
         flyway.migrate();
 
-        facultyDao.save(testFaculty);
+        facultyRepository.save(testFaculty);
         otherFaculty.setTitle("Physics");
-        facultyDao.save(otherFaculty);
+        facultyRepository.save(otherFaculty);
         otherFaculty.setId(2);
     }
 
     @Test
     public void shouldGetFacultyById() throws Exception {
-        Assertions.assertEquals(testFaculty, facultyDao.findById(1));
+        Assertions.assertEquals(testFaculty, facultyRepository.findById(1));
     }
 
     @Test
@@ -49,21 +49,21 @@ public class FacultyRepositoryIT {
         expected.add(testFaculty);
         expected.add(otherFaculty);
 
-        Assertions.assertEquals(expected, facultyDao.findAll());
+        Assertions.assertEquals(expected, facultyRepository.findAll());
     }
 
     @Test
     public void shouldUpdteFaculty() throws Exception {
         testFaculty.setTitle("Math");
-        facultyDao.save(testFaculty);
+        facultyRepository.save(testFaculty);
 
-        Assertions.assertEquals(testFaculty, facultyDao.findById(1));
+        Assertions.assertEquals(testFaculty, facultyRepository.findById(1));
     }
 
     @Test
     public void shouldDeleteFacultyById() throws Exception {
-        facultyDao.deleteById(1);
-        assertThat(facultyDao.findById(1)).isNull();
+        facultyRepository.deleteById(1);
+        assertThat(facultyRepository.findById(1)).isNull();
     }
 
     @AfterEach

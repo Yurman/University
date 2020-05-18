@@ -24,6 +24,9 @@ public class Department {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     public int getId() {
         return id;
     }
@@ -46,6 +49,14 @@ public class Department {
 
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

@@ -18,6 +18,9 @@ public class Faculty {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     public int getId() {
         return id;
     }
@@ -32,6 +35,14 @@ public class Faculty {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

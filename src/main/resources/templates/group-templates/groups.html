@@ -36,7 +36,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody th:each="group : ${groups}">
+                <tbody th:each="group : ${groups}" th:class="${group.deleted} ? table-danger :''">
                     <tr>
                         <td>
                             <span th:text="${group.id}"> Id </span>

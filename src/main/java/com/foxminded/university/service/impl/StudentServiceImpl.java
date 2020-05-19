@@ -81,6 +81,7 @@ public class StudentServiceImpl implements StudentService {
         studentDto.setId(student.getId());
         studentDto.setFirstName(student.getFirstName());
         studentDto.setLastName(student.getLastName());
+        studentDto.setDeleted(student.isDeleted());
         if (student.getGroup() != null) {
             studentDto.setGroupTitle(student.getGroup().getTitle());
             studentDto.setGroupId(student.getGroup().getId());
@@ -92,6 +93,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = (studentDto.getId() != 0) ? studentRepository.findById(studentDto.getId()) : new Student();
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
+        student.setDeleted(studentDto.isDeleted());
         if (studentDto.getGroupId() != 0) {
             student.setGroup(groupRepository.findById(studentDto.getGroupId()));
         }

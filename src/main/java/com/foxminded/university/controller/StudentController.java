@@ -1,5 +1,8 @@
 package com.foxminded.university.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
+import com.foxminded.university.service.dto.GroupDto;
 import com.foxminded.university.service.dto.StudentDto;
 
 @Controller
@@ -63,10 +68,28 @@ public class StudentController {
     public String deleteStudent(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            studentService.deleteStudent(id);
+            Student student = studentService.getStudentById(id);
+            student.setDeleted(true);
+            studentService.updateStudent(student);
             message = "Successfully delete student";
         } catch (QueryNotExecuteException e) {
             message = "Problem with deleting student";
+        }
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/students";
+    }
+
+    @GetMapping(value = "/restore-student")
+    public String restoreGroup(@RequestParam(value = "id") int id,
+            RedirectAttributes redirectAttributes) {
+        String message = null;
+        try {
+            Student student = studentService.getStudentById(id);
+            student.setDeleted(false);
+            studentService.updateStudent(student);
+            message = "Successfully restore student";
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
+            message = "Problem with restoring student";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
         return "redirect:/students";
@@ -78,7 +101,9 @@ public class StudentController {
         try {
             StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+            List<GroupDto> groups = groupService.getAllGroupDto().stream().filter(group -> !group.isDeleted())
+                    .collect(Collectors.toList());
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groups);
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

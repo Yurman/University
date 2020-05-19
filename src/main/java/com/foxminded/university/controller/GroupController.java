@@ -1,5 +1,8 @@
 package com.foxminded.university.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
+import com.foxminded.university.service.dto.DepartmentDto;
 import com.foxminded.university.service.dto.GroupDto;
 
 @Controller
@@ -62,10 +67,27 @@ public class GroupController {
     public String deleteGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            groupService.deleteGroup(id);
+            Group group = groupService.getGroupById(id);
+            group.setDeleted(true);
+            groupService.updateGroup(group);
             message = "Successfully delete group";
         } catch (QueryNotExecuteException e) {
             message = "Problem with deleting group";
+        }
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/groups";
+    }
+
+    @GetMapping(value = "/restore-group")
+    public String restoreGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
+        String message = null;
+        try {
+            Group group = groupService.getGroupById(id);
+            group.setDeleted(false);
+            groupService.updateGroup(group);
+            message = "Successfully restore group";
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
+            message = "Problem with restoring group";
         }
         redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
         return "redirect:/groups";
@@ -77,7 +99,10 @@ public class GroupController {
         try {
             GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
-            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
+            List<DepartmentDto> departments = departmentService.getAllDepartmentDto().stream()
+                    .filter(department -> !department.isDeleted())
+                    .collect(Collectors.toList());
+            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departments);
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

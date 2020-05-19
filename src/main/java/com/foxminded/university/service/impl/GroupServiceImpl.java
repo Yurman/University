@@ -82,6 +82,7 @@ public class GroupServiceImpl implements GroupService {
         groupDto.setId(group.getId());
         groupDto.setTitle(group.getTitle());
         groupDto.setYear(group.getYear());
+        groupDto.setDeleted(group.isDeleted());
         if (group.getDepartment() != null) {
             groupDto.setDepartmentTitle(group.getDepartment().getTitle());
             groupDto.setDepartmentId(group.getDepartment().getId());
@@ -93,6 +94,7 @@ public class GroupServiceImpl implements GroupService {
         Group group = (groupDto.getId() != 0) ? groupRepository.findById(groupDto.getId()) : new Group();
         group.setTitle(groupDto.getTitle());
         group.setYear(groupDto.getYear());
+        group.setDeleted(groupDto.isDeleted());
         if (groupDto.getDepartmentId() != 0) {
             group.setDepartment(departmentRepository.findById(groupDto.getDepartmentId()));
         }

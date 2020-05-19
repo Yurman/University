@@ -35,7 +35,7 @@
                     <th>Action</th>
                 </tr>
                 </thead>
-                <tbody th:each="student : ${students}">
+                <tbody th:each="student : ${students}" th:class="${student.deleted} ? table-danger :''">
                     <tr>
                         <td>
                             <div th:text="${student.id}">id</div>

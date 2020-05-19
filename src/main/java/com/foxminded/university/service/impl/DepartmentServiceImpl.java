@@ -65,6 +65,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());
         departmentDto.setTitle(department.getTitle());
+        departmentDto.setDeleted(department.isDeleted());
         if (department.getFaculty() != null) {
             departmentDto.setFacultyTitle(department.getFaculty().getTitle());
         }

@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
@@ -66,8 +67,8 @@ public class GroupControllerTest {
 
     @Test
     public void shouldReturnViewWhenGroupWasDelete() throws Exception {
-        List<GroupDto> groups = new ArrayList<>();
-        when(groupService.getAllGroupDto()).thenReturn(groups);
+        Group group = new Group();
+        when(groupService.getGroupById(5)).thenReturn(group);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
 
         mockMvc.perform(request.param("id", "5"))
@@ -77,9 +78,20 @@ public class GroupControllerTest {
 
     @Test
     public void shouldShowMessageWhenErrorOccuredWhileGroupDeleting() throws Exception {
-        List<GroupDto> groups = new ArrayList<>();
-        when(groupService.getAllGroupDto()).thenReturn(groups);
+        Group group = new Group();
+        when(groupService.getGroupById(5)).thenReturn(group);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-group");
+
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(redirectedUrl("/groups"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldReturnViewWhenGroupWasRestored() throws Exception {
+        Group group = new Group();
+        when(groupService.getGroupById(5)).thenReturn(group);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/restore-group");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(redirectedUrl("/groups"))

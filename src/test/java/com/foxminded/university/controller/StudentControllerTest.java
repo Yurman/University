@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.service.GroupService;
 import com.foxminded.university.service.StudentService;
@@ -66,8 +67,8 @@ public class StudentControllerTest {
 
     @Test
     public void shouldReturnStudentsViewWhenStudentWasDelete() throws Exception {
-        List<StudentDto> students = new ArrayList<>();
-        when(studentService.getAllStudentDto()).thenReturn(students);
+        Student student = new Student();
+        when(studentService.getStudentById(5)).thenReturn(student);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
 
         mockMvc.perform(request.param("id", "5"))
@@ -77,9 +78,20 @@ public class StudentControllerTest {
 
     @Test
     public void shouldShowMessageWhenErrorOccuredWhileDeletingStudent() throws Exception {
-        List<StudentDto> students = new ArrayList<>();
-        when(studentService.getAllStudentDto()).thenReturn(students);
+        Student student = new Student();
+        when(studentService.getStudentById(5)).thenReturn(student);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/delete-student");
+
+        mockMvc.perform(request.param("id", "5"))
+                .andExpect(redirectedUrl("/students"))
+                .andExpect(status().isFound());
+    }
+
+    @Test
+    public void shouldReturnStudentsViewWhenStudentWasRestored() throws Exception {
+        Student student = new Student();
+        when(studentService.getStudentById(5)).thenReturn(student);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get("/restore-student");
 
         mockMvc.perform(request.param("id", "5"))
                 .andExpect(redirectedUrl("/students"))

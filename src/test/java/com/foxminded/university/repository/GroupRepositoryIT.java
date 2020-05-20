@@ -50,6 +50,7 @@ public class GroupRepositoryIT {
         groupRepository.save(testGroup);
         otherGroup.setTitle("Optics");
         otherGroup.setDepartment(department);
+        otherGroup.setDeleted(true);
         groupRepository.save(otherGroup);
         groupWithoutDepartment.setTitle("Departmentless");
         groupWithoutDepartment.setYear(2);
@@ -70,6 +71,11 @@ public class GroupRepositoryIT {
     @Test
     public void shouldGetAllGroups() throws Exception {
         assertThat(groupRepository.findAll()).hasSize(3).contains(testGroup, otherGroup, groupWithoutDepartment);
+    }
+
+    @Test
+    public void shouldGetAllUndeletedGroups() throws Exception {
+        assertThat(groupRepository.findAllUndeleted()).hasSize(2).contains(testGroup, groupWithoutDepartment);
     }
 
     @Test

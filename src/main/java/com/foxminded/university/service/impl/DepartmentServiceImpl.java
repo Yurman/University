@@ -61,6 +61,16 @@ public class DepartmentServiceImpl implements DepartmentService {
         return allDepartmentDto;
     }
 
+    @Override
+    public List<DepartmentDto> getAllUndeletedDepartmentDto() {
+        List<DepartmentDto> allDepartmentDto = new ArrayList<>();
+        List<Department> departments = departmentRepository.findAllUndeleted();
+        for (Department department : departments) {
+            allDepartmentDto.add(convertToDepartmentDto(department));
+        }
+        return allDepartmentDto;
+    }
+
     private DepartmentDto convertToDepartmentDto(Department department) {
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());

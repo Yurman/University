@@ -1,13 +1,13 @@
 package com.foxminded.university.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +34,14 @@ public class FacultyRepositoryIT {
 
         facultyRepository.save(testFaculty);
         otherFaculty.setTitle("Physics");
+        otherFaculty.setDeleted(true);
         facultyRepository.save(otherFaculty);
         otherFaculty.setId(2);
     }
 
     @Test
     public void shouldGetFacultyById() throws Exception {
-        Assertions.assertEquals(testFaculty, facultyRepository.findById(1));
+        assertEquals(testFaculty, facultyRepository.findById(1));
     }
 
     @Test
@@ -49,7 +50,12 @@ public class FacultyRepositoryIT {
         expected.add(testFaculty);
         expected.add(otherFaculty);
 
-        Assertions.assertEquals(expected, facultyRepository.findAll());
+        assertEquals(expected, facultyRepository.findAll());
+    }
+
+    @Test
+    public void shouldGetAllUndeletedFaculties() throws Exception {
+        assertThat(facultyRepository.findAllUndeleted()).hasSize(1).contains(testFaculty);
     }
 
     @Test
@@ -57,7 +63,7 @@ public class FacultyRepositoryIT {
         testFaculty.setTitle("Math");
         facultyRepository.save(testFaculty);
 
-        Assertions.assertEquals(testFaculty, facultyRepository.findById(1));
+        assertEquals(testFaculty, facultyRepository.findById(1));
     }
 
     @Test

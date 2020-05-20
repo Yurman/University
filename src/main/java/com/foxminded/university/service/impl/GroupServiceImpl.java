@@ -86,6 +86,16 @@ public class GroupServiceImpl implements GroupService {
         return allGroupDto;
     }
 
+    @Override
+    public List<GroupDto> getAllUndeletedGroupDto() {
+        List<GroupDto> allGroupDto = new ArrayList<>();
+        List<Group> groups = groupRepository.findAllUndeleted();
+        for (Group group : groups) {
+            allGroupDto.add(convertToGroupDto(group));
+        }
+        return allGroupDto;
+    }
+
     private GroupDto convertToGroupDto(Group group) {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(group.getId());

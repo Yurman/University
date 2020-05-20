@@ -43,6 +43,7 @@ public class DepartmentRepositoryIT {
         departmentRepository.save(testDepartment);
         otherDepartment.setTitle("Optics");
         otherDepartment.setFaculty(faculty);
+        otherDepartment.setDeleted(true);
         departmentRepository.save(otherDepartment);
         otherDepartment.setId(2);
     }
@@ -59,6 +60,11 @@ public class DepartmentRepositoryIT {
         expected.add(otherDepartment);
 
         Assertions.assertEquals(expected, departmentRepository.findAll());
+    }
+
+    @Test
+    public void shouldGetAllUndeletedDepartments() throws Exception {
+        assertThat(departmentRepository.findAllUndeleted()).hasSize(1).contains(testDepartment);
     }
 
     @Test

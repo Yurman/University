@@ -21,4 +21,6 @@ public interface DepartmentService {
 
     public DepartmentDto getDepartmentDto(int id);
 
+    List<DepartmentDto> getAllUndeletedDepartmentDto();
+
 }

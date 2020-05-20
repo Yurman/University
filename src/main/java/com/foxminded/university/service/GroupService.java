@@ -27,4 +27,6 @@ public interface GroupService {
 
     public List<GroupDto> getAllGroupDto();
 
+    public List<GroupDto> getAllUndeletedGroupDto();
+
 }

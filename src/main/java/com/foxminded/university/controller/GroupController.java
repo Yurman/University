@@ -1,8 +1,5 @@
 package com.foxminded.university.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +14,6 @@ import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
 import com.foxminded.university.service.GroupService;
-import com.foxminded.university.service.dto.DepartmentDto;
 import com.foxminded.university.service.dto.GroupDto;
 
 @Controller
@@ -94,10 +90,7 @@ public class GroupController {
         try {
             GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
-            List<DepartmentDto> departments = departmentService.getAllDepartmentDto().stream()
-                    .filter(department -> !department.isDeleted())
-                    .collect(Collectors.toList());
-            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departments);
+            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllUndeletedDepartmentDto());
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

@@ -49,7 +49,16 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void deleteGroup(int id) {
-        groupRepository.deleteById(id);
+        Group group = groupRepository.findById(id);
+        group.setDeleted(true);
+        groupRepository.save(group);
+    }
+
+    @Override
+    public void restoreGroup(int id) {
+        Group group = groupRepository.findById(id);
+        group.setDeleted(false);
+        groupRepository.save(group);
     }
 
     @Override
@@ -94,7 +103,6 @@ public class GroupServiceImpl implements GroupService {
         Group group = (groupDto.getId() != 0) ? groupRepository.findById(groupDto.getId()) : new Group();
         group.setTitle(groupDto.getTitle());
         group.setYear(groupDto.getYear());
-        group.setDeleted(groupDto.isDeleted());
         if (groupDto.getDepartmentId() != 0) {
             group.setDepartment(departmentRepository.findById(groupDto.getDepartmentId()));
         }

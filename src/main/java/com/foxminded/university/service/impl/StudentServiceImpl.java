@@ -58,7 +58,16 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudent(int id) {
-        studentRepository.deleteById(id);
+        Student student = studentRepository.findById(id);
+        student.setDeleted(true);
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void restoreStudent(int id) {
+        Student student = studentRepository.findById(id);
+        student.setDeleted(false);
+        studentRepository.save(student);
     }
 
     @Override
@@ -93,7 +102,6 @@ public class StudentServiceImpl implements StudentService {
         Student student = (studentDto.getId() != 0) ? studentRepository.findById(studentDto.getId()) : new Student();
         student.setFirstName(studentDto.getFirstName());
         student.setLastName(studentDto.getLastName());
-        student.setDeleted(studentDto.isDeleted());
         if (studentDto.getGroupId() != 0) {
             student.setGroup(groupRepository.findById(studentDto.getGroupId()));
         }

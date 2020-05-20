@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.foxminded.university.domain.Student;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.GroupService;
@@ -68,9 +67,7 @@ public class StudentController {
     public String deleteStudent(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            Student student = studentService.getStudentById(id);
-            student.setDeleted(true);
-            studentService.updateStudent(student);
+            studentService.deleteStudent(id);
             message = "Successfully delete student";
         } catch (QueryNotExecuteException e) {
             message = "Problem with deleting student";
@@ -80,13 +77,11 @@ public class StudentController {
     }
 
     @GetMapping(value = "/restore-student")
-    public String restoreGroup(@RequestParam(value = "id") int id,
+    public String restoreStudent(@RequestParam(value = "id") int id,
             RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            Student student = studentService.getStudentById(id);
-            student.setDeleted(false);
-            studentService.updateStudent(student);
+            studentService.restoreStudent(id);
             message = "Successfully restore student";
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             message = "Problem with restoring student";

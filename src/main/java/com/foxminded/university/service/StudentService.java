@@ -21,6 +21,8 @@ public interface StudentService {
 
     public void deleteStudent(int id);
 
+    public void restoreStudent(int id);
+
     public List<Student> getAllStudents();
 
     public List<StudentDto> getAllStudentDto();

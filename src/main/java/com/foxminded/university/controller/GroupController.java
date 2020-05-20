@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.foxminded.university.domain.Group;
 import com.foxminded.university.exception.EntityNotFoundException;
 import com.foxminded.university.exception.QueryNotExecuteException;
 import com.foxminded.university.service.DepartmentService;
@@ -67,9 +66,7 @@ public class GroupController {
     public String deleteGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            Group group = groupService.getGroupById(id);
-            group.setDeleted(true);
-            groupService.updateGroup(group);
+            groupService.deleteGroup(id);
             message = "Successfully delete group";
         } catch (QueryNotExecuteException e) {
             message = "Problem with deleting group";
@@ -82,9 +79,7 @@ public class GroupController {
     public String restoreGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
         String message = null;
         try {
-            Group group = groupService.getGroupById(id);
-            group.setDeleted(false);
-            groupService.updateGroup(group);
+            groupService.restoreGroup(id);
             message = "Successfully restore group";
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             message = "Problem with restoring group";

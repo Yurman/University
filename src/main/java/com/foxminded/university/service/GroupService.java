@@ -21,6 +21,8 @@ public interface GroupService {
 
     public void deleteGroup(int id);
 
+    public void restoreGroup(int id);
+
     public List<Group> getAllGroups();
 
     public List<GroupDto> getAllGroupDto();

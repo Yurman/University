@@ -55,7 +55,12 @@ public class FacultyRepositoryIT {
 
     @Test
     public void shouldGetAllUndeletedFaculties() throws Exception {
-        assertThat(facultyRepository.findAllUndeleted()).hasSize(1).contains(testFaculty);
+        assertThat(facultyRepository.findAllByDeleted(false)).hasSize(1).contains(testFaculty);
+    }
+
+    @Test
+    public void shouldGetAllDeletedFaculties() throws Exception {
+        assertThat(facultyRepository.findAllByDeleted(true)).hasSize(1).contains(otherFaculty);
     }
 
     @Test

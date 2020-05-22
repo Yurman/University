@@ -1,7 +1,7 @@
 package com.foxminded.university.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,22 +78,16 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getAllGroupDto() {
-        List<GroupDto> allGroupDto = new ArrayList<>();
-        List<Group> groups = groupRepository.findAll();
-        for (Group group : groups) {
-            allGroupDto.add(convertToGroupDto(group));
-        }
-        return allGroupDto;
+        return convertToListDto(groupRepository.findAll());
     }
 
     @Override
     public List<GroupDto> getAllUndeletedGroupDto() {
-        List<GroupDto> allGroupDto = new ArrayList<>();
-        List<Group> groups = groupRepository.findAllUndeleted();
-        for (Group group : groups) {
-            allGroupDto.add(convertToGroupDto(group));
-        }
-        return allGroupDto;
+        return convertToListDto(groupRepository.findAllByDeleted(false));
+    }
+
+    private List<GroupDto> convertToListDto(List<Group> groups) {
+        return groups.stream().map(group -> convertToGroupDto(group)).collect(Collectors.toList());
     }
 
     private GroupDto convertToGroupDto(Group group) {

@@ -1,7 +1,7 @@
 package com.foxminded.university.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,12 +77,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getAllStudentDto() {
-        List<StudentDto> allStudentDto = new ArrayList<>();
-        List<Student> students = studentRepository.findAll();
-        for (Student student : students) {
-            allStudentDto.add(convertToStudentDto(student));
-        }
-        return allStudentDto;
+        return convertToListDto(studentRepository.findAll());
+    }
+
+    private List<StudentDto> convertToListDto(List<Student> students) {
+        return students.stream().map(student -> convertToStudentDto(student)).collect(Collectors.toList());
     }
 
     private StudentDto convertToStudentDto(Student student) {

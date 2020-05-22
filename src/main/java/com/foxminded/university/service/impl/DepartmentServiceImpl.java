@@ -1,7 +1,7 @@
 package com.foxminded.university.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,22 +53,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentDto> getAllDepartmentDto() {
-        List<DepartmentDto> allDepartmentDto = new ArrayList<>();
-        List<Department> departments = departmentRepository.findAll();
-        for (Department department : departments) {
-            allDepartmentDto.add(convertToDepartmentDto(department));
-        }
-        return allDepartmentDto;
+        return convertToListDto(departmentRepository.findAll());
     }
 
     @Override
     public List<DepartmentDto> getAllUndeletedDepartmentDto() {
-        List<DepartmentDto> allDepartmentDto = new ArrayList<>();
-        List<Department> departments = departmentRepository.findAllUndeleted();
-        for (Department department : departments) {
-            allDepartmentDto.add(convertToDepartmentDto(department));
-        }
-        return allDepartmentDto;
+        return convertToListDto(departmentRepository.findAllByDeleted(false));
+    }
+
+    private List<DepartmentDto> convertToListDto(List<Department> departments) {
+        return departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList());
     }
 
     private DepartmentDto convertToDepartmentDto(Department department) {

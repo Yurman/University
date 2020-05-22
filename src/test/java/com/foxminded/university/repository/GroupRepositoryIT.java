@@ -75,7 +75,12 @@ public class GroupRepositoryIT {
 
     @Test
     public void shouldGetAllUndeletedGroups() throws Exception {
-        assertThat(groupRepository.findAllUndeleted()).hasSize(2).contains(testGroup, groupWithoutDepartment);
+        assertThat(groupRepository.findAllByDeleted(false)).hasSize(2).contains(testGroup, groupWithoutDepartment);
+    }
+
+    @Test
+    public void shouldGetAllDeletedGroups() throws Exception {
+        assertThat(groupRepository.findAllByDeleted(true)).hasSize(1).contains(otherGroup);
     }
 
     @Test

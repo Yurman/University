@@ -64,7 +64,12 @@ public class DepartmentRepositoryIT {
 
     @Test
     public void shouldGetAllUndeletedDepartments() throws Exception {
-        assertThat(departmentRepository.findAllUndeleted()).hasSize(1).contains(testDepartment);
+        assertThat(departmentRepository.findAllByDeleted(false)).hasSize(1).contains(testDepartment);
+    }
+
+    @Test
+    public void shouldGetAllDeletedDepartments() throws Exception {
+        assertThat(departmentRepository.findAllByDeleted(true)).hasSize(1).contains(otherDepartment);
     }
 
     @Test

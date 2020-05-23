@@ -19,10 +19,14 @@ public interface GroupService {
 
     public GroupDto updateGroup(GroupDto groupDto);
 
-    public boolean deleteGroup(int id);
+    public void deleteGroup(int id);
+
+    public void restoreGroup(int id);
 
     public List<Group> getAllGroups();
 
     public List<GroupDto> getAllGroupDto();
+
+    public List<GroupDto> getAllUndeletedGroupDto();
 
 }

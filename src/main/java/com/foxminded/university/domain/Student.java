@@ -1,5 +1,6 @@
 package com.foxminded.university.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +21,9 @@ public class Student extends Person {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     public int getId() {
         return id;
     }
@@ -34,6 +38,14 @@ public class Student extends Person {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

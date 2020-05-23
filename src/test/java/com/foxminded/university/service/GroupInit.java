@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.foxminded.university.domain.Group;
 
-public class GroupRepository {
+public class GroupInit {
 
     public static Group createFirstTestGroup() {
         Group first = new Group();
@@ -34,7 +34,7 @@ public class GroupRepository {
         Group testGroup = createFirstTestGroup();
         testGroup.setTitle("test");
         testGroup.setYear(2);
-        testGroup.setDepartment(DepartmentRepository.getTestDepartment());
+        testGroup.setDepartment(DepartmentInit.getTestDepartment());
         return testGroup;
     }
 }

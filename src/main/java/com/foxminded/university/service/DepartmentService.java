@@ -13,12 +13,14 @@ public interface DepartmentService {
 
     public Department getDepartmentById(int id);
 
-    public boolean deleteDepartment(int id);
+    public void deleteDepartment(int id);
 
     public List<Department> getAllDepartments();
 
     public List<DepartmentDto> getAllDepartmentDto();
 
     public DepartmentDto getDepartmentDto(int id);
+
+    List<DepartmentDto> getAllUndeletedDepartmentDto();
 
 }

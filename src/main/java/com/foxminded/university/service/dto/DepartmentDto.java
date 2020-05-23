@@ -4,6 +4,7 @@ public class DepartmentDto {
     private int id;
     private String title;
     private String facultyTitle;
+    private boolean deleted;
 
     public int getId() {
         return id;
@@ -27,6 +28,14 @@ public class DepartmentDto {
 
     public void setFacultyTitle(String facultyTitle) {
         this.facultyTitle = facultyTitle;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
 }

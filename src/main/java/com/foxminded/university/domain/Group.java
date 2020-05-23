@@ -27,6 +27,9 @@ public class Group {
     @Column(name = "year")
     private int year;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
     public int getId() {
         return id;
     }
@@ -57,6 +60,14 @@ public class Group {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

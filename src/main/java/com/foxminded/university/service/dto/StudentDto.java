@@ -6,6 +6,7 @@ public class StudentDto {
     private String lastName;
     private String groupTitle;
     private int groupId;
+    private boolean deleted;
 
     public int getGroupId() {
         return groupId;
@@ -45,5 +46,13 @@ public class StudentDto {
 
     public void setGroupTitle(String groupTitle) {
         this.groupTitle = groupTitle;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

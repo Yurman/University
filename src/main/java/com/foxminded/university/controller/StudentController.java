@@ -72,13 +72,27 @@ public class StudentController {
         return "redirect:/students";
     }
 
+    @GetMapping(value = "/restore-student")
+    public String restoreStudent(@RequestParam(value = "id") int id,
+            RedirectAttributes redirectAttributes) {
+        String message = null;
+        try {
+            studentService.restoreStudent(id);
+            message = "Successfully restore student";
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
+            message = "Problem with restoring student";
+        }
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/students";
+    }
+
     @GetMapping(value = "/edit-student")
     public ModelAndView showEditStudentView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("student-templates/edit-student");
         try {
             StudentDto studentDto = (id != null) ? studentService.getStudentDtoById(id) : new StudentDto();
             model.addObject(ATTRIBUTE_HTML_STUDENT, studentDto);
-            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllGroupDto());
+            model.addObject(ATTRIBUTE_HTML_GROUPS, groupService.getAllUndeletedGroupDto());
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing student";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

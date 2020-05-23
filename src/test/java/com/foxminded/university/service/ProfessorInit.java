@@ -2,7 +2,7 @@ package com.foxminded.university.service;
 
 import com.foxminded.university.domain.Professor;
 
-public class ProfessorRepository {
+public class ProfessorInit {
 
     public static Professor getTestProfessor() {
         Professor professor = new Professor();

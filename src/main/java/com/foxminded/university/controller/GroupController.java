@@ -71,13 +71,26 @@ public class GroupController {
         return "redirect:/groups";
     }
 
+    @GetMapping(value = "/restore-group")
+    public String restoreGroup(@RequestParam(value = "id") int id, RedirectAttributes redirectAttributes) {
+        String message = null;
+        try {
+            groupService.restoreGroup(id);
+            message = "Successfully restore group";
+        } catch (EntityNotFoundException | QueryNotExecuteException e) {
+            message = "Problem with restoring group";
+        }
+        redirectAttributes.addFlashAttribute(ATTRIBUTE_HTML_MESSAGE, message);
+        return "redirect:/groups";
+    }
+
     @GetMapping(value = "/edit-group")
     public ModelAndView showEditGroupView(@RequestParam(name = "id", required = false) Integer id) {
         ModelAndView model = new ModelAndView("group-templates/edit-group");
         try {
             GroupDto groupDto = (id != null) ? groupService.getGroupDtoById(id) : new GroupDto();
             model.addObject(ATTRIBUTE_HTML_GROUP, groupDto);
-            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllDepartmentDto());
+            model.addObject(ATTRIBUTE_HTML_DEPARTMENTS, departmentService.getAllUndeletedDepartmentDto());
         } catch (EntityNotFoundException | QueryNotExecuteException e) {
             String errorMessage = "Problem with editing group";
             model.addObject(ATTRIBUTE_HTML_MESSAGE, errorMessage);

@@ -48,24 +48,24 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto getDepartmentDto(int id) {
-        return convertToDepartmentDto(departmentRepository.findById(id));
+        return toDto(departmentRepository.findById(id));
     }
 
     @Override
     public List<DepartmentDto> getAllDepartmentDto() {
-        return convertToListDto(departmentRepository.findAll());
+        return toDto(departmentRepository.findAll());
     }
 
     @Override
     public List<DepartmentDto> getAllUndeletedDepartmentDto() {
-        return convertToListDto(departmentRepository.findAllByDeleted(false));
+        return toDto(departmentRepository.findAllByDeleted(false));
     }
 
-    private List<DepartmentDto> convertToListDto(List<Department> departments) {
-        return departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList());
+    private List<DepartmentDto> toDto(List<Department> departments) {
+        return departments.stream().map(department -> toDto(department)).collect(Collectors.toList());
     }
 
-    private DepartmentDto convertToDepartmentDto(Department department) {
+    private DepartmentDto toDto(Department department) {
         DepartmentDto departmentDto = new DepartmentDto();
         departmentDto.setId(department.getId());
         departmentDto.setTitle(department.getTitle());

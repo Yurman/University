@@ -31,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDto getStudentDtoById(int id) {
-        return convertToStudentDto(studentRepository.findById(id));
+        return toDto(studentRepository.findById(id));
     }
 
     @Override
@@ -77,14 +77,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getAllStudentDto() {
-        return convertToListDto(studentRepository.findAll());
+        return toDto(studentRepository.findAll());
     }
 
-    private List<StudentDto> convertToListDto(List<Student> students) {
-        return students.stream().map(student -> convertToStudentDto(student)).collect(Collectors.toList());
+    private List<StudentDto> toDto(List<Student> students) {
+        return students.stream().map(student -> toDto(student)).collect(Collectors.toList());
     }
 
-    private StudentDto convertToStudentDto(Student student) {
+    private StudentDto toDto(Student student) {
         StudentDto studentDto = new StudentDto();
         studentDto.setId(student.getId());
         studentDto.setFirstName(student.getFirstName());

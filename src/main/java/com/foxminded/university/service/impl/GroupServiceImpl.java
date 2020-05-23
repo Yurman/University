@@ -68,7 +68,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDto getGroupDtoById(int id) {
-        return convertToGroupDto(groupRepository.findById(id));
+        return toDto(groupRepository.findById(id));
     }
 
     @Override
@@ -78,19 +78,19 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getAllGroupDto() {
-        return convertToListDto(groupRepository.findAll());
+        return toDto(groupRepository.findAll());
     }
 
     @Override
     public List<GroupDto> getAllUndeletedGroupDto() {
-        return convertToListDto(groupRepository.findAllByDeleted(false));
+        return toDto(groupRepository.findAllByDeleted(false));
     }
 
-    private List<GroupDto> convertToListDto(List<Group> groups) {
-        return groups.stream().map(group -> convertToGroupDto(group)).collect(Collectors.toList());
+    private List<GroupDto> toDto(List<Group> groups) {
+        return groups.stream().map(group -> toDto(group)).collect(Collectors.toList());
     }
 
-    private GroupDto convertToGroupDto(Group group) {
+    private GroupDto toDto(Group group) {
         GroupDto groupDto = new GroupDto();
         groupDto.setId(group.getId());
         groupDto.setTitle(group.getTitle());

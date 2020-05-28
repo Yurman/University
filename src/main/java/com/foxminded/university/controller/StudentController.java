@@ -1,7 +1,10 @@
 package com.foxminded.university.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,8 +104,11 @@ public class StudentController {
     }
 
     @PostMapping(value = "/edit-student")
-    public String editStudent(@ModelAttribute("studentDto") StudentDto studentDto,
-            RedirectAttributes redirectAttributes) {
+    public String editStudent(@ModelAttribute("studentDto") @Valid StudentDto studentDto,
+            RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "edit-student";
+        }
         String message = null;
         try {
             if (studentDto.getId() != 0) {

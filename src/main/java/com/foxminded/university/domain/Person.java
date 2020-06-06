@@ -2,20 +2,14 @@ package com.foxminded.university.domain;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @MappedSuperclass
 public class Person {
 
     @Column(name = "first_name")
-    @Size(min = 2, max = 10)
-    @NotNull
     private String firstName;
 
     @Column(name = "last_name")
-    @Size(min = 2, max = 20)
-    @NotNull
     private String lastName;
 
     public String getFirstName() {

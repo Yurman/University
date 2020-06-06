@@ -104,18 +104,18 @@ public class StudentController {
     }
 
     @PostMapping(value = "/edit-student")
-    public String editStudent(@ModelAttribute("studentDto") @Valid StudentDto studentDto,
-            RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+    public String editStudent(@Valid @ModelAttribute("student") StudentDto student, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "edit-student";
+            return "/edit-student";
         }
         String message = null;
         try {
-            if (studentDto.getId() != 0) {
-                studentService.updateStudent(studentDto);
+            if (student.getId() != 0) {
+                studentService.updateStudent(student);
                 message = "Succeccfully update student";
             } else {
-                studentService.addStudent(studentDto);
+                studentService.addStudent(student);
                 message = "Succeccfully add new student";
             }
         } catch (EntityNotFoundException | QueryNotExecuteException e) {

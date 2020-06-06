@@ -1,7 +1,11 @@
 package com.foxminded.university.service.dto;
 
+import javax.validation.constraints.Size;
+
 public class StudentDto {
     private int id;
+
+    @Size(min = 2)
     private String firstName;
     private String lastName;
     private String groupTitle;

@@ -1,24 +1,22 @@
 package com.foxminded.university.service.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class StudentDto {
     private int id;
 
-    @Size(min = 2)
+    @Size(min = 2, max = 10)
+    @NotBlank
     private String firstName;
+
+    @Size(min = 2, max = 20)
+    @NotBlank
     private String lastName;
+
     private String groupTitle;
     private int groupId;
     private boolean deleted;
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
 
     public int getId() {
         return id;
@@ -50,6 +48,14 @@ public class StudentDto {
 
     public void setGroupTitle(String groupTitle) {
         this.groupTitle = groupTitle;
+    }
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public boolean isDeleted() {

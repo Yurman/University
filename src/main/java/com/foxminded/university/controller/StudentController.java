@@ -107,7 +107,7 @@ public class StudentController {
     public String editStudent(@Valid @ModelAttribute("student") StudentDto student, BindingResult bindingResult,
             RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "/edit-student";
+            return "student-templates/edit-student";
         }
         String message = null;
         try {

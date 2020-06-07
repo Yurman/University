@@ -1,9 +1,22 @@
 package com.foxminded.university.service.dto;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+
+import com.foxminded.university.validation.UniqueTitle;
+
 public class GroupDto {
     private int id;
+
+    @UniqueTitle(message = "Title should be unique")
+    @Size(min = 2, max = 10, message = "Should be in between 2 and 10 characters")
     private String title;
+
+    @Min(value = 1, message = "Year is between 1 and 6")
+    @Max(value = 6, message = "Year is between 1 and 6")
     private int year;
+
     private String departmentTitle;
     private int departmentId;
     private boolean deleted;

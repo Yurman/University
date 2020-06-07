@@ -1,7 +1,10 @@
 package com.foxminded.university.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,7 +102,11 @@ public class GroupController {
     }
 
     @PostMapping(value = "/edit-group")
-    public String editGroup(@ModelAttribute("groupDto") GroupDto groupDto, RedirectAttributes redirectAttributes) {
+    public String editGroup(@Valid @ModelAttribute("group") GroupDto groupDto, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "group-templates/edit-group";
+        }
         String message = null;
         try {
             if (groupDto.getId() != 0) {

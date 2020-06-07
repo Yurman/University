@@ -50,8 +50,9 @@
                             <input type="text"
                                 class="form-control-plaintext card p-3 bg-light"
                                 name="lastName" id="lastName"
-                                th:value="${student.lastName}" th:field="*{lastName}" >
-                                <p th:if="${#fields.hasErrors('lastName')}"
+                                th:value="${student.lastName}"
+                                th:field="*{lastName}">
+                            <p th:if="${#fields.hasErrors('lastName')}"
                                 class="label label-danger"
                                 th:errors="*{lastName}">Name Error</p>
                         </div>
@@ -64,12 +65,19 @@
                                 class="form-control">
                                 <option th:value="${student.GroupId}"
                                     th:text="${student.GroupTitle}"
-                                    selected></option>
+                                    th:field="*{groupId}" selected></option>
                                 <option th:each="group : ${groups}"
                                     th:value="${group.id}"
-                                    th:text="${group.title}"></option>
+                                    th:text="${group.title}"
+                                    th:field="*{groupId}"></option>
                                 <option th:value="0" text=""></option>
                             </select>
+                            <div>
+                                <p th:if="${#fields.hasErrors('groupId')}"
+                                    class="label label-danger"
+                                    th:errors="*{groupId}">Group
+                                    Error</p>
+                            </div>
                         </div>
                     </div>
                     <button type="submit" value="Update"

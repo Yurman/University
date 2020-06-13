@@ -14,4 +14,6 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
 
     public List<Student> findAllByDeleted(boolean deleted);
 
+    public List<Student> findAllByGroupId(int groupId);
+
 }

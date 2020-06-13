@@ -27,4 +27,6 @@ public interface StudentService {
 
     public List<StudentDto> getAllStudentDto();
 
+    public List<StudentDto> getAllStudentDtoByGroupId(int id);
+
 }

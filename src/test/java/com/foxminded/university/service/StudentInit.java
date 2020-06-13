@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.foxminded.university.domain.Student;
+import com.foxminded.university.service.dto.StudentDto;
 
 public class StudentInit {
 
@@ -25,5 +26,13 @@ public class StudentInit {
         Student testStudent = getTestStudent();
         testStudent.setGroup(GroupInit.getTestGroup());
         return testStudent;
+    }
+
+    public static StudentDto getTestStudentDto() {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setFirstName("Name");
+        studentDto.setLastName("Last");
+        studentDto.setGroupId(GroupInit.getTestGroupDto().getId());
+        return studentDto;
     }
 }

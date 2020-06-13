@@ -1,4 +1,4 @@
-package com.foxminded.university.validation;
+package com.foxminded.university.validation.validator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -6,6 +6,7 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.foxminded.university.service.GroupService;
+import com.foxminded.university.validation.annotation.UniqueTitle;
 
 public class UniqueTitleValidator implements ConstraintValidator<UniqueTitle, String> {
 

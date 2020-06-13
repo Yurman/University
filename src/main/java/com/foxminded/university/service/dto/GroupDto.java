@@ -4,7 +4,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
-import com.foxminded.university.validation.UniqueTitle;
+import com.foxminded.university.validation.annotation.UniqueTitle;
 
 public class GroupDto {
     private int id;

@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.foxminded.university.validation.GroupNotFull;
+import com.foxminded.university.validation.annotation.GroupNotFull;
 
 public class StudentDto {
     private int id;
@@ -23,6 +23,7 @@ public class StudentDto {
 
     @GroupNotFull(message = "Group is already full")
     private int groupId;
+
     private boolean deleted;
 
     public int getId() {

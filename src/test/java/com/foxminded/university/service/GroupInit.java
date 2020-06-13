@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.foxminded.university.domain.Group;
+import com.foxminded.university.service.dto.GroupDto;
 
 public class GroupInit {
 
@@ -36,5 +37,13 @@ public class GroupInit {
         testGroup.setYear(2);
         testGroup.setDepartment(DepartmentInit.getTestDepartment());
         return testGroup;
+    }
+
+    public static GroupDto getTestGroupDto() {
+        GroupDto groupDto = new GroupDto();
+        groupDto.setTitle("Title");
+        groupDto.setYear(1);
+        groupDto.setId(1);
+        return groupDto;
     }
 }

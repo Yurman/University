@@ -80,6 +80,11 @@ public class StudentServiceImpl implements StudentService {
         return toDto(studentRepository.findAll());
     }
 
+    @Override
+    public List<StudentDto> getAllStudentDtoByGroupId(int id) {
+        return toDto(studentRepository.findAllByGroupId(id));
+    }
+
     private List<StudentDto> toDto(List<Student> students) {
         return students.stream().map(student -> toDto(student)).collect(Collectors.toList());
     }

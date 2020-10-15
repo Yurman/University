@@ -8,11 +8,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 
 import com.foxminded.university.service.StudentService;
-import com.foxminded.university.service.dto.StudentDto;
 import com.foxminded.university.validation.annotation.GroupNotFull;
 
 @PropertySource("application.properties")
-public class GroupNotFullValidator implements ConstraintValidator<GroupNotFull, StudentDto> {
+public class GroupNotFullValidator implements ConstraintValidator<GroupNotFull, Integer> {
 
     @Autowired
     private StudentService studentService;
@@ -21,9 +20,9 @@ public class GroupNotFullValidator implements ConstraintValidator<GroupNotFull, 
     private int limit;
 
     @Override
-    public boolean isValid(StudentDto student, ConstraintValidatorContext context) {
+    public boolean isValid(Integer groupId, ConstraintValidatorContext context) {
 
-        return studentService.getAllStudentDtoByGroupId(student.getGroupId()).size() < limit;
+        return studentService.getAllStudentDtoByGroupId(groupId).size() < limit;
     }
 
 }

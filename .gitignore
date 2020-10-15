@@ -1,6 +1,8 @@
 /bin/
 /.settings/
 /target/
+/src/main/resources/
+/src/test/resources/
 .project
 .classpath
 .settings

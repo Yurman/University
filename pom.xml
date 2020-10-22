@@ -8,7 +8,7 @@
         <version>2.2.7.RELEASE</version>
     </parent>
 
-    <groupId>com.foxminded.university</groupId>
+    <groupId>com.yurman.university</groupId>
     <artifactId>University</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -16,7 +16,7 @@
     <name>University</name>
 
     <properties>
-        <start-class>com.foxminded.university.UniversityApplication</start-class>
+        <start-class>com.yurman.university.UniversityApplication</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
